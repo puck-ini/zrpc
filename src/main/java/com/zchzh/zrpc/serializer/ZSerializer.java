@@ -3,6 +3,7 @@ package com.zchzh.zrpc.serializer;
 /**
  * @author zengchzh
  * @date 2021/3/10
+ * 序列化器
  */
 public interface ZSerializer {
 

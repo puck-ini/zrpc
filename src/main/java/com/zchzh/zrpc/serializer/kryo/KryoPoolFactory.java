@@ -22,7 +22,7 @@ public class KryoPoolFactory {
             Kryo kryo = new Kryo();
             // 关闭循环应用支持。循环引用：类A中有属性List<B>，而类B中有A a属性
             kryo.setReferences(false);
-            // 注册类，多机器部署不建议使用
+            // 注册类，多机器部署不建议使用，事先注册类可以提高序列化效率
             kryo.register(ZRpcRequest.class);
             kryo.register(ZRpcRespones.class);
 
