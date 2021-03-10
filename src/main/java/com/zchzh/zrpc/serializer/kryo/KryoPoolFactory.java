@@ -3,9 +3,8 @@ package com.zchzh.zrpc.serializer.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.esotericsoftware.kryo.pool.KryoPool;
-import com.esotericsoftware.kryo.pool.KryoPool.Builder;
 import com.zchzh.zrpc.model.request.ZRpcRequest;
-import com.zchzh.zrpc.model.respones.ZRpcRespones;
+import com.zchzh.zrpc.model.respones.ZRpcResponse;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 /**
@@ -24,7 +23,7 @@ public class KryoPoolFactory {
             kryo.setReferences(false);
             // 注册类，多机器部署不建议使用，事先注册类可以提高序列化效率
             kryo.register(ZRpcRequest.class);
-            kryo.register(ZRpcRespones.class);
+            kryo.register(ZRpcResponse.class);
 
             Kryo.DefaultInstantiatorStrategy strategy
                     = (Kryo.DefaultInstantiatorStrategy) kryo.getInstantiatorStrategy();
