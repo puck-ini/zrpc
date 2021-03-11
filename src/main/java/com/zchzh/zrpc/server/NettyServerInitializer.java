@@ -44,8 +44,10 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
                 4,
                 0,
                 0));
-        channelPipeline.addLast(new RpcEncoder(ZRpcRequest.class, zSerializer));
-        channelPipeline.addLast(new RpcDecoder(ZRpcResponse.class, zSerializer));
+        // server 解码 request
+        channelPipeline.addLast(new RpcDecoder(ZRpcRequest.class, zSerializer));
+        // server 编码 response
+        channelPipeline.addLast(new RpcEncoder(ZRpcResponse.class, zSerializer));
         channelPipeline.addLast(new NettyServerHandler(serviceMap));
     }
 }

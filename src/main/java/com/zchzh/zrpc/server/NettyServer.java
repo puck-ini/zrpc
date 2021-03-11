@@ -9,6 +9,9 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author zengchzh
  * @date 2021/3/10
@@ -17,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 public class NettyServer extends Server{
 
     private Channel channel;
+
+    private Map<String, Object> serviceMap = new HashMap<>();
 
 
     @Override
@@ -30,14 +35,7 @@ public class NettyServer extends Server{
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 100)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new ChannelInitializer<SocketChannel>() {
-
-                        @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
-                            ChannelPipeline channelPipeline = ch.pipeline();
-                            channelPipeline.addLast();
-                        }
-                    });
+                    .childHandler(new NettyServerInitializer(serviceMap));
 
             // 启动服务
             ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
