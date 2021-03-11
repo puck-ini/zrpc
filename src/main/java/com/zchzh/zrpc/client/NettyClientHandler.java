@@ -2,8 +2,6 @@ package com.zchzh.zrpc.client;
 
 import com.zchzh.zrpc.model.request.ZRpcRequest;
 import com.zchzh.zrpc.model.respones.ZRpcResponse;
-import com.zchzh.zrpc.serializer.ZSerializer;
-import com.zchzh.zrpc.serializer.kryo.KryoSerializer;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +26,8 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ZSerializer zSerializer = KryoSerializer.class.newInstance();
         log.info(" client handler: send request");
-        ctx.channel().writeAndFlush(zSerializer.serialize(zRpcRequest));
+        ctx.channel().writeAndFlush(zRpcRequest);
     }
 
     @Override

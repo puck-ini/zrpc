@@ -19,6 +19,7 @@
         <cglib.version>3.1</cglib.version>
         <hessian.version>4.0.63</hessian.version>
         <kryo.version>4.0.2</kryo.version>
+        <fastjson.version>1.2.73</fastjson.version>
     </properties>
 
     <dependencies>
@@ -53,6 +54,13 @@
             <version>${cglib.version}</version>
         </dependency>
 
+<!--        zookeeper-->
+        <dependency>
+            <groupId>com.101tec</groupId>
+            <artifactId>zkclient</artifactId>
+            <version>0.10</version>
+        </dependency>
+
 <!--        序列化方式-->
         <!-- hessian -->
         <dependency>
@@ -66,6 +74,13 @@
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
             <version>${kryo.version}</version>
+        </dependency>
+
+<!--        fastjson-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.version}</version>
         </dependency>
     </dependencies>
 

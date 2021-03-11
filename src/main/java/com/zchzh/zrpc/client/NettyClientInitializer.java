@@ -6,8 +6,6 @@ import com.zchzh.zrpc.model.request.ZRpcRequest;
 import com.zchzh.zrpc.model.respones.ZRpcResponse;
 import com.zchzh.zrpc.serializer.ZSerializer;
 import com.zchzh.zrpc.serializer.kryo.KryoSerializer;
-import com.zchzh.zrpc.server.NettyServerHandler;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
