@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
  * @author zengchzh
  * @date 2021/3/11
  */
-public interface ServerRegister {
+public interface ServiceRegister {
 
     /**
      * 注册服务对象

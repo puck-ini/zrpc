@@ -23,6 +23,9 @@ public class NettyServer extends Server{
 
     private Map<String, Object> serviceMap = new HashMap<>();
 
+    public NettyServer(int port){
+        super(port);
+    }
 
     @Override
     public void start() {

@@ -19,6 +19,10 @@ public abstract class Server {
      */
     protected String protocol;
 
+    public Server(int port) {
+        this.port = port;
+    }
+
 
     /**
      * 启动

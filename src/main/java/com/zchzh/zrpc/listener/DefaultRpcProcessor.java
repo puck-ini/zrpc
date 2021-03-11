@@ -4,7 +4,7 @@ import com.zchzh.zrpc.annotation.ZReference;
 import com.zchzh.zrpc.annotation.ZService;
 import com.zchzh.zrpc.proxy.ClientProxyFactory;
 import com.zchzh.zrpc.server.Server;
-import com.zchzh.zrpc.server.register.ServerRegister;
+import com.zchzh.zrpc.server.register.ServiceRegister;
 import com.zchzh.zrpc.server.register.ServiceObject;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -27,7 +27,7 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
     private ClientProxyFactory clientProxyFactory;
 
     @Resource
-    private ServerRegister serverRegister;
+    private ServiceRegister serviceRegister;
 
     @Resource
     private Server server;
@@ -72,7 +72,7 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
                         Class<?> superClass = interfaces[0];
                         serviceObject = new ServiceObject(superClass.getName(), superClass, obj);
                     }
-                    serverRegister.register(serviceObject);
+                    serviceRegister.register(serviceObject);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

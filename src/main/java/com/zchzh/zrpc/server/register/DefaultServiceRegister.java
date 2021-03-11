@@ -10,7 +10,7 @@ import java.util.Map;
  *
  * 默认服务注册器
  */
-public class DefaultServiceRegister implements ServerRegister{
+public class DefaultServiceRegister implements ServiceRegister {
 
     private Map<String, ServiceObject> serviceMap = new HashMap<>();
 
