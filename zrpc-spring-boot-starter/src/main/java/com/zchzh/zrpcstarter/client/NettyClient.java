@@ -2,6 +2,7 @@ package com.zchzh.zrpcstarter.client;
 
 import com.zchzh.zrpcstarter.model.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.model.respones.ZRpcResponse;
+import com.zchzh.zrpcstarter.model.service.Service;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
@@ -23,7 +24,12 @@ public class NettyClient extends Client{
     private ZRpcResponse zRpcResponse;
 
     @Override
-    public void start(ZRpcRequest request) {
+    public ZRpcResponse start(ZRpcRequest request, Service service) {
+        String[] addInfoArray = service.getAddress().split(":");
+        ip= addInfoArray[0];
+//        ip = "127.0.0.1";
+        port = Integer.parseInt(addInfoArray[1]);
+
         nettyClientHandler = new NettyClientHandler(request);
         EventLoopGroup eventLoopGroup = new NioEventLoopGroup();
 
@@ -45,7 +51,7 @@ public class NettyClient extends Client{
             // 释放资源
             eventLoopGroup.shutdownGracefully();
         }
-
+        return this.zRpcResponse;
     }
 
     @Override

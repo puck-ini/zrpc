@@ -1,6 +1,8 @@
 package com.zchzh.zrpcstarter.client;
 
 import com.zchzh.zrpcstarter.model.request.ZRpcRequest;
+import com.zchzh.zrpcstarter.model.respones.ZRpcResponse;
+import com.zchzh.zrpcstarter.model.service.Service;
 
 /**
  * @author zengchzh
@@ -27,7 +29,7 @@ public abstract class Client {
      * 启动
      * @param request 请求数据
      */
-    public abstract void start(ZRpcRequest request);
+    public abstract ZRpcResponse start(ZRpcRequest request, Service service);
 
     /**
      * 停止

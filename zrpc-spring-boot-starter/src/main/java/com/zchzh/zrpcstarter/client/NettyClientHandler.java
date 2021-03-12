@@ -6,6 +6,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.CountDownLatch;
+
 /**
  * @author zengchzh
  * @date 2021/3/10
@@ -20,8 +22,11 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
 
     private ZRpcRequest zRpcRequest;
 
+    private CountDownLatch cdl;
+
     public NettyClientHandler(ZRpcRequest request){
         this.zRpcRequest = request;
+        cdl = new CountDownLatch(1);
     }
 
     @Override
@@ -34,6 +39,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
         this.response = response;
         log.info("client handler : " + response.toString());
+        cdl.countDown();
     }
 
     @Override
@@ -48,7 +54,8 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
     }
 
 
-    public ZRpcResponse getResponse(){
+    public ZRpcResponse getResponse() throws InterruptedException {
+        cdl.await();
         return this.response;
     }
 

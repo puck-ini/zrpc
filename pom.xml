@@ -5,6 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>zrpc-spring-boot-starter</module>
+        <module>zrpc-spring-boot-test</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

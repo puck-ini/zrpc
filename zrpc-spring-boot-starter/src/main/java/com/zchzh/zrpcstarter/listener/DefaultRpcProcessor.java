@@ -73,6 +73,7 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
                         serviceObject = new ServiceObject(superClass.getName(), superClass, obj);
                     }
                     serviceRegister.register(serviceObject);
+                    server.addService(serviceObject.getName(),serviceObject.getObj());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -33,4 +33,7 @@ public abstract class Server {
      * 停止
      */
     public abstract void stop();
+
+
+    public abstract void addService(String name, Object object);
 }

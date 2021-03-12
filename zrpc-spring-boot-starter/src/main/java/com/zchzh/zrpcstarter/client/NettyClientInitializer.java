@@ -9,6 +9,10 @@ import com.zchzh.zrpcstarter.serializer.kryo.KryoSerializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.timeout.IdleStateHandler;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zengchzh
@@ -27,8 +31,10 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         ZSerializer zSerializer = KryoSerializer.class.newInstance();
         ChannelPipeline channelPipeline = ch.pipeline();
 
+        channelPipeline.addLast(new IdleStateHandler(0, 0, 5, TimeUnit.SECONDS));
         // client 编码 request
         channelPipeline.addLast(new RpcEncoder(ZRpcRequest.class, zSerializer));
+        channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
         // client 节码 response
         channelPipeline.addLast(new RpcDecoder(ZRpcResponse.class, zSerializer));
         channelPipeline.addLast(nettyClientHandler);

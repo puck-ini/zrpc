@@ -12,10 +12,7 @@ import org.springframework.util.CollectionUtils;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 
 /**
@@ -76,11 +73,16 @@ public class ClientProxyFactory {
             request.setMethodName(method.getName());
             request.setParameterTypes(method.getParameterTypes());
             request.setParameters(args);
+            request.setVersion("version");
+            request.setRequestId(UUID.randomUUID().toString());
 
             // 协议
-            nettyClient.start(request);
+            ZRpcResponse response = nettyClient.start(request,service);
             log.info("proxy success");
-            return null;
+            if (response.getError() != null) {
+                log.error("clientProxyFactory getError : " + response.getError());
+            }
+            return response.getResult();
         }
     }
 

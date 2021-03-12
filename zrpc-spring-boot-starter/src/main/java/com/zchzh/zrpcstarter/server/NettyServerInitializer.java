@@ -36,7 +36,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         ZSerializer zSerializer = KryoSerializer.class.newInstance();
         ChannelPipeline channelPipeline = ch.pipeline();
         //
-        channelPipeline.addLast(new IdleStateHandler(0, 0, 30, TimeUnit.SECONDS));
+        channelPipeline.addLast(new IdleStateHandler(0, 0, 5, TimeUnit.SECONDS));
         // 传输的最大值
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536,
                 0,
