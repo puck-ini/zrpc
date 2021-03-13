@@ -23,6 +23,14 @@ public class NettyClient extends Client{
 
     private ZRpcResponse zRpcResponse;
 
+    private String serializerName;
+
+    public NettyClient(){}
+
+    public NettyClient(String serializerName) {
+        this.serializerName = serializerName;
+    }
+
     /**
      *
      * @param request 请求数据
@@ -44,7 +52,7 @@ public class NettyClient extends Client{
             bootstrap.group(eventLoopGroup)
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.TCP_NODELAY, true)
-                    .handler(new NettyClientInitializer(nettyClientHandler));
+                    .handler(new NettyClientInitializer(nettyClientHandler, serializerName));
 
             // 连接服务器
             ChannelFuture future = bootstrap.connect(ip, port).sync();

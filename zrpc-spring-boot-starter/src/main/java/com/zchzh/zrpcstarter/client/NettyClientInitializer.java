@@ -22,8 +22,11 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
 
     private final NettyClientHandler nettyClientHandler;
 
-    public NettyClientInitializer(NettyClientHandler nettyClientHandler) {
+    private final String serializerName;
+
+    public NettyClientInitializer(NettyClientHandler nettyClientHandler, String serializerName) {
         this.nettyClientHandler = nettyClientHandler;
+        this.serializerName = serializerName;
     }
 
     @Override
@@ -34,11 +37,11 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         // 心跳机制，通过心跳检查对方是否有效,同时限制读和写的空闲时间，超过时间就会触发自定义handler中的userEventTrigger方法
         channelPipeline.addLast(new IdleStateHandler(0, 0, 5, TimeUnit.SECONDS));
         // client 编码 request
-        channelPipeline.addLast(new RpcEncoder(ZRpcRequest.class, zSerializer));
+        channelPipeline.addLast(new RpcEncoder(ZRpcRequest.class, serializerName));
         // 自定义长度编码器
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
         // client 节码 response
-        channelPipeline.addLast(new RpcDecoder(ZRpcResponse.class, zSerializer));
+        channelPipeline.addLast(new RpcDecoder(ZRpcResponse.class, serializerName));
         channelPipeline.addLast(nettyClientHandler);
     }
 }

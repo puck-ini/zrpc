@@ -22,6 +22,7 @@ public class KryoSerializer implements ZSerializer {
 
     @Override
     public <T> byte[] serialize(T object) {
+        System.out.println("KryoSerializer serialize ========================");
         Kryo kryo = kryoPool.borrow();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Output output = new Output(byteArrayOutputStream);
@@ -43,6 +44,7 @@ public class KryoSerializer implements ZSerializer {
 
     @Override
     public <T> Object deserialize(byte[] bytes, Class<T> clazz) {
+        System.out.println("KryoSerializer deserialize ========================");
         Kryo kryo = kryoPool.borrow();
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         Input in = new Input(byteArrayInputStream);

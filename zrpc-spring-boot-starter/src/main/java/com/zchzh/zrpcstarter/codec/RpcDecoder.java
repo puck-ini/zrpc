@@ -1,6 +1,7 @@
 package com.zchzh.zrpcstarter.codec;
 
 import com.zchzh.zrpcstarter.serializer.ZSerializer;
+import com.zchzh.zrpcstarter.serializer.ZSerializerFactory;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
@@ -18,9 +19,9 @@ public class RpcDecoder extends ByteToMessageDecoder {
 
     private ZSerializer zSerializer;
 
-    public RpcDecoder(Class<?> genericClass, ZSerializer zSerializer) {
+    public RpcDecoder(Class<?> genericClass, String serializerName) {
         this.genericClass = genericClass;
-        this.zSerializer = zSerializer;
+        this.zSerializer = ZSerializerFactory.getSerializer(serializerName);
     }
 
     @Override

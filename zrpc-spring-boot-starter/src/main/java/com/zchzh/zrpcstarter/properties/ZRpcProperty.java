@@ -27,4 +27,9 @@ public class ZRpcProperty {
      * 服务协议
      */
     private String protocol = "zrpc";
+
+    /**
+     * 序列化方式
+     */
+    private String serializer = "kryo";
 }

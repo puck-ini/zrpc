@@ -1,6 +1,7 @@
 package com.zchzh.zrpcstarter.server.register;
 
 import com.alibaba.fastjson.JSON;
+import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.model.service.Service;
 import com.zchzh.zrpcstarter.serializer.zookeeper.ZookeeperSerializer;
 import org.I0Itec.zkclient.ZkClient;
@@ -53,7 +54,7 @@ public class ZookeeperServiceRegister extends DefaultServiceRegister implements 
         String serviceName = serviceResource.getName();
         String uri = JSON.toJSONString(serviceResource);
         try {
-            uri = URLEncoder.encode(uri, "UTF-8");
+            uri = URLEncoder.encode(uri, Constants.UTF_8);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

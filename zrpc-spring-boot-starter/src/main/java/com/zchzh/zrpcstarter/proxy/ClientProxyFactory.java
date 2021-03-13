@@ -23,6 +23,7 @@ import java.util.*;
  * 通过对服务接口的动态代理，封装消费者发起的请求，同时获取响应
  */
 @Slf4j
+@Data
 public class ClientProxyFactory {
 
     private ServiceDiscover serviceDiscover;
@@ -89,29 +90,5 @@ public class ClientProxyFactory {
         }
     }
 
-
-    public ServiceDiscover getServiceDiscover() {
-        return serviceDiscover;
-    }
-
-    public void setServiceDiscover(ServiceDiscover serviceDiscover) {
-        this.serviceDiscover = serviceDiscover;
-    }
-
-    public NettyClient getNettyClient() {
-        return nettyClient;
-    }
-
-    public void setNettyClient(NettyClient nettyClient) {
-        this.nettyClient = nettyClient;
-    }
-
-    public Map<Class<?>, Object> getObjectCache() {
-        return objectCache;
-    }
-
-    public void setObjectCache(Map<Class<?>, Object> objectCache) {
-        this.objectCache = objectCache;
-    }
 
 }

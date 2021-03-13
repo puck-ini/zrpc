@@ -24,13 +24,15 @@ public class NettyServer extends Server{
 
     private Map<String, Object> serviceMap = new HashMap<>();
 
-    public NettyServer(int port){
+    private final String serializerName;
+
+    public NettyServer(int port, String serializerName){
         super(port);
+        this.serializerName = serializerName;
     }
 
     @Override
     public void start() {
-        Runnable target;
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -43,7 +45,7 @@ public class NettyServer extends Server{
                             .channel(NioServerSocketChannel.class)
                             .option(ChannelOption.SO_BACKLOG, 100)
                             .handler(new LoggingHandler(LogLevel.INFO))
-                            .childHandler(new NettyServerInitializer(serviceMap));
+                            .childHandler(new NettyServerInitializer(serviceMap, serializerName));
 
                     // 启动服务
                     ChannelFuture channelFuture = serverBootstrap.bind(port).sync();

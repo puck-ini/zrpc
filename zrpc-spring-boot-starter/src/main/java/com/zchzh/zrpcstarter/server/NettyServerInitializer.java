@@ -27,8 +27,11 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
      */
     private final Map<String, Object> serviceMap;
 
-    public NettyServerInitializer(Map<String, Object> serviceMap) {
+    private final String serializerName;
+
+    public NettyServerInitializer(Map<String, Object> serviceMap, String serializerName) {
         this.serviceMap = serviceMap;
+        this.serializerName = serializerName;
     }
 
     @Override
@@ -44,9 +47,9 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
                 0,
                 0));
         // server 解码 request
-        channelPipeline.addLast(new RpcDecoder(ZRpcRequest.class, zSerializer));
+        channelPipeline.addLast(new RpcDecoder(ZRpcRequest.class, serializerName));
         // server 编码 response
-        channelPipeline.addLast(new RpcEncoder(ZRpcResponse.class, zSerializer));
+        channelPipeline.addLast(new RpcEncoder(ZRpcResponse.class, serializerName));
         channelPipeline.addLast(new NettyServerHandler(serviceMap));
     }
 }

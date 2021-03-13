@@ -41,7 +41,7 @@ public class AutoConfiguration {
         // 设置支持的协议
 
         // 设置网络层
-        clientProxyFactory.setNettyClient(new NettyClient());
+        clientProxyFactory.setNettyClient(new NettyClient(zRpcProperty.getSerializer()));
         return clientProxyFactory;
     }
 
@@ -55,6 +55,6 @@ public class AutoConfiguration {
 
     @Bean
     public Server server(@Autowired ZRpcProperty zRpcProperty){
-        return new NettyServer(zRpcProperty.getServerPort());
+        return new NettyServer(zRpcProperty.getServerPort(), zRpcProperty.getSerializer());
     }
 }
