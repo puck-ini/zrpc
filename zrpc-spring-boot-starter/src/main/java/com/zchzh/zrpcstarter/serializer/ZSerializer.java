@@ -1,5 +1,7 @@
 package com.zchzh.zrpcstarter.serializer;
 
+import java.io.IOException;
+
 /**
  * @author zengchzh
  * @date 2021/3/10
@@ -13,7 +15,7 @@ public interface ZSerializer {
      * @param <T>
      * @return
      */
-    <T> byte[] serialize(T object);
+    <T> byte[] serialize(T object) throws IOException;
 
     /**
      * 反序列化
@@ -22,5 +24,5 @@ public interface ZSerializer {
      * @param <T>
      * @return
      */
-    <T> Object deserialize(byte[] bytes, Class<T> clazz);
+    <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException;
 }
