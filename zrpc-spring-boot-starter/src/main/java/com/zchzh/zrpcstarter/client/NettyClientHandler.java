@@ -29,12 +29,23 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
         cdl = new CountDownLatch(1);
     }
 
+    /**
+     * 发起请求
+     * @param ctx
+     * @throws Exception
+     */
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         log.info(" client handler: send request");
         ctx.channel().writeAndFlush(zRpcRequest);
     }
 
+    /**
+     * 接受响应
+     * @param ctx
+     * @param response
+     * @throws Exception
+     */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
         this.response = response;
@@ -59,6 +70,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
         return this.response;
     }
 
+    // TODO 添加 userEventTrigger
 
 
 

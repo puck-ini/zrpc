@@ -20,6 +20,9 @@ import java.util.Objects;
  * @date 2021/3/11
  *
  * RPC处理者，支持服务启动暴露、自动注入Service
+ * ApplicationListener<ContextRefreshedEvent>：
+ * 当Spring中的所有的Bean都加载完成时，Spring会发布一个时间，
+ * ApplicationListener<ContextRefreshedEvent>的作用是监听这个事件，当监听到事件发布就会执行onApplicationEvent方法
  */
 public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshedEvent> {
 

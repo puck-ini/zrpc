@@ -18,6 +18,9 @@ import java.util.*;
 /**
  * @author zengchzh
  * @date 2021/3/11
+ *
+ * 动态代理
+ * 通过对服务接口的动态代理，封装消费者发起的请求，同时获取响应
  */
 @Slf4j
 public class ClientProxyFactory {
