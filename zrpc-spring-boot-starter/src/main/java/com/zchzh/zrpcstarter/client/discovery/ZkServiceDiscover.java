@@ -2,7 +2,7 @@ package com.zchzh.zrpcstarter.client.discovery;
 
 import com.alibaba.fastjson.JSON;
 import com.zchzh.zrpcstarter.config.Constants;
-import com.zchzh.zrpcstarter.model.service.Service;
+import com.zchzh.zrpcstarter.protocol.service.Service;
 import com.zchzh.zrpcstarter.serializer.zookeeper.ZookeeperSerializer;
 import org.I0Itec.zkclient.ZkClient;
 

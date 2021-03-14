@@ -1,8 +1,8 @@
 package com.zchzh.zrpcstarter.client;
 
-import com.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import com.zchzh.zrpcstarter.model.respones.ZRpcResponse;
-import com.zchzh.zrpcstarter.model.service.Service;
+import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
+import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
+import com.zchzh.zrpcstarter.protocol.service.Service;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;

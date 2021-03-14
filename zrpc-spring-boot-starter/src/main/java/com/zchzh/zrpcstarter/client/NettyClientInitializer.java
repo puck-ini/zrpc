@@ -2,8 +2,8 @@ package com.zchzh.zrpcstarter.client;
 
 import com.zchzh.zrpcstarter.codec.RpcDecoder;
 import com.zchzh.zrpcstarter.codec.RpcEncoder;
-import com.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import com.zchzh.zrpcstarter.model.respones.ZRpcResponse;
+import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
+import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.serializer.ZSerializer;
 import com.zchzh.zrpcstarter.serializer.kryo.KryoSerializer;
 import io.netty.channel.ChannelInitializer;

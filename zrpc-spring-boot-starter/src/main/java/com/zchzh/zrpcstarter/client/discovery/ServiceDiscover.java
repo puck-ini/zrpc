@@ -1,6 +1,6 @@
 package com.zchzh.zrpcstarter.client.discovery;
 
-import com.zchzh.zrpcstarter.model.service.Service;
+import com.zchzh.zrpcstarter.protocol.service.Service;
 
 import java.util.List;
 

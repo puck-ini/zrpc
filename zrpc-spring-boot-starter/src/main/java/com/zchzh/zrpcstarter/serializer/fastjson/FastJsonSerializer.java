@@ -16,7 +16,6 @@ import java.io.IOException;
 public class FastJsonSerializer implements ZSerializer {
     @Override
     public <T> byte[] serialize(T object) throws IOException {
-        System.out.println("FastJsonSerializer serialize========================");
         SerializeWriter out = new SerializeWriter();
         JSONSerializer serializer = new JSONSerializer(out);
         serializer.config(SerializerFeature.WriteEnumUsingToString, true);
@@ -27,7 +26,6 @@ public class FastJsonSerializer implements ZSerializer {
 
     @Override
     public <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException {
-        System.out.println("FastJsonSerializer deserialize========================");
         return JSON.parseObject(new String(bytes), clazz);
     }
 }

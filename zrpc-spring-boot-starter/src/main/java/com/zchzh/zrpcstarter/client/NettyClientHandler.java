@@ -1,7 +1,7 @@
 package com.zchzh.zrpcstarter.client;
 
-import com.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import com.zchzh.zrpcstarter.model.respones.ZRpcResponse;
+import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
+import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;

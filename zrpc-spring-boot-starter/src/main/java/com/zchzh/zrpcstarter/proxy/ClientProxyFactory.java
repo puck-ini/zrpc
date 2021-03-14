@@ -2,9 +2,9 @@ package com.zchzh.zrpcstarter.proxy;
 
 import com.zchzh.zrpcstarter.client.NettyClient;
 import com.zchzh.zrpcstarter.client.discovery.ServiceDiscover;
-import com.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import com.zchzh.zrpcstarter.model.respones.ZRpcResponse;
-import com.zchzh.zrpcstarter.model.service.Service;
+import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
+import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
+import com.zchzh.zrpcstarter.protocol.service.Service;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;

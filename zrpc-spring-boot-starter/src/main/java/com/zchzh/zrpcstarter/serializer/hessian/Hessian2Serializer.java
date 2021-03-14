@@ -16,7 +16,6 @@ import java.io.InputStream;
 public class Hessian2Serializer implements ZSerializer {
     @Override
     public <T> byte[] serialize(T object) throws IOException {
-        System.out.println("Hessian2Serializer serialize ========================");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         Hessian2Output output = new Hessian2Output(byteArrayOutputStream);
         output.writeObject(object);
@@ -26,7 +25,6 @@ public class Hessian2Serializer implements ZSerializer {
 
     @Override
     public <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException {
-        System.out.println("Hessian2Serializer deserialize ========================");
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         Hessian2Input input = new Hessian2Input(byteArrayInputStream);
         return (T) input.readObject(clazz);
