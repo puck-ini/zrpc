@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * @author zengchzh
@@ -26,6 +27,8 @@ public class NettyServer extends Server{
 
     private final String serializerName;
 
+    private ThreadPoolExecutor threadPoolExecutor;
+
     public NettyServer(int port, String serializerName){
         super(port);
         this.serializerName = serializerName;
@@ -33,7 +36,19 @@ public class NettyServer extends Server{
 
     @Override
     public void start() {
-        new Thread(new Runnable() {
+        threadPoolExecutor = new ThreadPoolExecutor(
+                2,
+                20,
+                30L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<Runnable>(100),
+                new ThreadFactory() {
+                    @Override
+                    public Thread newThread(Runnable r) {
+                        return new Thread(r, "NettyServer-" + r.hashCode());
+                    }
+                });
+        threadPoolExecutor.execute(new Runnable() {
             @Override
             public void run() {
                 EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -60,12 +75,13 @@ public class NettyServer extends Server{
                     workerGroup.shutdownGracefully();
                 }
             }
-        }).start();
+        });
     }
 
     @Override
     public void stop() {
         this.channel.close();
+        threadPoolExecutor.shutdown();
     }
 
     @Override
