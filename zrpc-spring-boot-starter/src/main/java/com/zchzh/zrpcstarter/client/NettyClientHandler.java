@@ -4,6 +4,10 @@ import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.util.concurrent.DefaultProgressivePromise;
+import io.netty.util.concurrent.EventExecutor;
+import io.netty.util.concurrent.GlobalEventExecutor;
+import io.netty.util.concurrent.Promise;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.CountDownLatch;
@@ -18,15 +22,14 @@ import java.util.concurrent.CountDownLatch;
 @Slf4j
 public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
 
-    private ZRpcResponse response;
+    private final ZRpcRequest zRpcRequest;
 
-    private ZRpcRequest zRpcRequest;
-
-    private CountDownLatch cdl;
+    private final Promise<ZRpcResponse> responsePromise;
 
     public NettyClientHandler(ZRpcRequest request){
         this.zRpcRequest = request;
-        cdl = new CountDownLatch(1);
+        EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
+        responsePromise = new DefaultProgressivePromise<>(eventExecutor);
     }
 
     /**
@@ -48,9 +51,8 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
-        this.response = response;
+        responsePromise.setSuccess(response);
         log.info("client handler : " + response.toString());
-        cdl.countDown();
     }
 
     @Override
@@ -66,8 +68,11 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
 
 
     public ZRpcResponse getResponse() throws InterruptedException {
-        cdl.await();
-        return this.response;
+        responsePromise.await();
+        if (responsePromise.isSuccess()) {
+            return responsePromise.getNow();
+        }
+        return null;
     }
 
     // TODO 添加 userEventTrigger
