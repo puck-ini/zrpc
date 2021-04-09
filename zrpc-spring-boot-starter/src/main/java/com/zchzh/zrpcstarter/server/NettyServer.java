@@ -27,7 +27,9 @@ public class NettyServer extends Server{
 
     private final String serializerName;
 
-    private ThreadPoolExecutor threadPoolExecutor;
+    private final ThreadFactory threadFactory = Executors.defaultThreadFactory();
+
+    private Thread serverThread;
 
     public NettyServer(int port, String serializerName){
         super(port);
@@ -36,19 +38,8 @@ public class NettyServer extends Server{
 
     @Override
     public void start() {
-        threadPoolExecutor = new ThreadPoolExecutor(
-                2,
-                20,
-                30L,
-                TimeUnit.SECONDS,
-                new LinkedBlockingQueue<Runnable>(100),
-                new ThreadFactory() {
-                    @Override
-                    public Thread newThread(Runnable r) {
-                        return new Thread(r, "NettyServer-" + r.hashCode());
-                    }
-                });
-        threadPoolExecutor.execute(new Runnable() {
+
+        serverThread = threadFactory.newThread(new Runnable() {
             @Override
             public void run() {
                 EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -76,12 +67,18 @@ public class NettyServer extends Server{
                 }
             }
         });
+
+        serverThread.setDaemon(Boolean.TRUE);
+        serverThread.setName("serverThread");
+        serverThread.start();
     }
 
     @Override
     public void stop() {
         this.channel.close();
-        threadPoolExecutor.shutdown();
+        if (serverThread != null && serverThread.isAlive()) {
+            serverThread.interrupt();
+        }
     }
 
     @Override
