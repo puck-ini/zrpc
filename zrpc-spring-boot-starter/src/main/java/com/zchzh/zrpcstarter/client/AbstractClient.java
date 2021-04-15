@@ -8,7 +8,7 @@ import com.zchzh.zrpcstarter.protocol.service.Service;
  * @author zengchzh
  * @date 2021/3/11
  */
-public abstract class Client {
+public abstract class AbstractClient {
 
     /**
      * 服务ip
@@ -29,10 +29,6 @@ public abstract class Client {
      * 启动
      * @param request 请求数据
      */
-    public abstract ZRpcResponse start(ZRpcRequest request, Service service);
+    public abstract ZRpcResponse sendRequest(ZRpcRequest request, Service service);
 
-    /**
-     * 停止
-     */
-    public abstract void stop();
 }

@@ -1,6 +1,5 @@
 package com.zchzh.zrpcstarter.server;
 
-import com.zchzh.zrpcstarter.server.NettyServerInitializer;
 import com.zchzh.zrpcstarter.util.ServiceUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -19,7 +18,7 @@ import java.util.concurrent.*;
  * @date 2021/3/10
  */
 @Slf4j
-public class NettyServer extends Server{
+public class NettyServer extends AbstractServer {
 
     private Channel channel;
 

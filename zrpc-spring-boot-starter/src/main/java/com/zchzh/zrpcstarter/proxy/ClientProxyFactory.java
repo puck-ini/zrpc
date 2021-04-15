@@ -81,7 +81,7 @@ public class ClientProxyFactory {
             request.setRequestId(UUID.randomUUID().toString());
 
             // 协议
-            ZRpcResponse response = nettyClient.start(request,service);
+            ZRpcResponse response = nettyClient.sendRequest(request,service);
             log.info("proxy success");
             if (response.getError() != null) {
                 log.error("clientProxyFactory getError : " + response.getError());

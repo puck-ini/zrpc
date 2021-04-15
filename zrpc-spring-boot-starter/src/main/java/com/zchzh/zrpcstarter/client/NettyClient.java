@@ -4,7 +4,6 @@ import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.protocol.service.Service;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
@@ -15,9 +14,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
  * @author zengchzh
  * @date 2021/3/11
  */
-public class NettyClient extends Client{
-
-    private Channel channel;
+public class NettyClient extends AbstractClient {
 
     private NettyClientHandler nettyClientHandler;
 
@@ -38,7 +35,7 @@ public class NettyClient extends Client{
      * @return
      */
     @Override
-    public ZRpcResponse start(ZRpcRequest request, Service service) {
+    public ZRpcResponse sendRequest(ZRpcRequest request, Service service) {
         String[] addInfoArray = service.getAddress().split(":");
         ip= addInfoArray[0];
 //        ip = "127.0.0.1";
@@ -57,7 +54,6 @@ public class NettyClient extends Client{
             // 连接服务器
             ChannelFuture future = bootstrap.connect(ip, port).sync();
             // 写入请求数据
-            this.channel = future.channel();
             this.zRpcResponse = nettyClientHandler.getResponse();
         } catch (Exception e){
             e.printStackTrace();
@@ -66,10 +62,5 @@ public class NettyClient extends Client{
             eventLoopGroup.shutdownGracefully();
         }
         return this.zRpcResponse;
-    }
-
-    @Override
-    public void stop() {
-        this.channel.close();
     }
 }

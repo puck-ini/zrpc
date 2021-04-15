@@ -3,7 +3,7 @@ package com.zchzh.zrpcstarter.listener;
 import com.zchzh.zrpcstarter.annotation.ZReference;
 import com.zchzh.zrpcstarter.annotation.ZService;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;
-import com.zchzh.zrpcstarter.server.Server;
+import com.zchzh.zrpcstarter.server.AbstractServer;
 import com.zchzh.zrpcstarter.server.register.ServiceRegister;
 import com.zchzh.zrpcstarter.server.register.ServiceObject;
 import org.springframework.context.ApplicationContext;
@@ -33,7 +33,7 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
     private ServiceRegister serviceRegister;
 
     @Resource
-    private Server server;
+    private AbstractServer server;
 
 
     @Override

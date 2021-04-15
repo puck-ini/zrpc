@@ -7,7 +7,7 @@ import lombok.Data;
  * @date 2021/3/10
  */
 @Data
-public abstract class Server {
+public abstract class AbstractServer {
 
     /**
      * 服务端口
@@ -19,7 +19,7 @@ public abstract class Server {
      */
     protected String protocol;
 
-    public Server(int port) {
+    public AbstractServer(int port) {
         this.port = port;
     }
 
