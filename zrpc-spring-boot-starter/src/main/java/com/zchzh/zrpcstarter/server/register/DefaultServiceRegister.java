@@ -1,5 +1,7 @@
 package com.zchzh.zrpcstarter.server.register;
 
+import com.alibaba.nacos.api.exception.NacosException;
+
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class DefaultServiceRegister implements ServiceRegister {
     protected Integer port;
 
     @Override
-    public void register(ServiceObject serviceObject) throws UnknownHostException {
+    public void register(ServiceObject serviceObject) throws UnknownHostException, NacosException {
         if (serviceObject == null){
             throw new IllegalArgumentException("Parameter cannot be empty.");
         }
