@@ -1,5 +1,7 @@
 package com.zchzh.zrpcstarter.server.register;
 
+import com.alibaba.nacos.api.exception.NacosException;
+
 import java.net.UnknownHostException;
 
 /**
@@ -12,7 +14,7 @@ public interface ServiceRegister {
      * 注册服务对象
      * @param serviceObject
      */
-    void register(ServiceObject serviceObject) throws UnknownHostException;
+    void register(ServiceObject serviceObject) throws UnknownHostException, NacosException;
 
     /**
      * 获取服务对象

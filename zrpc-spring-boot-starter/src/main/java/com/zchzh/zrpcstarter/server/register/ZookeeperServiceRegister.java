@@ -1,6 +1,7 @@
 package com.zchzh.zrpcstarter.server.register;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.nacos.api.exception.NacosException;
 import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.service.Service;
 import com.zchzh.zrpcstarter.serializer.zookeeper.ZookeeperSerializer;
@@ -32,7 +33,7 @@ public class ZookeeperServiceRegister extends DefaultServiceRegister implements 
      * @throws Exception 注册异常
      */
     @Override
-    public void register(ServiceObject so) throws UnknownHostException {
+    public void register(ServiceObject so) throws UnknownHostException, NacosException {
         super.register(so);
         Service service = new Service();
 

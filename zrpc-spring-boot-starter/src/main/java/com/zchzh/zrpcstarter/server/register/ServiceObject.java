@@ -16,6 +16,21 @@ public class ServiceObject {
     private String name;
 
     /**
+     * 类方法名
+     */
+    private String[] methods;
+
+    /**
+     * 完整类路径
+     */
+    private String path;
+
+    /**
+     * 应用程序名 spring.application.name
+     */
+    private String application;
+
+    /**
      * 服务Class
      */
     private Class<?> clazz;
