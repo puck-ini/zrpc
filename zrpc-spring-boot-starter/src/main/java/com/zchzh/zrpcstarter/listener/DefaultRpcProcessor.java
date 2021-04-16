@@ -2,6 +2,7 @@ package com.zchzh.zrpcstarter.listener;
 
 import com.zchzh.zrpcstarter.annotation.ZReference;
 import com.zchzh.zrpcstarter.annotation.ZService;
+import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;
 import com.zchzh.zrpcstarter.server.AbstractServer;
 import com.zchzh.zrpcstarter.server.register.ServiceRegister;
@@ -12,6 +13,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
 
@@ -34,6 +36,15 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
 
     @Resource
     private AbstractServer server;
+
+    private ZRpcProperty property;
+
+
+    public DefaultRpcProcessor() {}
+
+    public DefaultRpcProcessor(ZRpcProperty property) {
+        this.property = property;
+    }
 
 
     @Override
@@ -61,6 +72,7 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
                 try {
                     Class<?> clazz = obj.getClass();
                     Class<?>[] interfaces = clazz.getInterfaces();
+                    Method[] methods = clazz.getDeclaredMethods();
                     ServiceObject serviceObject;
                     if (interfaces.length != 1){
                         ZService service = clazz.getAnnotation(ZService.class);
@@ -74,6 +86,7 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
                     } else {
                         Class<?> superClass = interfaces[0];
                         serviceObject = new ServiceObject(superClass.getName(), superClass, obj);
+                        serviceObject.setPath(superClass.getName());
                     }
                     serviceRegister.register(serviceObject);
                     server.addService(serviceObject.getName(),serviceObject.getObj());
