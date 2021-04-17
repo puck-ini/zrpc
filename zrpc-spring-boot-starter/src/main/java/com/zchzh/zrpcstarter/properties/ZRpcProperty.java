@@ -16,7 +16,12 @@ public class ZRpcProperty {
     /**
      * 服务注册中心
      */
-    private String registerAddress = "127.0.0.1:2181";
+    private String registerAddress = "127.0.0.1:8848";
+
+    /**
+     * 注册中心协议
+     */
+    private String registerProtocol = "nacos";
 
     /**
      * 服务端暴露端口

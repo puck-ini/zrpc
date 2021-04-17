@@ -1,5 +1,6 @@
 package com.zchzh.zrpcstarter.server;
 
+import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.util.ServiceUtil;
@@ -83,7 +84,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         if (evt instanceof IdleStateEvent) {
             ctx.channel().close();
-            log.info("Channel idle in last seconds, close it");
+            log.info("Channel idle in last seconds, close it - " + Constants.BEAT_TIME);
         } else {
             super.userEventTriggered(ctx, evt);
         }

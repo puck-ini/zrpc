@@ -2,6 +2,7 @@ package com.zchzh.zrpcstarter.server;
 
 import com.zchzh.zrpcstarter.codec.RpcDecoder;
 import com.zchzh.zrpcstarter.codec.RpcEncoder;
+import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.serializer.ZSerializer;
@@ -39,7 +40,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         ZSerializer zSerializer = KryoSerializer.class.newInstance();
         ChannelPipeline channelPipeline = ch.pipeline();
         //
-        channelPipeline.addLast(new IdleStateHandler(0, 0, 5, TimeUnit.SECONDS));
+        channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));
         // 传输的最大值
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536,
                 0,

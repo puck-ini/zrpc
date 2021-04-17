@@ -31,4 +31,10 @@ public abstract class AbstractClient {
      */
     public abstract ZRpcResponse sendRequest(ZRpcRequest request, Service service);
 
+
+    /**
+     * 启动
+     */
+    public abstract void start();
+
 }

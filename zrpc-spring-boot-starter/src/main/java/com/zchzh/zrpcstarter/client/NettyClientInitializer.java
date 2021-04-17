@@ -2,6 +2,8 @@ package com.zchzh.zrpcstarter.client;
 
 import com.zchzh.zrpcstarter.codec.RpcDecoder;
 import com.zchzh.zrpcstarter.codec.RpcEncoder;
+import com.zchzh.zrpcstarter.config.Constants;
+import com.zchzh.zrpcstarter.enums.ZSerializerEnums;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.serializer.ZSerializer;
@@ -20,9 +22,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
 
-    private final NettyClientHandler nettyClientHandler;
+    private NettyClientHandler nettyClientHandler;
 
-    private final String serializerName;
+    private String serializerName;
+
+    public NettyClientInitializer() {
+        this.serializerName = ZSerializerEnums.KRYO.getConfigName();
+    }
 
     public NettyClientInitializer(NettyClientHandler nettyClientHandler, String serializerName) {
         this.nettyClientHandler = nettyClientHandler;
@@ -35,13 +41,14 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         ChannelPipeline channelPipeline = ch.pipeline();
 
         // 心跳机制，通过心跳检查对方是否有效,同时限制读和写的空闲时间，超过时间就会触发自定义handler中的userEventTrigger方法
-        channelPipeline.addLast(new IdleStateHandler(0, 0, 5, TimeUnit.SECONDS));
+        channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME, TimeUnit.SECONDS));
         // client 编码 request
         channelPipeline.addLast(new RpcEncoder(ZRpcRequest.class, serializerName));
         // 自定义长度编码器
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
         // client 节码 response
         channelPipeline.addLast(new RpcDecoder(ZRpcResponse.class, serializerName));
-        channelPipeline.addLast(nettyClientHandler);
+//        channelPipeline.addLast(nettyClientHandler);
+        channelPipeline.addLast(new NettyClientHandler());
     }
 }

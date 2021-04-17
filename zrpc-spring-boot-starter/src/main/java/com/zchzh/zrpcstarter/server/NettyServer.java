@@ -49,7 +49,7 @@ public class NettyServer extends AbstractServer {
                     serverBootstrap.group(bossGroup, workerGroup)
                             .channel(NioServerSocketChannel.class)
                             .option(ChannelOption.SO_BACKLOG, 100)
-                            .handler(new LoggingHandler(LogLevel.INFO))
+//                            .handler(new LoggingHandler(LogLevel.INFO))
                             .childHandler(new NettyServerInitializer(serviceMap, serializerName));
 
                     // 启动服务

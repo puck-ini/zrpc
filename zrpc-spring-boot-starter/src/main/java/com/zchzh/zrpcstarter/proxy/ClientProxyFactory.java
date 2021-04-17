@@ -1,7 +1,10 @@
 package com.zchzh.zrpcstarter.proxy;
 
+import com.zchzh.zrpcstarter.cache.GlobalCache;
 import com.zchzh.zrpcstarter.client.NettyClient;
+import com.zchzh.zrpcstarter.client.NettyClientHandler;
 import com.zchzh.zrpcstarter.client.discovery.ServiceDiscover;
+import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.protocol.service.Service;
@@ -13,6 +16,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -81,12 +85,28 @@ public class ClientProxyFactory {
             request.setRequestId(UUID.randomUUID().toString());
 
             // 协议
-            ZRpcResponse response = nettyClient.sendRequest(request,service);
-            log.info("proxy success");
-            if (response.getError() != null) {
-                log.error("clientProxyFactory getError : " + response.getError());
+//            ZRpcResponse response = nettyClient.sendRequest(request,service);
+            NettyClientHandler handler = new NettyClientHandler();
+            for (int i = 0; i < 10; i++) {
+                log.info("ClientProxyFactory =======" + Thread.currentThread().getName());
+                if ((handler = GlobalCache.INSTANCE.get(Constants.DEFAULT_HANDLE)) != null) {
+                    break;
+                }
+                new NettyClient(service.getAddress()).start();
+                TimeUnit.MILLISECONDS.sleep(200);
             }
-            return response.getResult();
+            if (handler != null) {
+                handler.sendRequest(request);
+                ZRpcResponse response = handler.getResponse(request.getRequestId());
+                log.info("proxy success");
+                if (response.getError() != null) {
+                    log.error("clientProxyFactory getError : " + response.getError());
+                }
+                return response.getResult();
+            }else {
+                log.error(" handler error - " + System.currentTimeMillis());
+                return null;
+            }
         }
     }
 
