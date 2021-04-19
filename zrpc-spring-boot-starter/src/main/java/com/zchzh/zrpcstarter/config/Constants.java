@@ -16,9 +16,11 @@ public class Constants {
 
     public static final ZRpcRequest BEAT_PING;
 
+    public static final String PING = "beat_ping";
+
     static {
         BEAT_PING = new ZRpcRequest();
-        BEAT_PING.setRequestId(String.valueOf(System.currentTimeMillis()));
+        BEAT_PING.setRequestId(PING + ":" + System.currentTimeMillis());
     }
 
 }

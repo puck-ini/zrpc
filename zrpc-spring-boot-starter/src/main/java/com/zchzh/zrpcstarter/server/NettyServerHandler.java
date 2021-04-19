@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.reflect.FastClass;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -54,6 +55,9 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
      * @return
      */
     private Object handle(ZRpcRequest request) throws InvocationTargetException {
+        if (request.getRequestId().startsWith(Constants.PING)) {
+            return null;
+        }
         String className = request.getClassName();
         String version = request.getVersion();
         String serviceKey = ServiceUtil.makeServiceKey(className, version);
