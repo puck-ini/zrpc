@@ -1,6 +1,7 @@
 package com.zchzh.zrpcstarter.server.register;
 
 import com.alibaba.nacos.api.exception.NacosException;
+import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
 
 import java.net.UnknownHostException;
 

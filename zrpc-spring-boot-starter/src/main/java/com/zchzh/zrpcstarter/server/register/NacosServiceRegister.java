@@ -4,6 +4,7 @@ import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
+import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 
@@ -42,7 +43,7 @@ public class NacosServiceRegister extends DefaultServiceRegister implements Serv
         Map<String, String> instanceMeta = new HashMap<>();
         instanceMeta.put("protocol", protocol);
         instance.setMetadata(instanceMeta);
-        namingService.registerInstance(so.getClazz().getName(), instance);
+        namingService.registerInstance(so.getName(), instance);
     }
 
     @Override

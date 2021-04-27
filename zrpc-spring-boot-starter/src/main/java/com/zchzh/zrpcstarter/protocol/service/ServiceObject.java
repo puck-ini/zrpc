@@ -1,4 +1,4 @@
-package com.zchzh.zrpcstarter.server.register;
+package com.zchzh.zrpcstarter.protocol.service;
 
 import lombok.Data;
 
@@ -14,6 +14,11 @@ public class ServiceObject {
      * 服务名称
      */
     private String name;
+
+    /**
+     * 服务地址，格式：IP:Port
+     */
+    private String address;
 
     /**
      * 类方法名
@@ -33,17 +38,13 @@ public class ServiceObject {
     /**
      * 服务Class
      */
-    private Class<?> clazz;
+    private String className;
 
-    /**
-     * 具体服务
-     */
-    private Object obj;
 
-    public ServiceObject(String name, Class<?> clazz, Object obj) {
+    private String protocol;
+
+    public ServiceObject(String name) {
         super();
         this.name = name;
-        this.clazz = clazz;
-        this.obj = obj;
     }
 }

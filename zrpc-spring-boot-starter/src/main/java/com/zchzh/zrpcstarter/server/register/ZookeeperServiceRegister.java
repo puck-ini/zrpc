@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.service.Service;
+import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
 import com.zchzh.zrpcstarter.serializer.zookeeper.ZookeeperSerializer;
 import org.I0Itec.zkclient.ZkClient;
 
@@ -40,7 +41,7 @@ public class ZookeeperServiceRegister extends DefaultServiceRegister implements 
         String host = InetAddress.getLocalHost().getHostAddress();
         String address = host + ":" + port;
         service.setAddress(address);
-        service.setName(so.getClazz().getName());
+        service.setName(so.getClassName());
         service.setProtocol(protocol);
         this.exportService(service);
 

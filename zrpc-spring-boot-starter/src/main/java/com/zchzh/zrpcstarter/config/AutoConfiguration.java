@@ -1,11 +1,9 @@
 package com.zchzh.zrpcstarter.config;
 
 import com.alibaba.nacos.api.exception.NacosException;
-import com.zchzh.zrpcstarter.client.AbstractClient;
-import com.zchzh.zrpcstarter.client.NettyClient;
 import com.zchzh.zrpcstarter.client.discovery.NacosServiceDiscover;
 import com.zchzh.zrpcstarter.client.discovery.ZkServiceDiscover;
-import com.zchzh.zrpcstarter.listener.DefaultRpcProcessor;
+import com.zchzh.zrpcstarter.listener.DefaultRpcProcessorListener;
 import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;;
 import com.zchzh.zrpcstarter.server.NettyServer;
@@ -27,8 +25,8 @@ import org.springframework.context.annotation.Configuration;
 public class AutoConfiguration {
 
     @Bean
-    public DefaultRpcProcessor defaultRpcProcessor() {
-        return new DefaultRpcProcessor();
+    public DefaultRpcProcessorListener defaultRpcProcessor() {
+        return new DefaultRpcProcessorListener();
     }
 
     @Bean

@@ -7,7 +7,7 @@ import com.zchzh.zrpcstarter.client.discovery.ServiceDiscover;
 import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
-import com.zchzh.zrpcstarter.protocol.service.Service;
+import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -65,7 +65,7 @@ public class ClientProxyFactory {
 
             // 获取服务信息
             String serviceName = this.clazz.getName();
-            List<Service> serviceList = serviceDiscover.getService(serviceName);
+            List<ServiceObject> serviceList = serviceDiscover.getService(serviceName);
 
             if (CollectionUtils.isEmpty(serviceList)) {
                 log.error("ServiceNoFoundException");
@@ -73,7 +73,7 @@ public class ClientProxyFactory {
             }
 
             // 随机选择一个服务提供者（软负载均衡）
-            Service service = serviceList.get(random.nextInt(serviceList.size()));
+            ServiceObject service = serviceList.get(random.nextInt(serviceList.size()));
 
             // 构造request对象
             ZRpcRequest request = new ZRpcRequest();

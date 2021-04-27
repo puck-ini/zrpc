@@ -6,7 +6,8 @@ import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;
 import com.zchzh.zrpcstarter.server.AbstractServer;
 import com.zchzh.zrpcstarter.server.register.ServiceRegister;
-import com.zchzh.zrpcstarter.server.register.ServiceObject;
+import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -26,7 +27,9 @@ import java.util.Objects;
  * 当Spring中的所有的Bean都加载完成时，Spring会发布一个时间，
  * ApplicationListener<ContextRefreshedEvent>的作用是监听这个事件，当监听到事件发布就会执行onApplicationEvent方法
  */
-public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshedEvent> {
+
+@Slf4j
+public class DefaultRpcProcessorListener implements ApplicationListener<ContextRefreshedEvent> {
 
     @Resource
     private ClientProxyFactory clientProxyFactory;
@@ -40,9 +43,9 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
     private ZRpcProperty property;
 
 
-    public DefaultRpcProcessor() {}
+    public DefaultRpcProcessorListener() {}
 
-    public DefaultRpcProcessor(ZRpcProperty property) {
+    public DefaultRpcProcessorListener(ZRpcProperty property) {
         this.property = property;
     }
 
@@ -74,6 +77,7 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
                     Class<?>[] interfaces = clazz.getInterfaces();
                     Method[] methods = clazz.getDeclaredMethods();
                     ServiceObject serviceObject;
+                    String interfacesName = null;
                     if (interfaces.length != 1){
                         ZService service = clazz.getAnnotation(ZService.class);
                         String value = service.value();
@@ -82,14 +86,17 @@ public class DefaultRpcProcessor implements ApplicationListener<ContextRefreshed
                             throw new UnsupportedOperationException("The exposed interface is not specific with '"
                                     + obj.getClass().getName() + "'");
                         }
-                        serviceObject = new ServiceObject(value, Class.forName(value), obj);
+                        serviceObject = new ServiceObject(value);
                     } else {
                         Class<?> superClass = interfaces[0];
-                        serviceObject = new ServiceObject(superClass.getName(), superClass, obj);
-                        serviceObject.setPath(superClass.getName());
+                        interfacesName = superClass.getName();
+                        serviceObject = new ServiceObject(interfacesName);
+                        serviceObject.setPath(interfacesName);
+                        serviceObject.setClassName(obj.getClass().getName());
                     }
+                    log.info("ServiceObject>>>>>>>>>>>>>" + serviceObject.toString());
                     serviceRegister.register(serviceObject);
-                    server.addService(serviceObject.getName(),serviceObject.getObj());
+                    server.addService(interfacesName,obj);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
