@@ -34,7 +34,7 @@ public class NacosServiceRegister extends DefaultServiceRegister implements Serv
     @Override
     public void register(ServiceObject so) throws UnknownHostException, NacosException {
         super.register(so);
-        String host = InetAddress.getLocalHost().getHostAddress();
+        String host = getHost();
         Instance instance = new Instance();
         instance.setIp(host);
         instance.setPort(port);
@@ -42,6 +42,7 @@ public class NacosServiceRegister extends DefaultServiceRegister implements Serv
         instance.setWeight(1.0);
         Map<String, String> instanceMeta = new HashMap<>();
         instanceMeta.put("protocol", protocol);
+        instanceMeta.put("address", host + ":" + port);
         instance.setMetadata(instanceMeta);
         namingService.registerInstance(so.getName(), instance);
     }

@@ -1,6 +1,9 @@
 package com.zchzh.zrpcstarter.proxy;
 
+import com.zchzh.zrpcstarter.cache.ClientCache;
 import com.zchzh.zrpcstarter.cache.GlobalCache;
+import com.zchzh.zrpcstarter.cache.ResultCache;
+import com.zchzh.zrpcstarter.client.Client;
 import com.zchzh.zrpcstarter.client.NettyClient;
 import com.zchzh.zrpcstarter.client.NettyClientHandler;
 import com.zchzh.zrpcstarter.client.discovery.ServiceDiscover;
@@ -86,27 +89,31 @@ public class ClientProxyFactory {
 
             // 协议
 //            ZRpcResponse response = nettyClient.sendRequest(request,service);
-            NettyClientHandler handler = new NettyClientHandler();
-            for (int i = 0; i < 10; i++) {
-                log.info("ClientProxyFactory =======" + Thread.currentThread().getName());
-                if ((handler = GlobalCache.INSTANCE.get(Constants.DEFAULT_HANDLE)) != null) {
-                    break;
-                }
-                new NettyClient(service.getAddress()).start();
-                TimeUnit.MILLISECONDS.sleep(200);
-            }
-            if (handler != null) {
-                handler.sendRequest(request);
-                ZRpcResponse response = handler.getResponse(request.getRequestId());
-                log.info("proxy success");
-                if (response.getError() != null) {
-                    log.error("clientProxyFactory getError : " + response.getError());
-                }
-                return response.getResult();
-            }else {
-                log.error(" handler error - " + System.currentTimeMillis());
-                return null;
-            }
+//            NettyClientHandler handler = new NettyClientHandler();
+//            for (int i = 0; i < 10; i++) {
+//                log.info("ClientProxyFactory =======" + Thread.currentThread().getName());
+//                if ((handler = GlobalCache.INSTANCE.get(Constants.DEFAULT_HANDLE)) != null) {
+//                    break;
+//                }
+//                new NettyClient(service.getAddress()).start();
+//                TimeUnit.MILLISECONDS.sleep(200);
+//            }
+//
+//            if (handler != null) {
+//                handler.sendRequest(request);
+//                ZRpcResponse response = handler.getResponse(request.getRequestId());
+//                log.info("proxy success");
+//                if (response.getError() != null) {
+//                    log.error("clientProxyFactory getError : " + response.getError());
+//                }
+//                return response.getResult();
+//            }else {
+//                log.error(" handler error - " + System.currentTimeMillis());
+//                return null;
+//            }
+            Client client = ClientCache.MAP.get(ClientCache.MAP.makeKey(service));
+            client.send(request);
+            return ResultCache.MAP.get(request.getRequestId()).getNow().getResult();
         }
     }
 

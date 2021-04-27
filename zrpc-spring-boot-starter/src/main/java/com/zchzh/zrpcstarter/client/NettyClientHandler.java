@@ -71,6 +71,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
         log.info("client handler : " + response.toString());
+        ResultCache.MAP.get(response.getRequestId()).trySuccess(response);
         responsePromise.trySuccess(response);
 //        EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
 //        Promise<ZRpcResponse> promise = new DefaultProgressivePromise<>(eventExecutor);
