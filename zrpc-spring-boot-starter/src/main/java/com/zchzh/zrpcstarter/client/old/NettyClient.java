@@ -1,6 +1,8 @@
-package com.zchzh.zrpcstarter.client;
+package com.zchzh.zrpcstarter.client.old;
 
 import com.zchzh.zrpcstarter.cache.GlobalCache;
+import com.zchzh.zrpcstarter.client.NettyClientHandler;
+import com.zchzh.zrpcstarter.client.NettyClientInitializer;
 import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
@@ -21,6 +23,7 @@ import java.util.concurrent.*;
  * @date 2021/3/11
  */
 
+@Deprecated
 @Slf4j
 public class NettyClient extends AbstractClient {
 

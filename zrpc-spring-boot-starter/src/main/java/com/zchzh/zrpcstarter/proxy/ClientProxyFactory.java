@@ -1,13 +1,8 @@
 package com.zchzh.zrpcstarter.proxy;
 
 import com.zchzh.zrpcstarter.cache.ClientCache;
-import com.zchzh.zrpcstarter.cache.GlobalCache;
-import com.zchzh.zrpcstarter.cache.ResultCache;
 import com.zchzh.zrpcstarter.client.Client;
-import com.zchzh.zrpcstarter.client.NettyClient;
-import com.zchzh.zrpcstarter.client.NettyClientHandler;
 import com.zchzh.zrpcstarter.client.discovery.ServiceDiscover;
-import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
@@ -35,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 public class ClientProxyFactory {
 
     private ServiceDiscover serviceDiscover;
-
-    private NettyClient nettyClient;
 
     private Map<Class<?>, Object> objectCache = new HashMap<>();
 

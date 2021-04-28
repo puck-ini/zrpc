@@ -1,4 +1,4 @@
-package com.zchzh.zrpcstarter.client;
+package com.zchzh.zrpcstarter.client.old;
 
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
@@ -8,6 +8,7 @@ import com.zchzh.zrpcstarter.protocol.service.Service;
  * @author zengchzh
  * @date 2021/3/11
  */
+@Deprecated
 public abstract class AbstractClient {
 
     /**
