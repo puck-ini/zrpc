@@ -1,0 +1,17 @@
+server:
+  port: 9091
+
+
+dubbo:
+  registry:
+    address: zookeeper://localhost:2181
+  scan:
+    base-packages: com.zchzh.demoprovider
+  protocol:
+    name: dubbo
+    port: -1
+  provider:
+    timeout: 30000
+spring:
+  application:
+    name: provider
