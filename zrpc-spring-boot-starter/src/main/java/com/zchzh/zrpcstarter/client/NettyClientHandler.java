@@ -1,6 +1,5 @@
 package com.zchzh.zrpcstarter.client;
 
-import com.zchzh.zrpcstarter.cache.GlobalCache;
 import com.zchzh.zrpcstarter.cache.ResultCache;
 import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
@@ -105,7 +104,6 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
-        GlobalCache.INSTANCE.remove(Constants.DEFAULT_HANDLE);
     }
 
     public ZRpcResponse getResponse(String id) throws InterruptedException {

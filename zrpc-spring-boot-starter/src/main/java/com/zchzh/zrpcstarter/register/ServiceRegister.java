@@ -17,10 +17,10 @@ public interface ServiceRegister {
      */
     void register(ServiceObject serviceObject) throws UnknownHostException, NacosException;
 
-    /**
-     * 获取服务对象
-     * @param name
-     * @return
-     */
-    ServiceObject getServiceObject(String name);
+//    /**
+//     * 获取服务对象
+//     * @param name
+//     * @return
+//     */
+//    ServiceObject getServiceObject(String name);
 }

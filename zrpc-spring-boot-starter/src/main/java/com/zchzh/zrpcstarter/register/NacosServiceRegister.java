@@ -17,9 +17,11 @@ import java.util.Map;
  * @author zengchzh
  * @date 2021/4/16
  */
-public class NacosServiceRegister extends DefaultServiceRegister implements ServiceRegister, EnvironmentAware {
+public class NacosServiceRegister implements ServiceRegister, EnvironmentAware {
 
+    protected String protocol;
 
+    protected Integer port;
 
     private Environment environment;
 
@@ -33,7 +35,6 @@ public class NacosServiceRegister extends DefaultServiceRegister implements Serv
 
     @Override
     public void register(ServiceObject so) throws UnknownHostException, NacosException {
-        super.register(so);
         String host = getHost();
         Instance instance = new Instance();
         instance.setIp(host);
@@ -64,24 +65,5 @@ public class NacosServiceRegister extends DefaultServiceRegister implements Serv
     private String getConfig(String prop){
         return environment.getProperty(prop);
     }
-
-//
-//    public static void main(String[] args) throws NacosException, InterruptedException {
-//        NamingService naming = NamingFactory.createNamingService("127.0.0.1:8848");
-////        naming.registerInstance("test","127.0.0.1", 8888);
-//
-//        Instance instance = new Instance();
-//
-//        instance.setIp("127.0.0.1");
-//        instance.setPort(8888);
-//        instance.setHealthy(false);
-//        instance.setWeight(2.0);
-//        Map<String, String> instanceMeta = new HashMap<>();
-//        instanceMeta.put("addr", "123456");
-//        instance.setMetadata(instanceMeta);
-//        naming.registerInstance("test1", instance);
-////        TimeUnit.SECONDS.sleep(60);
-////        naming.deregisterInstance("test", "127.0.0.1", 8888);
-//    }
 
 }

@@ -18,7 +18,11 @@ import java.net.UnknownHostException;
  * @date 2021/3/11
  */
 @Deprecated
-public class ZookeeperServiceRegister extends DefaultServiceRegister implements ServiceRegister {
+public class ZookeeperServiceRegister implements ServiceRegister {
+
+    protected String protocol;
+
+    protected Integer port;
 
     private ZkClient zkClient;
 
@@ -36,7 +40,6 @@ public class ZookeeperServiceRegister extends DefaultServiceRegister implements 
      */
     @Override
     public void register(ServiceObject so) throws UnknownHostException, NacosException {
-        super.register(so);
         Service service = new Service();
 
         String host = InetAddress.getLocalHost().getHostAddress();
