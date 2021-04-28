@@ -17,6 +17,7 @@ import java.net.UnknownHostException;
  * @author zengchzh
  * @date 2021/3/11
  */
+@Deprecated
 public class ZookeeperServiceRegister extends DefaultServiceRegister implements ServiceRegister {
 
     private ZkClient zkClient;

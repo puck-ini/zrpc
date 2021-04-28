@@ -16,6 +16,7 @@ import java.util.*;
  * @date 2021/3/24
  */
 
+@Deprecated
 @Slf4j
 @Data
 public class ClientCglibProxyFactory {

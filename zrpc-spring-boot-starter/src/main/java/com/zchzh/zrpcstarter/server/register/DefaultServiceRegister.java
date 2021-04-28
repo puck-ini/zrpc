@@ -13,6 +13,7 @@ import java.util.Map;
  *
  * 默认服务注册器
  */
+@Deprecated
 public class DefaultServiceRegister implements ServiceRegister {
 
     private Map<String, ServiceObject> serviceMap = new HashMap<>();

@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
  * @author zengchzh
  * @date 2021/3/11
  */
+@Deprecated
 public class ZkServiceDiscover implements ServiceDiscover{
 
     private ZkClient zkClient;

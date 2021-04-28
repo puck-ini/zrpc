@@ -3,7 +3,6 @@ package com.zchzh.demoprovider;
 import com.zchzh.demoapi.service.DemoService;
 import com.zchzh.zrpcstarter.annotation.ZService;
 import lombok.SneakyThrows;
-import org.apache.dubbo.config.annotation.Service;
 
 import java.util.concurrent.TimeUnit;
 

@@ -11,6 +11,7 @@ import java.util.concurrent.locks.LockSupport;
  * @author zengchzh
  * @date 2021/4/15
  */
+@Deprecated
 public enum  GlobalCache {
     /**
      * 全局缓存实例

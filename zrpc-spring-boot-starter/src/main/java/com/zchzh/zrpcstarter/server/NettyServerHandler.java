@@ -14,6 +14,7 @@ import net.sf.cglib.reflect.FastClass;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.*;
 
@@ -50,7 +51,12 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcRequest request) throws Exception {
+        if (request.getRequestId().startsWith(Constants.PING)) {
+            log.info("ping --------------------" + new Date());
+            return;
+        }
         threadPoolExecutor.execute(() -> {
+
             ZRpcResponse response = new ZRpcResponse();
             response.setRequestId(request.getRequestId());
             try {

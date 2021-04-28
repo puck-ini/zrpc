@@ -7,6 +7,7 @@ import lombok.Data;
  * @date 2021/3/11
  */
 
+@Deprecated
 @Data
 public class Service {
 

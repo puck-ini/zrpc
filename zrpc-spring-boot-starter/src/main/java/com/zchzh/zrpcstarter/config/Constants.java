@@ -12,7 +12,7 @@ public class Constants {
 
     public static final String DEFAULT_HANDLE = "default-handle";
 
-    public static final int BEAT_TIME = 30;
+    public static final int BEAT_TIME = 5;
 
     public static final ZRpcRequest BEAT_PING;
 
