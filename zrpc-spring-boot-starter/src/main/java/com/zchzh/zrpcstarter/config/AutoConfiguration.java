@@ -1,16 +1,16 @@
 package com.zchzh.zrpcstarter.config;
 
 import com.alibaba.nacos.api.exception.NacosException;
-import com.zchzh.zrpcstarter.client.discovery.NacosServiceDiscover;
-import com.zchzh.zrpcstarter.client.discovery.ZkServiceDiscover;
+import com.zchzh.zrpcstarter.discovery.NacosServiceDiscover;
+import com.zchzh.zrpcstarter.discovery.ZkServiceDiscover;
 import com.zchzh.zrpcstarter.listener.DefaultRpcProcessorListener;
 import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;;
 import com.zchzh.zrpcstarter.server.NettyServer;
 import com.zchzh.zrpcstarter.server.AbstractServer;
-import com.zchzh.zrpcstarter.server.register.NacosServiceRegister;
-import com.zchzh.zrpcstarter.server.register.ServiceRegister;
-import com.zchzh.zrpcstarter.server.register.ZookeeperServiceRegister;
+import com.zchzh.zrpcstarter.register.NacosServiceRegister;
+import com.zchzh.zrpcstarter.register.ServiceRegister;
+import com.zchzh.zrpcstarter.register.ZookeeperServiceRegister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

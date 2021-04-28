@@ -1,4 +1,4 @@
-package com.zchzh.zrpcstarter.server.register;
+package com.zchzh.zrpcstarter.register;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.exception.NacosException;

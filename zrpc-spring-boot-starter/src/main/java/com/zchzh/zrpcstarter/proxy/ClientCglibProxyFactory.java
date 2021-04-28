@@ -1,7 +1,7 @@
 package com.zchzh.zrpcstarter.proxy;
 
 import com.zchzh.zrpcstarter.client.old.NettyClient;
-import com.zchzh.zrpcstarter.client.discovery.ServiceDiscover;
+import com.zchzh.zrpcstarter.discovery.ServiceDiscover;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.Enhancer;

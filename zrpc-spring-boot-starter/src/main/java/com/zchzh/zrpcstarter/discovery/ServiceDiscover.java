@@ -1,4 +1,4 @@
-package com.zchzh.zrpcstarter.client.discovery;
+package com.zchzh.zrpcstarter.discovery;
 
 import com.alibaba.nacos.api.exception.NacosException;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;

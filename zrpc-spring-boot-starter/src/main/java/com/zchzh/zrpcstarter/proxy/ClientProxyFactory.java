@@ -2,7 +2,7 @@ package com.zchzh.zrpcstarter.proxy;
 
 import com.zchzh.zrpcstarter.cache.ClientCache;
 import com.zchzh.zrpcstarter.client.Client;
-import com.zchzh.zrpcstarter.client.discovery.ServiceDiscover;
+import com.zchzh.zrpcstarter.discovery.ServiceDiscover;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
@@ -15,7 +15,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 
 /**

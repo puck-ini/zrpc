@@ -5,7 +5,7 @@ import com.zchzh.zrpcstarter.annotation.ZService;
 import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;
 import com.zchzh.zrpcstarter.server.AbstractServer;
-import com.zchzh.zrpcstarter.server.register.ServiceRegister;
+import com.zchzh.zrpcstarter.register.ServiceRegister;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
