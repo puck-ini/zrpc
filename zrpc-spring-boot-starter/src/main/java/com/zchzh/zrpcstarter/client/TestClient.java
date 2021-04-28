@@ -12,6 +12,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -29,6 +30,8 @@ public class TestClient implements Client {
     private EventLoopGroup workGroup = new NioEventLoopGroup();
 
     EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
+
+    private final Promise<NettyClientHandler> promiseHandler = new DefaultPromise<>(eventExecutor);
 
     private final Promise<Channel> promiseChannel = new DefaultPromise<>(eventExecutor);
 
@@ -65,7 +68,9 @@ public class TestClient implements Client {
             @Override
             public void operationComplete(ChannelFuture futureListener) throws Exception {
                 if (futureListener.isSuccess()) {
+                    NettyClientHandler handler = futureListener.channel().pipeline().get(NettyClientHandler.class);
                     promiseChannel.trySuccess(futureListener.channel());
+                    promiseHandler.trySuccess(handler);
                     log.info("connect success");
                 } else {
                     log.info("Failed to connect to server, try connect after 10s");
@@ -81,23 +86,14 @@ public class TestClient implements Client {
         });
     }
 
-    @SneakyThrows
+
     @Override
-    public void send(ZRpcRequest request) {
-//        while (channelActive()) {
-//            log.info("connect server : " + new Date());
-//            TimeUnit.MILLISECONDS.sleep(1000);
-//        }
-        promiseChannel.await();
-        if (promiseChannel.isSuccess()) {
-            log.info("send request" + new Date());
-            promiseChannel.getNow().writeAndFlush(request);
-            Promise<ZRpcResponse> promise = new DefaultProgressivePromise<>(eventExecutor);
-            ResultCache.MAP.put(request.getRequestId(), promise);
-            ResultCache.MAP.notifyLock();
+    public NettyClientHandler getHandler() throws InterruptedException, ExecutionException {
+        promiseHandler.await();
+        if (promiseHandler.isSuccess()) {
+            return promiseHandler.getNow();
         }
-
-
+        return promiseHandler.get();
     }
 
     private boolean channelActive() {

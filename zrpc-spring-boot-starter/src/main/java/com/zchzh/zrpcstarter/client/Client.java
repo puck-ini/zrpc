@@ -2,6 +2,8 @@ package com.zchzh.zrpcstarter.client;
 
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * @author zengchzh
  * @date 2021/4/27
@@ -18,9 +20,12 @@ public interface Client {
      */
     void connect();
 
-    /**
-     * 发送请求
-     * @param request 请求信息
-     */
-    void send(ZRpcRequest request);
+
+    NettyClientHandler getHandler() throws InterruptedException, ExecutionException;
+
+//    /**
+//     * 发送请求
+//     * @param request 请求信息
+//     */
+//    void send(ZRpcRequest request);
 }

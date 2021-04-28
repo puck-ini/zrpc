@@ -11,6 +11,7 @@ import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
+import io.netty.util.concurrent.Promise;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -112,8 +113,12 @@ public class ClientProxyFactory {
 //                return null;
 //            }
             Client client = ClientCache.MAP.get(ClientCache.MAP.makeKey(service));
-            client.send(request);
-            return ResultCache.MAP.get(request.getRequestId()).getNow().getResult();
+            Promise<ZRpcResponse> promise = client.getHandler().send(request);
+            ZRpcResponse response = promise.get();
+            if (response.getError() != null) {
+                log.error("clientProxyFactory getError : " + response.getError());
+            }
+            return response.getResult();
         }
     }
 

@@ -13,7 +13,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.CountDownLatch;
+import java.util.Date;
 
 /**
  * @author zengchzh
@@ -71,12 +71,13 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
         log.info("client handler : " + response.toString());
-        ResultCache.MAP.get(response.getRequestId()).trySuccess(response);
+        Promise<ZRpcResponse> promise = ResultCache.MAP.get(response.getRequestId());
+        if (promise != null) {
+            ResultCache.MAP.remove(response.getRequestId());
+            promise.trySuccess(response);
+        }
+
         responsePromise.trySuccess(response);
-//        EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
-//        Promise<ZRpcResponse> promise = new DefaultProgressivePromise<>(eventExecutor);
-//        promise.trySuccess(response);
-//        ResultCache.INSTANCE.put(response.getRequestId(), promise);
     }
 
     @Override
@@ -96,7 +97,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
         // 实现长连接发送心跳
         if (evt instanceof IdleStateEvent) {
             log.info("client send beat -" + System.currentTimeMillis());
-            sendRequest(Constants.BEAT_PING);
+            send(Constants.BEAT_PING);
         } else {
             super.userEventTriggered(ctx, evt);
         }
@@ -108,7 +109,6 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
     }
 
     public ZRpcResponse getResponse(String id) throws InterruptedException {
-//        Promise<ZRpcResponse> promise = ResultCache.INSTANCE.get(id);
         responsePromise.await();
         if (responsePromise.isSuccess()) {
             return responsePromise.getNow();
@@ -116,13 +116,18 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
         return null;
     }
 
-    public void sendRequest(ZRpcRequest request) {
-        ChannelFuture channelFuture = channel.writeAndFlush(request);
-//        if (!channelFuture.isSuccess()) {
-//            log.error("send request error - " + request.getRequestId());
-//        }
+    public Promise<ZRpcResponse> send(ZRpcRequest request) {
+        Promise<ZRpcResponse> promise = new DefaultProgressivePromise<>(GlobalEventExecutor.INSTANCE);
+        ResultCache.MAP.put(request.getRequestId(), promise);
+        try {
+            ChannelFuture channelFuture = channel.writeAndFlush(request).sync();
+            log.info("send request" + new Date());
+            if (channelFuture.isSuccess()) {
+                log.info("send request success");
+            }
+        } catch (Exception e) {
+            log.error("send request error {}", e.getMessage());
+        }
+        return promise;
     }
-
-
-
 }
