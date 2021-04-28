@@ -22,7 +22,7 @@ public class TestClient implements Client {
 
     private int port;
 
-    private EventLoopGroup workGroup = new NioEventLoopGroup();
+    private EventLoopGroup workGroup = new NioEventLoopGroup(1);
 
     private final Promise<NettyClientHandler> promiseHandler = ImmediateEventExecutor.INSTANCE.newPromise();
 
@@ -82,10 +82,10 @@ public class TestClient implements Client {
 
     @Override
     public NettyClientHandler getHandler() throws InterruptedException, ExecutionException {
-        promiseHandler.await();
-        if (promiseHandler.isSuccess()) {
-            return promiseHandler.getNow();
-        }
+//        promiseHandler.await();
+//        if (promiseHandler.isSuccess()) {
+//            return promiseHandler.getNow();
+//        }
         return promiseHandler.get();
     }
 

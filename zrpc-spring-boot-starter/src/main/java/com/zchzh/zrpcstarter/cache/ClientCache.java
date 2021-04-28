@@ -41,4 +41,8 @@ public enum ClientCache {
     public String makeKey(ServiceObject serviceObject) {
         return serviceObject.getName() + ":" +serviceObject.getAddress();
     }
+
+    public int size() {
+        return CLIENT_MAP.size();
+    }
 }

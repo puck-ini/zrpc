@@ -30,14 +30,14 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
     private final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
             12,
             24,
-            30,
+            Constants.BEAT_TIME * 3,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(100),
             new ThreadFactory() {
                 @Override
                 public Thread newThread(Runnable r) {
                     Thread thread = new Thread(r);
-                    thread.setDaemon(true);
+//                    thread.setDaemon(true);
                     thread.setName("NettyServerHandler-" + r.hashCode());
                     return thread;
                 }
