@@ -4,9 +4,9 @@ import com.zchzh.zrpcstarter.annotation.ZReference;
 import com.zchzh.zrpcstarter.annotation.ZService;
 import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;
-import com.zchzh.zrpcstarter.server.AbstractServer;
 import com.zchzh.zrpcstarter.register.ServiceRegister;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
+import com.zchzh.zrpcstarter.server.Server;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -38,7 +38,7 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
     private ServiceRegister serviceRegister;
 
     @Resource
-    private AbstractServer server;
+    private Server server;
 
     private ZRpcProperty property;
 

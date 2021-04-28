@@ -7,10 +7,10 @@ import com.zchzh.zrpcstarter.listener.DefaultRpcProcessorListener;
 import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;;
 import com.zchzh.zrpcstarter.server.NettyServer;
-import com.zchzh.zrpcstarter.server.AbstractServer;
 import com.zchzh.zrpcstarter.register.NacosServiceRegister;
 import com.zchzh.zrpcstarter.register.ServiceRegister;
 import com.zchzh.zrpcstarter.register.ZookeeperServiceRegister;
+import com.zchzh.zrpcstarter.server.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -83,7 +83,7 @@ public class AutoConfiguration {
     }
 
     @Bean
-    public AbstractServer server(@Autowired ZRpcProperty zRpcProperty){
+    public Server server(@Autowired ZRpcProperty zRpcProperty){
         return new NettyServer(zRpcProperty.getServerPort(), zRpcProperty.getSerializer());
     }
 }

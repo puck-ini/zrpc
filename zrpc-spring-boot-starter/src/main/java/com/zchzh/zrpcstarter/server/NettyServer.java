@@ -18,7 +18,17 @@ import java.util.concurrent.*;
  * @date 2021/3/10
  */
 @Slf4j
-public class NettyServer extends AbstractServer {
+public class NettyServer implements Server {
+
+    /**
+     * 服务端口
+     */
+    protected int port;
+
+    /**
+     * 服务协议
+     */
+    protected String protocol;
 
     private Channel channel;
 
@@ -30,8 +40,9 @@ public class NettyServer extends AbstractServer {
 
     private Thread serverThread;
 
+
     public NettyServer(int port, String serializerName){
-        super(port);
+        this.port = port;
         this.serializerName = serializerName;
     }
 
