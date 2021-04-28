@@ -107,7 +107,9 @@ public class ClientProxyFactory {
 //            }
             Client client = ClientCache.MAP.get(ClientCache.MAP.makeKey(service));
             Promise<ZRpcResponse> promise = client.getHandler().send(request);
+            long start = System.currentTimeMillis();
             ZRpcResponse response = promise.get();
+            log.info("get response cost >>>>>>>>>>>>>>>> : " + (System.currentTimeMillis() - start));
             if (response.getError() != null) {
                 log.error("clientProxyFactory getError : " + response.getError());
             }

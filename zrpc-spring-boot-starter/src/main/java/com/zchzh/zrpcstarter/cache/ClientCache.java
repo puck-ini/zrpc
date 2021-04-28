@@ -27,9 +27,6 @@ public enum ClientCache {
         Client client = CLIENT_MAP.get(key);
         if (client == null) {
             String[] strings = key.split(":");
-            for (String s: strings) {
-                log.info(s);
-            }
             client = new TestClient(strings[1],Integer.parseInt(strings[2]));
             put(key, client);
         }

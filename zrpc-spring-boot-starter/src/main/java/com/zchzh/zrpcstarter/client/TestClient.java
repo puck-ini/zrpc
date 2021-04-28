@@ -1,17 +1,12 @@
 package com.zchzh.zrpcstarter.client;
 
-import com.zchzh.zrpcstarter.cache.ResultCache;
-import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
-import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.*;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -29,11 +24,9 @@ public class TestClient implements Client {
 
     private EventLoopGroup workGroup = new NioEventLoopGroup();
 
-    EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
+    private final Promise<NettyClientHandler> promiseHandler = ImmediateEventExecutor.INSTANCE.newPromise();
 
-    private final Promise<NettyClientHandler> promiseHandler = new DefaultPromise<>(eventExecutor);
-
-    private final Promise<Channel> promiseChannel = new DefaultPromise<>(eventExecutor);
+    private final Promise<Channel> promiseChannel = ImmediateEventExecutor.INSTANCE.newPromise();
 
     private Bootstrap bootstrap;
 

@@ -17,12 +17,22 @@ public class DemoServiceImpl implements DemoService {
     @SneakyThrows
     @Override
     public String getMsg() {
-        TimeUnit.MILLISECONDS.sleep(100);
+//        TimeUnit.MILLISECONDS.sleep(100);
         return "getMsg: " + System.currentTimeMillis();
+    }
+
+    @SneakyThrows
+    @Override
+    public String getMsg(long sleep) {
+        TimeUnit.MILLISECONDS.sleep(sleep);
+        return "getMsg: " + System.currentTimeMillis() + " - sleep - " + sleep;
     }
 
     @Override
     public String sendMsg(String msg) {
         return System.currentTimeMillis() + " sendMsg: " + msg ;
     }
+
+
+
 }
