@@ -120,7 +120,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
         Promise<ZRpcResponse> promise = ImmediateEventExecutor.INSTANCE.newPromise();
         ResultCache.MAP.put(request.getRequestId(), promise);
         try {
-            ChannelFuture channelFuture = channel.writeAndFlush(request).sync();
+            ChannelFuture channelFuture = channel.writeAndFlush(request);
             log.info("send request" + new Date());
             if (channelFuture.isSuccess()) {
                 log.info("send request success");

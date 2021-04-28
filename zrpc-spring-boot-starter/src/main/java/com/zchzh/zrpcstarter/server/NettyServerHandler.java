@@ -15,6 +15,7 @@ import net.sf.cglib.reflect.FastClass;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.*;
 
 /**
  * @author zengchzh
@@ -25,6 +26,22 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
 
     private final Map<String, Object> serviceMap;
 
+    private final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+            12,
+            24,
+            30,
+            TimeUnit.SECONDS,
+            new LinkedBlockingQueue<>(100),
+            new ThreadFactory() {
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread thread = new Thread(r);
+                    thread.setDaemon(true);
+                    thread.setName("NettyServerHandler-" + r.hashCode());
+                    return thread;
+                }
+            });
+
 
     public NettyServerHandler(Map<String, Object> serviceMap) {
         this.serviceMap = serviceMap;
@@ -33,19 +50,21 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcRequest request) throws Exception {
-        ZRpcResponse response = new ZRpcResponse();
-        response.setRequestId(request.getRequestId());
-        try {
-            Object result = handle(request);
-            response.setResult(result);
-        }catch (Throwable t) {
-            response.setError(t.toString());
-        }
-        ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future) throws Exception {
-                log.info("send response for request" + request.getRequestId());
+        threadPoolExecutor.execute(() -> {
+            ZRpcResponse response = new ZRpcResponse();
+            response.setRequestId(request.getRequestId());
+            try {
+                Object result = handle(request);
+                response.setResult(result);
+            }catch (Throwable t) {
+                response.setError(t.toString());
             }
+            ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    log.info("send response for request" + request.getRequestId());
+                }
+            });
         });
     }
 
