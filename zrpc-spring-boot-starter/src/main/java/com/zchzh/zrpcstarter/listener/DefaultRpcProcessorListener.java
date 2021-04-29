@@ -5,7 +5,6 @@ import com.zchzh.zrpcstarter.annotation.ZService;
 import com.zchzh.zrpcstarter.cache.ClientCache;
 import com.zchzh.zrpcstarter.client.TestClient;
 import com.zchzh.zrpcstarter.discovery.ServiceDiscover;
-import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;
 import com.zchzh.zrpcstarter.register.ServiceRegister;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
@@ -20,10 +19,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -51,17 +47,9 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
 
     private Timeout timeout;
 
-    private final List<String> serverNameList = new ArrayList<>();
-
-    private ZRpcProperty property;
-
+    private final Set<String> serverNameSet = new HashSet<>();
 
     public DefaultRpcProcessorListener() {}
-
-    public DefaultRpcProcessorListener(ZRpcProperty property) {
-        this.property = property;
-    }
-
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -92,7 +80,6 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
                 try {
                     Class<?> clazz = obj.getClass();
                     Class<?>[] interfaces = clazz.getInterfaces();
-                    Method[] methods = clazz.getDeclaredMethods();
                     ServiceObject serviceObject;
                     String interfacesName = null;
                     if (interfaces.length != 1){
@@ -144,7 +131,7 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
                 Class<?> fieldClass = field.getType();
                 Object object = context.getBean(name);
                 field.setAccessible(true);
-                serverNameList.add(fieldClass.getName());
+                serverNameSet.add(fieldClass.getName());
                 try {
                     field.set(object, clientProxyFactory.getProxy(fieldClass));
                 }catch (IllegalAccessException e) {
@@ -157,7 +144,7 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
 
     private void prepareClient() {
         timeout = new HashedWheelTimer().newTimeout(to -> {
-            serverNameList.forEach(s -> {
+            serverNameSet.forEach(s -> {
                 serviceDiscover.getService(s).forEach(so -> {
                     String[] strings = so.getAddress().split(":");
                     ClientCache.MAP.put(ClientCache.MAP.makeKey(so),
