@@ -80,30 +80,6 @@ public class ClientProxyFactory {
             request.setVersion("version");
             request.setRequestId(UUID.randomUUID().toString());
 
-            // 协议
-//            ZRpcResponse response = nettyClient.sendRequest(request,service);
-//            NettyClientHandler handler = new NettyClientHandler();
-//            for (int i = 0; i < 10; i++) {
-//                log.info("ClientProxyFactory =======" + Thread.currentThread().getName());
-//                if ((handler = GlobalCache.INSTANCE.get(Constants.DEFAULT_HANDLE)) != null) {
-//                    break;
-//                }
-//                new NettyClient(service.getAddress()).start();
-//                TimeUnit.MILLISECONDS.sleep(200);
-//            }
-//
-//            if (handler != null) {
-//                handler.sendRequest(request);
-//                ZRpcResponse response = handler.getResponse(request.getRequestId());
-//                log.info("proxy success");
-//                if (response.getError() != null) {
-//                    log.error("clientProxyFactory getError : " + response.getError());
-//                }
-//                return response.getResult();
-//            }else {
-//                log.error(" handler error - " + System.currentTimeMillis());
-//                return null;
-//            }
             Client client = ClientCache.MAP.get(ClientCache.MAP.makeKey(service));
             Promise<ZRpcResponse> promise = client.getHandler().send(request);
             long start = System.currentTimeMillis();

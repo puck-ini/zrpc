@@ -2,11 +2,16 @@ package com.zchzh.zrpcstarter.listener;
 
 import com.zchzh.zrpcstarter.annotation.ZReference;
 import com.zchzh.zrpcstarter.annotation.ZService;
+import com.zchzh.zrpcstarter.cache.ClientCache;
+import com.zchzh.zrpcstarter.client.TestClient;
+import com.zchzh.zrpcstarter.discovery.ServiceDiscover;
 import com.zchzh.zrpcstarter.properties.ZRpcProperty;
 import com.zchzh.zrpcstarter.proxy.ClientProxyFactory;
 import com.zchzh.zrpcstarter.register.ServiceRegister;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
 import com.zchzh.zrpcstarter.server.Server;
+import io.netty.util.HashedWheelTimer;
+import io.netty.util.Timeout;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
@@ -15,17 +20,18 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author zengchzh
  * @date 2021/3/11
  *
  * RPC处理者，支持服务启动暴露、自动注入Service
- * ApplicationListener<ContextRefreshedEvent>：
- * 当Spring中的所有的Bean都加载完成时，Spring会发布一个时间，
- * ApplicationListener<ContextRefreshedEvent>的作用是监听这个事件，当监听到事件发布就会执行onApplicationEvent方法
  */
 
 @Slf4j
@@ -38,7 +44,14 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
     private ServiceRegister serviceRegister;
 
     @Resource
+    private ServiceDiscover serviceDiscover;
+
+    @Resource
     private Server server;
+
+    private Timeout timeout;
+
+    private final List<String> serverNameList = new ArrayList<>();
 
     private ZRpcProperty property;
 
@@ -59,6 +72,10 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
 
             // 注入Service
             injectService(context);
+
+            // 准备client
+            prepareClient();
+
         }
     }
 
@@ -127,6 +144,7 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
                 Class<?> fieldClass = field.getType();
                 Object object = context.getBean(name);
                 field.setAccessible(true);
+                serverNameList.add(fieldClass.getName());
                 try {
                     field.set(object, clientProxyFactory.getProxy(fieldClass));
                 }catch (IllegalAccessException e) {
@@ -135,4 +153,28 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
             }
         }
     }
+
+
+    private void prepareClient() {
+        timeout = new HashedWheelTimer().newTimeout(to -> {
+            serverNameList.forEach(s -> {
+                serviceDiscover.getService(s).forEach(so -> {
+                    String[] strings = so.getAddress().split(":");
+                    ClientCache.MAP.put(ClientCache.MAP.makeKey(so),
+                            new TestClient(strings[0], Integer.parseInt(strings[1])));
+                });
+            });
+        }, 5, TimeUnit.SECONDS);
+
+        Executors.defaultThreadFactory().newThread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(31);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            timeout.cancel();
+        }).start();
+    }
+
+
 }

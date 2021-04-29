@@ -2,6 +2,7 @@ package com.zchzh.zrpcstarter.config;
 
 import com.alibaba.nacos.api.exception.NacosException;
 import com.zchzh.zrpcstarter.discovery.NacosServiceDiscover;
+import com.zchzh.zrpcstarter.discovery.ServiceDiscover;
 import com.zchzh.zrpcstarter.discovery.ZkServiceDiscover;
 import com.zchzh.zrpcstarter.listener.DefaultRpcProcessorListener;
 import com.zchzh.zrpcstarter.properties.ZRpcProperty;
@@ -51,12 +52,6 @@ public class AutoConfiguration {
                 throw new RuntimeException("注册中心启动失败");
             }
         }
-
-
-        // 设置支持的协议
-
-        // 设置网络层
-//        clientProxyFactory.setNettyClient(new NettyClient(zRpcProperty.getSerializer()));
         return clientProxyFactory;
     }
 
@@ -79,7 +74,21 @@ public class AutoConfiguration {
                 throw new RuntimeException("注册中心启动失败");
             }
         }
+    }
 
+    @Bean
+    public ServiceDiscover serviceDiscover(@Autowired ZRpcProperty zRpcProperty) {
+        switch (zRpcProperty.getRegisterProtocol()) {
+            case "zookeeper": {
+                return new ZkServiceDiscover(zRpcProperty.getRegisterAddress());
+            }
+            case "nacos": {
+                return new NacosServiceDiscover(zRpcProperty.getRegisterAddress());
+            }
+            default: {
+                throw new RuntimeException("服务发现启动失败");
+            }
+        }
     }
 
     @Bean

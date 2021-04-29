@@ -1,6 +1,5 @@
 package com.zchzh.zrpcstarter.discovery;
 
-import com.alibaba.nacos.api.exception.NacosException;
 import com.zchzh.zrpcstarter.protocol.service.ServiceObject;
 
 import java.util.List;
@@ -16,5 +15,5 @@ public interface ServiceDiscover {
      * @param name
      * @return
      */
-    List<ServiceObject> getService(String name) throws NacosException;
+    List<ServiceObject> getService(String name);
 }
