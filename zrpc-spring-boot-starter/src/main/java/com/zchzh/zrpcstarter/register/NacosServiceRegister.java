@@ -25,7 +25,7 @@ public class NacosServiceRegister implements ServiceRegister, EnvironmentAware {
 
     private Environment environment;
 
-    private NamingService namingService;
+    private final NamingService namingService;
 
     public NacosServiceRegister(String addr, int port, String protocol) throws NacosException {
         namingService = NamingFactory.createNamingService(addr);
@@ -34,18 +34,36 @@ public class NacosServiceRegister implements ServiceRegister, EnvironmentAware {
     }
 
     @Override
-    public void register(ServiceObject so) throws UnknownHostException, NacosException {
-        String host = getHost();
+    public void register(ServiceObject so) throws NacosException {
+        Instance instance = newNacosInstance();
+        instance.setMetadata(newNacosInstanceMeta());
+        namingService.registerInstance(so.getName(), instance);
+    }
+
+    private Instance newNacosInstance() {
         Instance instance = new Instance();
-        instance.setIp(host);
+        instance.setIp(getHost());
         instance.setPort(port);
         instance.setHealthy(false);
         instance.setWeight(1.0);
-        Map<String, String> instanceMeta = new HashMap<>();
+        return instance;
+    }
+
+    private Map<String, String> newNacosInstanceMeta() {
+        Map<String, String> instanceMeta = new HashMap<>(16);
         instanceMeta.put("protocol", protocol);
-        instanceMeta.put("address", host + ":" + port);
-        instance.setMetadata(instanceMeta);
-        namingService.registerInstance(so.getName(), instance);
+        instanceMeta.put("address", getHost() + ":" + port);
+        return instanceMeta;
+
+    }
+    private String getHost() {
+        String host = "";
+        try {
+             host = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return host;
     }
 
     @Override
@@ -53,14 +71,6 @@ public class NacosServiceRegister implements ServiceRegister, EnvironmentAware {
         this.environment = environment;
     }
 
-    private String getHost() throws UnknownHostException {
-        return InetAddress.getLocalHost().getHostAddress();
-    }
-
-    private void registerInstance() throws NacosException {
-        NamingService naming = NamingFactory.createNamingService("127.0.0.1");
-        naming.registerInstance("test","127.0.0.1", 8888);
-    }
 
     private String getConfig(String prop){
         return environment.getProperty(prop);

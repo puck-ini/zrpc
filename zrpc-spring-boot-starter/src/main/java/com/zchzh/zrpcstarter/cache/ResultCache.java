@@ -20,17 +20,17 @@ public enum ResultCache {
      */
     MAP;
 
-    private static final Map<String, Promise<ZRpcResponse>> resultMap = new ConcurrentHashMap<>();
+    private static final Map<String, Promise<ZRpcResponse>> RESULT_MAP = new ConcurrentHashMap<>();
 
     public Promise<ZRpcResponse> get(String key) throws InterruptedException {
-        return resultMap.get(key);
+        return RESULT_MAP.get(key);
     }
 
     public void put(String key, Promise<ZRpcResponse> handler) {
-        resultMap.putIfAbsent(key, handler);
+        RESULT_MAP.putIfAbsent(key, handler);
     }
 
     public Promise<ZRpcResponse> remove(String key) {
-        return resultMap.remove(key);
+        return RESULT_MAP.remove(key);
     }
 }
