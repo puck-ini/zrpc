@@ -15,3 +15,6 @@ dubbo:
 spring:
   application:
     name: provider
+zrpc:
+  register-address: 127.0.0.1:8848
+  register-protocol: nacos
