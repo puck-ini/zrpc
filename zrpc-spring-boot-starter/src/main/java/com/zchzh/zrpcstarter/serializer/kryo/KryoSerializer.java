@@ -4,6 +4,9 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.pool.KryoPool;
+import com.google.auto.service.AutoService;
+import com.zchzh.zrpcstarter.annotation.SerializerName;
+import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.serializer.ZSerializer;
 import com.zchzh.zrpcstarter.serializer.kryo.KryoPoolFactory;
 
@@ -16,6 +19,9 @@ import java.io.IOException;
  * @date 2021/3/10
  * 使用 kryo 序列化和反序列化
  */
+
+@AutoService(ZSerializer.class)
+@SerializerName(value = Constants.KRYO)
 public class KryoSerializer implements ZSerializer {
 
     private final KryoPool kryoPool = KryoPoolFactory.getKryoPoolInstance();

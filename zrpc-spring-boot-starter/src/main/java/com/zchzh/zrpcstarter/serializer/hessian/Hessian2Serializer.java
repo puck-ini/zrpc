@@ -2,17 +2,21 @@ package com.zchzh.zrpcstarter.serializer.hessian;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
+import com.google.auto.service.AutoService;
+import com.zchzh.zrpcstarter.annotation.SerializerName;
+import com.zchzh.zrpcstarter.config.Constants;
 import com.zchzh.zrpcstarter.serializer.ZSerializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * @author zengchzh
  * @date 2021/3/13
  */
+@AutoService(ZSerializer.class)
+@SerializerName(value = Constants.HESSIAN2)
 public class Hessian2Serializer implements ZSerializer {
     @Override
     public <T> byte[] serialize(T object) throws IOException {

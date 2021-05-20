@@ -23,4 +23,11 @@ public class Constants {
         BEAT_PING.setRequestId(PING + ":" + System.currentTimeMillis());
     }
 
+
+    public static final String FASTJSON = "fastjson";
+
+    public static final String HESSIAN2 = "hessian";
+
+    public static final String KRYO = "kryo";
+
 }

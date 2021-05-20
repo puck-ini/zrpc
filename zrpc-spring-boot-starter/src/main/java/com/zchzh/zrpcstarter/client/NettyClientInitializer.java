@@ -3,7 +3,6 @@ package com.zchzh.zrpcstarter.client;
 import com.zchzh.zrpcstarter.codec.RpcDecoder;
 import com.zchzh.zrpcstarter.codec.RpcEncoder;
 import com.zchzh.zrpcstarter.config.Constants;
-import com.zchzh.zrpcstarter.enums.ZSerializerEnums;
 import com.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
 import com.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
 import com.zchzh.zrpcstarter.serializer.ZSerializer;
@@ -27,7 +26,7 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
     private String serializerName;
 
     public NettyClientInitializer() {
-        this.serializerName = ZSerializerEnums.KRYO.getConfigName();
+        this.serializerName = Constants.KRYO;
     }
 
     public NettyClientInitializer(NettyClientHandler nettyClientHandler, String serializerName) {

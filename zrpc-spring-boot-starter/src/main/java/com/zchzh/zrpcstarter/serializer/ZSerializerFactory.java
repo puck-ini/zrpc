@@ -1,7 +1,11 @@
 package com.zchzh.zrpcstarter.serializer;
 
-import com.zchzh.zrpcstarter.enums.ZSerializerEnums;
+import com.zchzh.zrpcstarter.annotation.SerializerName;
+import com.zchzh.zrpcstarter.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
+import java.util.*;
 
 /**
  * @author zengchzh
@@ -10,16 +14,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ZSerializerFactory {
 
-    public static ZSerializer getSerializer(String name) {
-        try {
-            ZSerializerEnums zSerializerEnums = ZSerializerEnums.get(name);
-            if (zSerializerEnums != null) {
-                return (ZSerializer) Class.forName(zSerializerEnums.getClassName()).newInstance();
-            }
-        }catch (Exception e) {
-            log.error("ZSerializerFactory create Serializer error");
-            e.printStackTrace();
-        }
-        return null;
+    private static final Map<String, ZSerializer> SERIALIZER_MAP = new HashMap<>();
+
+    public static ZSerializer getInstance(String name) {
+        return SERIALIZER_MAP.computeIfAbsent(name, k -> get(name));
     }
+
+    private static ZSerializer get(String name) {
+        ServiceLoader<ZSerializer> loader =ServiceLoader.load(ZSerializer.class);
+        for (ZSerializer serializer : loader) {
+            SerializerName serializerName = serializer.getClass().getAnnotation(SerializerName.class);
+            if (StringUtils.isEmpty(serializerName)) {
+                throw new IllegalArgumentException("serializer name can not be empty");
+            }
+            if (Objects.equals(name, serializerName.value())) {
+                return serializer;
+            }
+        }
+        throw new CommonException("invalid serializer config");
+    }
+
+
 }

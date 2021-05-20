@@ -21,7 +21,7 @@ public class RpcDecoder extends ByteToMessageDecoder {
 
     public RpcDecoder(Class<?> genericClass, String serializerName) {
         this.genericClass = genericClass;
-        this.zSerializer = ZSerializerFactory.getSerializer(serializerName);
+        this.zSerializer = ZSerializerFactory.getInstance(serializerName);
     }
 
     @Override

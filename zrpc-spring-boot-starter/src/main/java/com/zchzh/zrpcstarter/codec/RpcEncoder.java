@@ -18,7 +18,7 @@ public class RpcEncoder extends MessageToByteEncoder {
 
     public RpcEncoder(Class<?> genericClass, String serializerName) {
         this.genericClass = genericClass;
-        this.zSerializer = ZSerializerFactory.getSerializer(serializerName);
+        this.zSerializer = ZSerializerFactory.getInstance(serializerName);
     }
 
 
