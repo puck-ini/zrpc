@@ -29,20 +29,13 @@ public class KryoSerializer implements ZSerializer {
     @Override
     public <T> byte[] serialize(T object) {
         Kryo kryo = kryoPool.borrow();
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        Output output = new Output(byteArrayOutputStream);
-        try {
+        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            Output output = new Output(byteArrayOutputStream)) {
             kryo.writeObject(output, object);
-            output.close();
             return byteArrayOutputStream.toByteArray();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
-            try {
-                byteArrayOutputStream.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
             kryoPool.release(kryo);
         }
     }
@@ -50,20 +43,12 @@ public class KryoSerializer implements ZSerializer {
     @Override
     public <T> Object deserialize(byte[] bytes, Class<T> clazz) {
         Kryo kryo = kryoPool.borrow();
-        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-        Input in = new Input(byteArrayInputStream);
-        try {
-            Object result = kryo.readObject(in, clazz);
-            in.close();
-            return result;
+        try(ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+            Input in = new Input(byteArrayInputStream);) {
+            return kryo.readObject(in, clazz);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
-            try {
-                byteArrayInputStream.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
             kryoPool.release(kryo);
         }
     }

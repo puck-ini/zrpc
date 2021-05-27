@@ -24,7 +24,7 @@ public class ZSerializerFactory {
         ServiceLoader<ZSerializer> loader =ServiceLoader.load(ZSerializer.class);
         for (ZSerializer serializer : loader) {
             SerializerName serializerName = serializer.getClass().getAnnotation(SerializerName.class);
-            if (StringUtils.isEmpty(serializerName)) {
+            if (Objects.isNull(serializerName)) {
                 throw new IllegalArgumentException("serializer name can not be empty");
             }
             if (Objects.equals(name, serializerName.value())) {
