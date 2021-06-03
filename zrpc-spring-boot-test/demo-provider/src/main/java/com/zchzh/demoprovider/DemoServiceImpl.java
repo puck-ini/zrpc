@@ -1,7 +1,7 @@
 package com.zchzh.demoprovider;
 
 import com.zchzh.demoapi.service.DemoService;
-import com.zchzh.zrpcstarter.annotation.ZService;
+import org.zchzh.zrpcstarter.annotation.ZService;
 import lombok.SneakyThrows;
 
 import java.util.concurrent.TimeUnit;

@@ -1,7 +1,7 @@
 package com.zchzh.democonsumer;
 
 import com.zchzh.demoapi.service.DemoService;
-import com.zchzh.zrpcstarter.annotation.ZReference;
+import org.zchzh.zrpcstarter.annotation.ZReference;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.web.bind.annotation.PathVariable;

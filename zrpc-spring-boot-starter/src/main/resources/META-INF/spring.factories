@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.zchzh.zrpcstarter.config.AutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=org.zchzh.zrpcstarter.config.AutoConfiguration
