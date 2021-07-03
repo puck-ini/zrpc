@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/4/27
  */
 @Slf4j
-public class TestClient implements Client {
+public class NettyClient implements Client {
 
 
     private String ip;
@@ -30,7 +30,7 @@ public class TestClient implements Client {
 
     private Bootstrap bootstrap;
 
-    public TestClient(String ip, int port) {
+    public NettyClient(String ip, int port) {
         this.ip = ip;
         this.port = port;
         this.start();

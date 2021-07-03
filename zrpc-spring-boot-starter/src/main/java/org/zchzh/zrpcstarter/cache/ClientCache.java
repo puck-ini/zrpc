@@ -1,7 +1,7 @@
 package org.zchzh.zrpcstarter.cache;
 
 import org.zchzh.zrpcstarter.client.Client;
-import org.zchzh.zrpcstarter.client.TestClient;
+import org.zchzh.zrpcstarter.client.NettyClient;
 import org.zchzh.zrpcstarter.protocol.service.ServiceObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +27,7 @@ public enum ClientCache {
         Client client = CLIENT_MAP.get(key);
         if (client == null) {
             String[] strings = key.split(":");
-            client = new TestClient(strings[1],Integer.parseInt(strings[2]));
+            client = new NettyClient(strings[1],Integer.parseInt(strings[2]));
             put(key, client);
         }
         return client;

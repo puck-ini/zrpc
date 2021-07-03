@@ -11,6 +11,7 @@ import org.zchzh.zrpcstarter.serializer.ZSerializer;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author zengchzh
@@ -27,13 +28,20 @@ public class KryoSerializer implements ZSerializer {
     @Override
     public <T> byte[] serialize(T object) {
         Kryo kryo = kryoPool.borrow();
-        try(ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            Output output = new Output(byteArrayOutputStream)) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        Output output = new Output(byteArrayOutputStream);
+        try {
             kryo.writeObject(output, object);
+            output.close();
             return byteArrayOutputStream.toByteArray();
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
+            try {
+                byteArrayOutputStream.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             kryoPool.release(kryo);
         }
     }
@@ -41,12 +49,20 @@ public class KryoSerializer implements ZSerializer {
     @Override
     public <T> Object deserialize(byte[] bytes, Class<T> clazz) {
         Kryo kryo = kryoPool.borrow();
-        try(ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-            Input in = new Input(byteArrayInputStream);) {
-            return kryo.readObject(in, clazz);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
+        Input in = new Input(byteArrayInputStream);
+        try {
+            Object result = kryo.readObject(in, clazz);
+            in.close();
+            return result;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         } finally {
+            try {
+                byteArrayInputStream.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             kryoPool.release(kryo);
         }
     }

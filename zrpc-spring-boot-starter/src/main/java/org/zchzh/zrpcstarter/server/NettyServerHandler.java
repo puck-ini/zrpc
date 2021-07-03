@@ -104,7 +104,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.info("NettyServerHandler exceptionCaught");
+        log.error("NettyServerHandler exceptionCaught", cause);
         ctx.close();
     }
 

@@ -3,7 +3,7 @@ package org.zchzh.zrpcstarter.listener;
 import org.zchzh.zrpcstarter.annotation.ZReference;
 import org.zchzh.zrpcstarter.annotation.ZService;
 import org.zchzh.zrpcstarter.cache.ClientCache;
-import org.zchzh.zrpcstarter.client.TestClient;
+import org.zchzh.zrpcstarter.client.NettyClient;
 import org.zchzh.zrpcstarter.discovery.ServiceDiscover;
 import org.zchzh.zrpcstarter.proxy.ClientProxyFactory;
 import org.zchzh.zrpcstarter.register.ServiceRegister;
@@ -147,7 +147,7 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
                 serviceDiscover.getService(s).forEach(so -> {
                     String[] strings = so.getAddress().split(":");
                     ClientCache.MAP.put(ClientCache.MAP.makeKey(so),
-                            new TestClient(strings[0], Integer.parseInt(strings[1])));
+                            new NettyClient(strings[0], Integer.parseInt(strings[1])));
                 });
             });
         }, 5, TimeUnit.SECONDS);

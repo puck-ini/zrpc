@@ -3,6 +3,7 @@ package org.zchzh.zrpcstarter.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.zchzh.zrpcstarter.config.Constants;
 
 /**
  * @author zengchzh
@@ -36,5 +37,5 @@ public class ZRpcProperty {
     /**
      * 序列化方式
      */
-    private String serializer = "kryo";
+    private String serializer = Constants.KRYO;
 }

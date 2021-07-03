@@ -86,7 +86,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        cause.printStackTrace();
+        log.error("NettyClientHandler exceptionCaught", cause);
         ctx.close();
     }
 
