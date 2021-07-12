@@ -30,12 +30,4 @@ public interface Client {
      */
     Promise<ZRpcResponse> invoke(ZRpcRequest request);
 
-
-    ResponseHandler getHandler() throws InterruptedException, ExecutionException;
-
-//    /**
-//     * 发送请求
-//     * @param request 请求信息
-//     */
-//    void send(ZRpcRequest request);
 }

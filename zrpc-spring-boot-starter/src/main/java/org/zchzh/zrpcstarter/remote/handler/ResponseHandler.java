@@ -24,43 +24,6 @@ import java.util.Date;
 @Slf4j
 public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
 
-    private volatile Channel channel;
-
-    private ZRpcRequest zRpcRequest;
-
-    private Promise<ZRpcResponse> responsePromise;
-
-    public ResponseHandler() {
-        EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
-        responsePromise = new DefaultProgressivePromise<>(eventExecutor);
-    }
-
-    public ResponseHandler(ZRpcRequest request){
-        this.zRpcRequest = request;
-        EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
-        responsePromise = new DefaultProgressivePromise<>(eventExecutor);
-    }
-
-    @Override
-    public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        super.channelRegistered(ctx);
-        this.channel = ctx.channel();
-    }
-
-    /**
-     * 发起请求
-     * @param ctx
-     * @throws Exception
-     */
-//    @Override
-//    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-//        if (zRpcRequest != null) {
-//            log.info(" client handler : send request /v1");
-//            sendRequest(zRpcRequest);
-//        }
-//        log.error("client handler : send request error");
-//    }
-
     /**
      * 接受响应
      * @param ctx
@@ -79,7 +42,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        log.error("NettyClientHandler exceptionCaught", cause);
+        log.error("ResponseHandler exceptionCaught", cause);
         ctx.close();
     }
 
@@ -97,28 +60,5 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
-    }
-
-    public ZRpcResponse getResponse(String id) throws InterruptedException {
-        responsePromise.await();
-        if (responsePromise.isSuccess()) {
-            return responsePromise.getNow();
-        }
-        return null;
-    }
-
-    public Promise<ZRpcResponse> send(ZRpcRequest request) {
-        Promise<ZRpcResponse> promise = ImmediateEventExecutor.INSTANCE.newPromise();
-        ResponseMap.put(request.getRequestId(), promise);
-        try {
-            ChannelFuture channelFuture = channel.writeAndFlush(request);
-            log.info("send request" + new Date());
-            if (channelFuture.isSuccess()) {
-                log.info("send request success");
-            }
-        } catch (Exception e) {
-            log.error("send request error {}", e.getMessage());
-        }
-        return promise;
     }
 }

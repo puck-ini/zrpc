@@ -26,8 +26,6 @@ import java.util.concurrent.*;
 @Slf4j
 public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
 
-    private Map<String, Object> serviceMap;
-
     private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
             12,
             24,
@@ -43,13 +41,6 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
                     return thread;
                 }
             });
-
-
-    public RequestHandler() {};
-    public RequestHandler(Map<String, Object> serviceMap) {
-        this.serviceMap = serviceMap;
-    }
-
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcRequest req) throws Exception {
@@ -94,20 +85,6 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
         String methodName = request.getMethodName();
         Class<?>[] parameterTypes = request.getParameterTypes();
         Object[] parameters = request.getParameters();
-
-//        String className = request.getClassName();
-//        String version = request.getVersion();
-//        String serviceKey = ServiceUtil.makeServiceKey(className, version);
-//        Object serviceBean = serviceMap.get(serviceKey);
-//        if (serviceBean == null) {
-//            log.error("Can not find service implement with interface name: {} and version: {}", className, version);
-//            return null;
-//        }
-//
-//        Class<?> serviceClass = serviceBean.getClass();
-//        String methodName = request.getMethodName();
-//        Class<?>[] parameterTypes = request.getParameterTypes();
-//        Object[] parameters = request.getParameters();
 
         // cglib reflect
         FastClass fastClass = FastClass.create(serviceClass);

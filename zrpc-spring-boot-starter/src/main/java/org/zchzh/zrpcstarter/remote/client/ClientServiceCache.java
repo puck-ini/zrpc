@@ -17,16 +17,6 @@ public class ClientServiceCache {
 
     private static final Map<String, Client> CLIENT_MAP = new ConcurrentHashMap<>();
 
-    public static Client get(String key) {
-        Client client = CLIENT_MAP.get(key);
-        if (client == null) {
-            String[] strings = key.split(":");
-            client = new NettyClient(strings[1],Integer.parseInt(strings[2]));
-            put(key, client);
-        }
-        return client;
-    }
-
     public static Client getClient(String ip, int port) {
         String key = ip + port;
         return CLIENT_MAP.computeIfAbsent(key, i -> {
@@ -38,11 +28,6 @@ public class ClientServiceCache {
 
     public static void put(String key, Client client) {
         CLIENT_MAP.putIfAbsent(key, client);
-    }
-
-
-    public static String makeKey(ServiceObject serviceObject) {
-        return serviceObject.getName() + ":" +serviceObject.getAddress();
     }
 
     public static int size() {

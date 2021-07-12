@@ -22,19 +22,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
 
-    private ResponseHandler responseHandler;
-
     private ZSerializer serializer;
-
-
-    public NettyClientInitializer() {
-
-    }
-
-    public NettyClientInitializer(ResponseHandler responseHandler, ZSerializer serializer) {
-        this.responseHandler = responseHandler;
-        this.serializer = serializer;
-    }
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {

@@ -28,8 +28,6 @@ public class NettyClient implements Client {
 
     private EventLoopGroup workGroup = new NioEventLoopGroup(1);
 
-    private final Promise<ResponseHandler> handlerPromise = ImmediateEventExecutor.INSTANCE.newPromise();
-
     private final Promise<Channel> channelPromise = ImmediateEventExecutor.INSTANCE.newPromise();
 
     private Bootstrap bootstrap;
@@ -66,11 +64,8 @@ public class NettyClient implements Client {
                 if (futureListener.isSuccess()) {
                     ResponseHandler handler = futureListener.channel().pipeline().get(ResponseHandler.class);
                     channelPromise.trySuccess(futureListener.channel());
-                    handlerPromise.trySuccess(handler);
-                    log.info("connect success");
                 } else {
-                    log.info("Failed to connect to server, try connect after 10s");
-
+                    log.warn("Failed to connect to server, try connect after 10s");
                     futureListener.channel().eventLoop().schedule(new Runnable() {
                         @Override
                         public void run() {
@@ -111,15 +106,6 @@ public class NettyClient implements Client {
         return channel != null && channel.isActive();
     }
 
-    @Deprecated
-    @Override
-    public ResponseHandler getHandler() throws InterruptedException, ExecutionException {
-//        promiseHandler.await();
-//        if (promiseHandler.isSuccess()) {
-//            return promiseHandler.getNow();
-//        }
-        return handlerPromise.get();
-    }
 
 
 

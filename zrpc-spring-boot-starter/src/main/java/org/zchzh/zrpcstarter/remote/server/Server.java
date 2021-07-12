@@ -16,11 +16,4 @@ public interface Server {
      */
     void stop();
 
-
-    /**
-     * 添加服务
-     * @param name 服务名
-     * @param object 服务实例
-     */
-    void addService(String name, Object object);
 }

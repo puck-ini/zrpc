@@ -15,17 +15,11 @@ import java.util.Objects;
  * @date 2021/3/11
  */
 
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceObject implements Serializable {
-
-    /**
-     * 服务名称
-     */
-    private String name;
 
     private String serviceName;
 
@@ -33,9 +27,6 @@ public class ServiceObject implements Serializable {
 
     private Integer port;
 
-    /**
-     * 服务地址，格式：IP:Port
-     */
     private String address;
 
     private Double weight;
@@ -43,34 +34,6 @@ public class ServiceObject implements Serializable {
     private Class<?> clazz;
 
     private Map<String, String> meta;
-
-    /**
-     * 类方法名
-     */
-    private String[] methods;
-
-    /**
-     * 完整类路径
-     */
-    private String path;
-
-    /**
-     * 应用程序名 spring.application.name
-     */
-    private String application;
-
-    /**
-     * 服务Class
-     */
-    private String className;
-
-
-    private String protocol;
-
-    public ServiceObject(String name) {
-        super();
-        this.name = name;
-    }
 
     public String getAddress() {
         if (StringUtils.isEmpty(address)) {

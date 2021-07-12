@@ -49,7 +49,7 @@ public class NacosRegister implements Register {
                 serviceObjectList.addAll(getAll(serviceName));
             }
         } catch (NacosException e) {
-            log.error(e.getErrMsg());
+            log.error(e.getErrMsg(), e);
         }
         return serviceObjectList;
     }
@@ -63,7 +63,7 @@ public class NacosRegister implements Register {
                 serviceObjectList.add(toService(instance));
             }
         } catch (NacosException e) {
-            log.error(e.getErrMsg());
+            log.error(e.getErrMsg(), e);
         }
         return serviceObjectList;
     }
