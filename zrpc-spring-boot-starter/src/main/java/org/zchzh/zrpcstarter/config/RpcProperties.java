@@ -28,14 +28,17 @@ public class RpcProperties {
      * 服务端暴露端口
      */
     private Integer serverPort = 19000;
+    /**
+     * 服务端序列化方式
+     */
+    private String serverSerializer = Constants.KRYO;
 
     /**
-     * 服务协议
+     * 客户端暴露端口
      */
-    private String protocol = "zrpc";
-
+    private Integer clientPort = 19000;
     /**
-     * 序列化方式
+     * 客户端序列化方式
      */
-    private String serializer = Constants.KRYO;
+    private String clientSerializer = Constants.KRYO;
 }
