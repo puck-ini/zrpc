@@ -3,7 +3,7 @@ package org.zchzh.zrpcstarter.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.zchzh.zrpcstarter.config.Constants;
+import org.zchzh.zrpcstarter.constants.Constants;
 
 /**
  * @author zengchzh

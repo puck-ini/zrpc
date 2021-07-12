@@ -4,7 +4,7 @@ import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.google.auto.service.AutoService;
 import org.zchzh.zrpcstarter.annotation.SerializerName;
-import org.zchzh.zrpcstarter.config.Constants;
+import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 
 import java.io.ByteArrayInputStream;

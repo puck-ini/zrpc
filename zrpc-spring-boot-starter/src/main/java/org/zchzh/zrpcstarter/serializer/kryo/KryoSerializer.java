@@ -6,7 +6,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.pool.KryoPool;
 import com.google.auto.service.AutoService;
 import org.zchzh.zrpcstarter.annotation.SerializerName;
-import org.zchzh.zrpcstarter.config.Constants;
+import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 
 import java.io.ByteArrayInputStream;

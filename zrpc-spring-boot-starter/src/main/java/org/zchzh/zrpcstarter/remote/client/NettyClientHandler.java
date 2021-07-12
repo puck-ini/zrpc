@@ -1,7 +1,7 @@
 package org.zchzh.zrpcstarter.remote.client;
 
 import org.zchzh.zrpcstarter.remote.cache.ResultCache;
-import org.zchzh.zrpcstarter.config.Constants;
+import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
 import io.netty.channel.Channel;

@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.config;
+package org.zchzh.zrpcstarter.constants;
 
 import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
 
@@ -29,5 +29,13 @@ public class Constants {
     public static final String HESSIAN2 = "hessian";
 
     public static final String KRYO = "kryo";
+
+
+
+
+    public static final String RANDOM = "random";
+
+
+    public static final String LOAD_BALANCE = "loadbalance";
 
 }

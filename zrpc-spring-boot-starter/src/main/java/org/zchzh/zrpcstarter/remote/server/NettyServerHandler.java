@@ -1,6 +1,6 @@
 package org.zchzh.zrpcstarter.remote.server;
 
-import org.zchzh.zrpcstarter.config.Constants;
+import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
 import org.zchzh.zrpcstarter.util.ServiceUtil;
