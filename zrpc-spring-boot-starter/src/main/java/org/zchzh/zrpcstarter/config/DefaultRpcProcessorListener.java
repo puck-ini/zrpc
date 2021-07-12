@@ -2,12 +2,12 @@ package org.zchzh.zrpcstarter.config;
 
 import org.zchzh.zrpcstarter.annotation.ZReference;
 import org.zchzh.zrpcstarter.annotation.ZService;
-import org.zchzh.zrpcstarter.remote.client.ClientCache;
+import org.zchzh.zrpcstarter.remote.client.ClientServiceCache;
 import org.zchzh.zrpcstarter.remote.client.NettyClient;
 import org.zchzh.zrpcstarter.register.discovery.ServiceDiscover;
 import org.zchzh.zrpcstarter.proxy.ClientProxyFactory;
 import org.zchzh.zrpcstarter.register.ServiceRegister;
-import org.zchzh.zrpcstarter.model.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.ServiceObject;
 import org.zchzh.zrpcstarter.remote.server.Server;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
@@ -83,7 +83,7 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
                     String interfacesName = null;
                     if (interfaces.length != 1){
                         ZService service = clazz.getAnnotation(ZService.class);
-                        String value = service.value();
+                        String value = service.name();
                         if (value.equals("")){
                             startServerFlag = false;
                             throw new UnsupportedOperationException("The exposed interface is not specific with '"
@@ -146,7 +146,7 @@ public class DefaultRpcProcessorListener implements ApplicationListener<ContextR
             serverNameSet.forEach(s -> {
                 serviceDiscover.getService(s).forEach(so -> {
                     String[] strings = so.getAddress().split(":");
-                    ClientCache.MAP.put(ClientCache.MAP.makeKey(so),
+                    ClientServiceCache.put(ClientServiceCache.makeKey(so),
                             new NettyClient(strings[0], Integer.parseInt(strings[1])));
                 });
             });

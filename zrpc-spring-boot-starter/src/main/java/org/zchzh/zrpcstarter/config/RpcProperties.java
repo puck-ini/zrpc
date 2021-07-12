@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.properties;
+package org.zchzh.zrpcstarter.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -10,9 +10,9 @@ import org.zchzh.zrpcstarter.constants.Constants;
  * @date 2021/3/11
  */
 @Data
-@EnableConfigurationProperties(ZRpcProperty.class)
+@EnableConfigurationProperties(RpcProperties.class)
 @ConfigurationProperties("zrpc")
-public class ZRpcProperty {
+public class RpcProperties {
 
     /**
      * 服务注册中心

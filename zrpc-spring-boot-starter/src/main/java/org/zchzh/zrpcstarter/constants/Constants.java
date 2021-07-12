@@ -1,6 +1,6 @@
 package org.zchzh.zrpcstarter.constants;
 
-import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
 
 /**
  * @author zengchzh

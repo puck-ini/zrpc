@@ -1,11 +1,11 @@
 package org.zchzh.zrpcstarter.proxy;
 
-import org.zchzh.zrpcstarter.remote.client.ClientCache;
+import org.zchzh.zrpcstarter.remote.client.ClientServiceCache;
 import org.zchzh.zrpcstarter.remote.client.Client;
 import org.zchzh.zrpcstarter.register.discovery.ServiceDiscover;
-import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
-import org.zchzh.zrpcstarter.model.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
+import org.zchzh.zrpcstarter.model.ServiceObject;
 import io.netty.util.concurrent.Promise;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -80,7 +80,7 @@ public class ClientProxyFactory {
             request.setVersion("version");
             request.setRequestId(UUID.randomUUID().toString());
 
-            Client client = ClientCache.MAP.get(ClientCache.MAP.makeKey(service));
+            Client client = ClientServiceCache.get(ClientServiceCache.makeKey(service));
             Promise<ZRpcResponse> promise = client.getHandler().send(request);
             long start = System.currentTimeMillis();
             ZRpcResponse response = promise.get();
