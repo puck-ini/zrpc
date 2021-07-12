@@ -1,6 +1,6 @@
 package org.zchzh.zrpcstarter.serializer;
 
-import org.zchzh.zrpcstarter.annotation.SerializerName;
+import org.zchzh.zrpcstarter.annotation.JdkSPI;
 import org.zchzh.zrpcstarter.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ public class ZSerializerFactory {
     private static ZSerializer get(String name) {
         ServiceLoader<ZSerializer> loader =ServiceLoader.load(ZSerializer.class);
         for (ZSerializer serializer : loader) {
-            SerializerName serializerName = serializer.getClass().getAnnotation(SerializerName.class);
+            JdkSPI serializerName = serializer.getClass().getAnnotation(JdkSPI.class);
             if (Objects.isNull(serializerName)) {
                 throw new IllegalArgumentException("serializer name can not be empty");
             }

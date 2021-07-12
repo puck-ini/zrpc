@@ -5,7 +5,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.pool.KryoPool;
 import com.google.auto.service.AutoService;
-import org.zchzh.zrpcstarter.annotation.SerializerName;
+import org.zchzh.zrpcstarter.annotation.JdkSPI;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 
@@ -20,7 +20,7 @@ import java.io.IOException;
  */
 
 @AutoService(ZSerializer.class)
-@SerializerName(value = Constants.KRYO)
+@JdkSPI(value = Constants.KRYO)
 public class KryoSerializer implements ZSerializer {
 
     private final KryoPool kryoPool = KryoPoolFactory.getKryoPoolInstance();

@@ -3,8 +3,8 @@ package org.zchzh.zrpcstarter.serializer.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.esotericsoftware.kryo.pool.KryoPool;
-import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 /**

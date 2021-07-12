@@ -5,7 +5,7 @@ import com.alibaba.fastjson.serializer.JSONSerializer;
 import com.alibaba.fastjson.serializer.SerializeWriter;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.auto.service.AutoService;
-import org.zchzh.zrpcstarter.annotation.SerializerName;
+import org.zchzh.zrpcstarter.annotation.JdkSPI;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 
@@ -16,7 +16,7 @@ import java.io.IOException;
  * @date 2021/3/13
  */
 @AutoService(ZSerializer.class)
-@SerializerName(value = Constants.FASTJSON)
+@JdkSPI(value = Constants.FASTJSON)
 public class FastJsonSerializer implements ZSerializer {
     @Override
     public <T> byte[] serialize(T object) throws IOException {
