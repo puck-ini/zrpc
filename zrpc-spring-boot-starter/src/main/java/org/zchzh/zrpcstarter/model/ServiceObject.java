@@ -21,18 +21,33 @@ import java.util.Objects;
 @AllArgsConstructor
 public class ServiceObject implements Serializable {
 
+    /**
+     * 服务名
+     */
     private String serviceName;
-
+    /**
+     * 服务ip
+     */
     private String ip;
-
+    /**
+     * 服务端口
+     */
     private Integer port;
-
+    /**
+     * 服务地址
+     */
     private String address;
-
+    /**
+     * 服务权重
+     */
     private Double weight;
-
+    /**
+     * 服务接口
+     */
     private Class<?> clazz;
-
+    /**
+     * 服务元数据
+     */
     private Map<String, String> meta;
 
     public String getAddress() {

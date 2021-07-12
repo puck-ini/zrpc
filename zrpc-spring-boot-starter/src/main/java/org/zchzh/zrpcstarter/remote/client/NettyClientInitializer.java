@@ -35,7 +35,6 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
         // client 节码 response
         channelPipeline.addLast(new RpcDecoder(ZRpcResponse.class, serializer));
-//        channelPipeline.addLast(nettyClientHandler);
         channelPipeline.addLast(new ResponseHandler());
     }
 }

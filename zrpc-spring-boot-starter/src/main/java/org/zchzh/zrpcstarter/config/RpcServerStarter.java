@@ -65,19 +65,14 @@ public class RpcServerStarter implements ApplicationListener<ContextRefreshedEve
                         .port(rpcProperties.getServerPort())
                         .weight(service.weight())
                         .clazz(clazz)
-                        .meta(new HashMap<>())
+                        .meta(new HashMap<>(10))
                         .build();
                 serviceObject.getMeta().put(Constants.LOAD_BALANCE, service.loadBalance());
                 register.register(serviceObject);
                 ServerServiceCache.put(interfaceName, obj);
             }
             // 启动服务监听请求
-            threadFactory.newThread(new Runnable() {
-                @Override
-                public void run() {
-                    server.start();
-                }
-            }).start();
+            threadFactory.newThread(() -> server.start()).start();
         }
     }
 }
