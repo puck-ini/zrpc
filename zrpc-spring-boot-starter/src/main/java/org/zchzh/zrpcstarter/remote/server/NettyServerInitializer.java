@@ -3,9 +3,9 @@ package org.zchzh.zrpcstarter.remote.server;
 import org.zchzh.zrpcstarter.remote.codec.RpcDecoder;
 import org.zchzh.zrpcstarter.remote.codec.RpcEncoder;
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
-import org.zchzh.zrpcstarter.remote.handler.NettyServerHandler;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
+import org.zchzh.zrpcstarter.remote.handler.RequestHandler;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 import org.zchzh.zrpcstarter.serializer.kryo.KryoSerializer;
 import io.netty.channel.ChannelInitializer;
@@ -27,9 +27,13 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
     /**
      * 服务列表
      */
-    private final Map<String, Object> serviceMap;
+    private Map<String, Object> serviceMap;
 
-    private final String serializerName;
+    private String serializerName;
+
+    private ZSerializer serializer;
+
+    public NettyServerInitializer() {};
 
     public NettyServerInitializer(Map<String, Object> serviceMap, String serializerName) {
         this.serviceMap = serviceMap;
@@ -38,7 +42,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ZSerializer zSerializer = KryoSerializer.class.newInstance();
+        serializer = KryoSerializer.class.newInstance();
         ChannelPipeline channelPipeline = ch.pipeline();
         //
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));
@@ -49,9 +53,9 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
                 0,
                 0));
         // server 解码 request
-        channelPipeline.addLast(new RpcDecoder(ZRpcRequest.class, serializerName));
+        channelPipeline.addLast(new RpcDecoder(ZRpcRequest.class, serializer));
         // server 编码 response
-        channelPipeline.addLast(new RpcEncoder(ZRpcResponse.class, serializerName));
-        channelPipeline.addLast(new NettyServerHandler(serviceMap));
+        channelPipeline.addLast(new RpcEncoder(ZRpcResponse.class, serializer));
+        channelPipeline.addLast(new RequestHandler());
     }
 }

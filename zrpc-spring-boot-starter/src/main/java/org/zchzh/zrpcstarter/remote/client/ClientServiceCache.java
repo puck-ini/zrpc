@@ -1,8 +1,6 @@
 package org.zchzh.zrpcstarter.remote.client;
 
-import org.zchzh.zrpcstarter.remote.client.Client;
-import org.zchzh.zrpcstarter.remote.client.NettyClient;
-import org.zchzh.zrpcstarter.model.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.ServiceObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -14,16 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Slf4j
-public enum ClientCache {
-    /**
-     * client map
-     */
-    MAP;
+public class ClientServiceCache {
 
 
     private static final Map<String, Client> CLIENT_MAP = new ConcurrentHashMap<>();
 
-    public Client get(String key) {
+    public static Client get(String key) {
         Client client = CLIENT_MAP.get(key);
         if (client == null) {
             String[] strings = key.split(":");
@@ -33,16 +27,25 @@ public enum ClientCache {
         return client;
     }
 
-    public void put(String key, Client client) {
+    public static Client getClient(String ip, int port) {
+        String key = ip + port;
+        return CLIENT_MAP.computeIfAbsent(key, i -> {
+            Client client = new NettyClient(ip, port);
+            client.start();
+            return client;
+        });
+    }
+
+    public static void put(String key, Client client) {
         CLIENT_MAP.putIfAbsent(key, client);
     }
 
 
-    public String makeKey(ServiceObject serviceObject) {
+    public static String makeKey(ServiceObject serviceObject) {
         return serviceObject.getName() + ":" +serviceObject.getAddress();
     }
 
-    public int size() {
+    public static int size() {
         return CLIENT_MAP.size();
     }
 }

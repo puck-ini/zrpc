@@ -1,8 +1,9 @@
 package org.zchzh.zrpcstarter.remote.handler;
 
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
+import org.zchzh.zrpcstarter.remote.server.ServerServiceCache;
 import org.zchzh.zrpcstarter.util.ServiceUtil;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -15,6 +16,7 @@ import net.sf.cglib.reflect.FastClass;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 /**
@@ -22,44 +24,45 @@ import java.util.concurrent.*;
  * @date 2021/3/10
  */
 @Slf4j
-public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
+public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
 
-    private final Map<String, Object> serviceMap;
+    private Map<String, Object> serviceMap;
 
-    private final ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(
+    private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
             12,
             24,
             Constants.BEAT_TIME * 3,
             TimeUnit.SECONDS,
-            new LinkedBlockingQueue<>(100),
+            new LinkedBlockingQueue<>(1000),
             new ThreadFactory() {
                 @Override
                 public Thread newThread(Runnable r) {
                     Thread thread = new Thread(r);
-//                    thread.setDaemon(true);
+                    thread.setDaemon(true);
                     thread.setName("NettyServerHandler-" + r.hashCode());
                     return thread;
                 }
             });
 
 
-    public NettyServerHandler(Map<String, Object> serviceMap) {
+    public RequestHandler() {};
+    public RequestHandler(Map<String, Object> serviceMap) {
         this.serviceMap = serviceMap;
     }
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ZRpcRequest request) throws Exception {
-        if (request.getRequestId().startsWith(Constants.PING)) {
-            log.info("ping --------------------" + new Date());
+    protected void channelRead0(ChannelHandlerContext ctx, ZRpcRequest req) throws Exception {
+        if (req.getRequestId().startsWith(Constants.PING)) {
+            log.info("ping >>>>>>>> server - {}, reqId {} ", new Date(), req.getRequestId());
             return;
         }
-        threadPoolExecutor.execute(() -> {
+        pool.execute(() -> {
 
             ZRpcResponse response = new ZRpcResponse();
-            response.setRequestId(request.getRequestId());
+            response.setRequestId(req.getRequestId());
             try {
-                Object result = handle(request);
+                Object result = handle(req);
                 response.setResult(result);
             }catch (Throwable t) {
                 response.setError(t.toString());
@@ -67,7 +70,7 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
             ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
-                    log.info("send response for request" + request.getRequestId());
+                    log.info("send response for request" + req.getRequestId());
                 }
             });
         });
@@ -82,24 +85,34 @@ public class NettyServerHandler extends SimpleChannelInboundHandler<ZRpcRequest>
         if (request.getRequestId().startsWith(Constants.PING)) {
             return null;
         }
-        String className = request.getClassName();
-        String version = request.getVersion();
-        String serviceKey = ServiceUtil.makeServiceKey(className, version);
-        Object serviceBean = serviceMap.get(serviceKey);
-        if (serviceBean == null) {
-            log.error("Can not find service implement with interface name: {} and version: {}", className, version);
-            return null;
+        String interfaceName = request.getClassName();
+        Object obj = ServerServiceCache.get(interfaceName);
+        if (Objects.isNull(obj)) {
+            throw new RuntimeException("can not find service implement with interface name " + interfaceName);
         }
-
-        Class<?> serviceClass = serviceBean.getClass();
+        Class<?> serviceClass = obj.getClass();
         String methodName = request.getMethodName();
         Class<?>[] parameterTypes = request.getParameterTypes();
         Object[] parameters = request.getParameters();
 
+//        String className = request.getClassName();
+//        String version = request.getVersion();
+//        String serviceKey = ServiceUtil.makeServiceKey(className, version);
+//        Object serviceBean = serviceMap.get(serviceKey);
+//        if (serviceBean == null) {
+//            log.error("Can not find service implement with interface name: {} and version: {}", className, version);
+//            return null;
+//        }
+//
+//        Class<?> serviceClass = serviceBean.getClass();
+//        String methodName = request.getMethodName();
+//        Class<?>[] parameterTypes = request.getParameterTypes();
+//        Object[] parameters = request.getParameters();
+
         // cglib reflect
         FastClass fastClass = FastClass.create(serviceClass);
         int methodIndex = fastClass.getIndex(methodName,parameterTypes);
-        return fastClass.invoke(methodIndex, serviceBean, parameters);
+        return fastClass.invoke(methodIndex, obj, parameters);
     }
 
     @Override

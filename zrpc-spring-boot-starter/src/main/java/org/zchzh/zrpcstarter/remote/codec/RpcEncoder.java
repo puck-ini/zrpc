@@ -10,22 +10,21 @@ import io.netty.handler.codec.MessageToByteEncoder;
  * @author zengchzh
  * @date 2021/3/10
  */
-public class RpcEncoder extends MessageToByteEncoder {
+public class RpcEncoder extends MessageToByteEncoder<Object> {
 
-    private Class<?> genericClass;
+    private final Class<?> clazz;
 
-    private ZSerializer zSerializer;
+    private final ZSerializer serializer;
 
-    public RpcEncoder(Class<?> genericClass, String serializerName) {
-        this.genericClass = genericClass;
-        this.zSerializer = ZSerializerFactory.getInstance(serializerName);
+    public RpcEncoder(Class<?> clazz, ZSerializer serializer) {
+        this.clazz = clazz;
+        this.serializer = serializer;
     }
-
 
     @Override
     protected void encode(ChannelHandlerContext ctx, Object msg, ByteBuf out) throws Exception {
-        if (genericClass.isInstance(msg)) {
-            byte[] data = zSerializer.serialize(msg);
+        if (clazz.isInstance(msg)) {
+            byte[] data = serializer.serialize(msg);
             out.writeInt(data.length);
             out.writeBytes(data);
         }

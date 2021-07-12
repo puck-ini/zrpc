@@ -1,6 +1,9 @@
 package org.zchzh.zrpcstarter.remote.client;
 
-import org.zchzh.zrpcstarter.remote.handler.NettyClientHandler;
+import io.netty.util.concurrent.Promise;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
+import org.zchzh.zrpcstarter.remote.handler.ResponseHandler;
 
 import java.util.concurrent.ExecutionException;
 
@@ -20,8 +23,15 @@ public interface Client {
      */
     void connect();
 
+    /**
+     * 发起请求
+     * @param request 请求数据
+     * @return 返回结果future
+     */
+    Promise<ZRpcResponse> invoke(ZRpcRequest request);
 
-    NettyClientHandler getHandler() throws InterruptedException, ExecutionException;
+
+    ResponseHandler getHandler() throws InterruptedException, ExecutionException;
 
 //    /**
 //     * 发送请求

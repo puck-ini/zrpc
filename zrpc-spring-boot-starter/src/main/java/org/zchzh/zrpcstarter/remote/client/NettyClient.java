@@ -6,7 +6,10 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
-import org.zchzh.zrpcstarter.remote.handler.NettyClientHandler;
+import org.zchzh.zrpcstarter.model.ResponseMap;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
+import org.zchzh.zrpcstarter.remote.handler.ResponseHandler;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -25,16 +28,15 @@ public class NettyClient implements Client {
 
     private EventLoopGroup workGroup = new NioEventLoopGroup(1);
 
-    private final Promise<NettyClientHandler> promiseHandler = ImmediateEventExecutor.INSTANCE.newPromise();
+    private final Promise<ResponseHandler> handlerPromise = ImmediateEventExecutor.INSTANCE.newPromise();
 
-    private final Promise<Channel> promiseChannel = ImmediateEventExecutor.INSTANCE.newPromise();
+    private final Promise<Channel> channelPromise = ImmediateEventExecutor.INSTANCE.newPromise();
 
     private Bootstrap bootstrap;
 
     public NettyClient(String ip, int port) {
         this.ip = ip;
         this.port = port;
-        this.start();
     }
 
     @Override
@@ -62,9 +64,9 @@ public class NettyClient implements Client {
             @Override
             public void operationComplete(ChannelFuture futureListener) throws Exception {
                 if (futureListener.isSuccess()) {
-                    NettyClientHandler handler = futureListener.channel().pipeline().get(NettyClientHandler.class);
-                    promiseChannel.trySuccess(futureListener.channel());
-                    promiseHandler.trySuccess(handler);
+                    ResponseHandler handler = futureListener.channel().pipeline().get(ResponseHandler.class);
+                    channelPromise.trySuccess(futureListener.channel());
+                    handlerPromise.trySuccess(handler);
                     log.info("connect success");
                 } else {
                     log.info("Failed to connect to server, try connect after 10s");
@@ -80,20 +82,46 @@ public class NettyClient implements Client {
         });
     }
 
-
     @Override
-    public NettyClientHandler getHandler() throws InterruptedException, ExecutionException {
+    public Promise<ZRpcResponse> invoke(ZRpcRequest request) {
+        Promise<ZRpcResponse> promise = ImmediateEventExecutor.INSTANCE.newPromise();
+        ResponseMap.put(request.getRequestId(), promise);
+        try {
+            ChannelFuture future = channelPromise.get().writeAndFlush(request);
+            future.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        log.info("request success");
+                    } else {
+                        log.error("request fail", future.cause());
+                    }
+
+                }
+            });
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("get client channel fail", e);
+            throw new RuntimeException("get client channel fail");
+        }
+        return promise;
+    }
+
+    private boolean channelActive() {
+        Channel channel = channelPromise.getNow();
+        return channel != null && channel.isActive();
+    }
+
+    @Deprecated
+    @Override
+    public ResponseHandler getHandler() throws InterruptedException, ExecutionException {
 //        promiseHandler.await();
 //        if (promiseHandler.isSuccess()) {
 //            return promiseHandler.getNow();
 //        }
-        return promiseHandler.get();
+        return handlerPromise.get();
     }
 
-    private boolean channelActive() {
-        Channel channel = promiseChannel.getNow();
-        return channel != null && channel.isActive();
-    }
+
 
 
 }

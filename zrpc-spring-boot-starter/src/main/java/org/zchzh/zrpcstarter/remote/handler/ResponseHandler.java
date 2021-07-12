@@ -1,9 +1,9 @@
 package org.zchzh.zrpcstarter.remote.handler;
 
-import org.zchzh.zrpcstarter.model.ResultCache;
+import org.zchzh.zrpcstarter.model.ResponseMap;
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
+import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
@@ -22,7 +22,7 @@ import java.util.Date;
  */
 
 @Slf4j
-public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
+public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
 
     private volatile Channel channel;
 
@@ -30,12 +30,12 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
 
     private Promise<ZRpcResponse> responsePromise;
 
-    public NettyClientHandler() {
+    public ResponseHandler() {
         EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
         responsePromise = new DefaultProgressivePromise<>(eventExecutor);
     }
 
-    public NettyClientHandler(ZRpcRequest request){
+    public ResponseHandler(ZRpcRequest request){
         this.zRpcRequest = request;
         EventExecutor eventExecutor = GlobalEventExecutor.INSTANCE;
         responsePromise = new DefaultProgressivePromise<>(eventExecutor);
@@ -69,14 +69,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
-        log.info("client handler : " + response.toString());
-        Promise<ZRpcResponse> promise = ResultCache.MAP.get(response.getRequestId());
-        if (promise != null) {
-            ResultCache.MAP.remove(response.getRequestId());
-            promise.trySuccess(response);
-        }
-
-        responsePromise.trySuccess(response);
+        ResponseMap.pop(response.getRequestId()).trySuccess(response);
     }
 
     @Override
@@ -96,7 +89,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
         // 实现长连接发送心跳
         if (evt instanceof IdleStateEvent) {
             log.info("client send beat -" + System.currentTimeMillis());
-            send(Constants.BEAT_PING);
+            ctx.channel().writeAndFlush(Constants.BEAT_PING);
         } else {
             super.userEventTriggered(ctx, evt);
         }
@@ -116,7 +109,7 @@ public class NettyClientHandler extends SimpleChannelInboundHandler<ZRpcResponse
 
     public Promise<ZRpcResponse> send(ZRpcRequest request) {
         Promise<ZRpcResponse> promise = ImmediateEventExecutor.INSTANCE.newPromise();
-        ResultCache.MAP.put(request.getRequestId(), promise);
+        ResponseMap.put(request.getRequestId(), promise);
         try {
             ChannelFuture channelFuture = channel.writeAndFlush(request);
             log.info("send request" + new Date());

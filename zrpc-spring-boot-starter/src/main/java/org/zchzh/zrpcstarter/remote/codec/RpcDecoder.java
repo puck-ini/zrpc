@@ -15,13 +15,13 @@ import java.util.List;
 
 public class RpcDecoder extends ByteToMessageDecoder {
 
-    private Class<?> genericClass;
+    private Class<?> clazz;
 
-    private ZSerializer zSerializer;
+    private ZSerializer serializer;
 
-    public RpcDecoder(Class<?> genericClass, String serializerName) {
-        this.genericClass = genericClass;
-        this.zSerializer = ZSerializerFactory.getInstance(serializerName);
+    public RpcDecoder(Class<?> clazz, ZSerializer serializer) {
+        this.clazz = clazz;
+        this.serializer = serializer;
     }
 
     @Override
@@ -40,6 +40,6 @@ public class RpcDecoder extends ByteToMessageDecoder {
         }
         byte[] data = new byte[dataLength];
         in.readBytes(data);
-        out.add(zSerializer.deserialize(data, genericClass));
+        out.add(serializer.deserialize(data, clazz));
     }
 }
