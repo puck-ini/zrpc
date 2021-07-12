@@ -1,6 +1,6 @@
 package org.zchzh.zrpcstarter.proxy;
 
-import org.zchzh.zrpcstarter.remote.cache.ClientCache;
+import org.zchzh.zrpcstarter.remote.client.ClientCache;
 import org.zchzh.zrpcstarter.remote.client.Client;
 import org.zchzh.zrpcstarter.register.discovery.ServiceDiscover;
 import org.zchzh.zrpcstarter.model.request.ZRpcRequest;

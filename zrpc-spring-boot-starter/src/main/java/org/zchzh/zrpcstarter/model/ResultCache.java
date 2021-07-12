@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.remote.cache;
+package org.zchzh.zrpcstarter.model;
 
 
 import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;

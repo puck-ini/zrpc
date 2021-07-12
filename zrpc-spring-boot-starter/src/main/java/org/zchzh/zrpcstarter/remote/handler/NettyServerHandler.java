@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.remote.server;
+package org.zchzh.zrpcstarter.remote.handler;
 
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.request.ZRpcRequest;

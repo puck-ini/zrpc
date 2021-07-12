@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.remote.cache;
+package org.zchzh.zrpcstarter.remote.client;
 
 import org.zchzh.zrpcstarter.remote.client.Client;
 import org.zchzh.zrpcstarter.remote.client.NettyClient;
