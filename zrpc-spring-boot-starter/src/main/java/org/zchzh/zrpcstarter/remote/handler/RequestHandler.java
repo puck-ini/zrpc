@@ -37,7 +37,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
                 public Thread newThread(Runnable r) {
                     Thread thread = new Thread(r);
                     thread.setDaemon(true);
-                    thread.setName("NettyServerHandler-" + r.hashCode());
+                    thread.setName("RequestHandler-" + r.hashCode());
                     return thread;
                 }
             });
@@ -49,7 +49,6 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
             return;
         }
         pool.execute(() -> {
-
             ZRpcResponse response = new ZRpcResponse();
             response.setRequestId(req.getRequestId());
             try {
@@ -61,7 +60,11 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
             ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
-                    log.info("send response for request" + req.getRequestId());
+                    if (future.isSuccess()) {
+                        log.info("send response for request" + req.getRequestId());
+                    } else {
+                        log.error("send response fail with request - {}", req.getRequestId(), future.cause());
+                    }
                 }
             });
         });

@@ -51,7 +51,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         // 实现长连接发送心跳
         if (evt instanceof IdleStateEvent) {
-            log.info("client send beat -" + System.currentTimeMillis());
+            log.info("client send beat -" + new Date());
             ctx.channel().writeAndFlush(Constants.BEAT_PING);
         } else {
             super.userEventTriggered(ctx, evt);

@@ -24,25 +24,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
 
-    /**
-     * 服务列表
-     */
-    private Map<String, Object> serviceMap;
-
-    private String serializerName;
-
-    private ZSerializer serializer;
-
-    public NettyServerInitializer() {};
-
-    public NettyServerInitializer(Map<String, Object> serviceMap, String serializerName) {
-        this.serviceMap = serviceMap;
-        this.serializerName = serializerName;
-    }
-
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        serializer = KryoSerializer.class.newInstance();
+        ZSerializer serializer = KryoSerializer.class.newInstance();
         ChannelPipeline channelPipeline = ch.pipeline();
         //
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));

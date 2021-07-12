@@ -60,13 +60,12 @@ public class NettyClient implements Client {
         ChannelFuture future = bootstrap.connect(ip,port);
         future.addListener(new ChannelFutureListener() {
             @Override
-            public void operationComplete(ChannelFuture futureListener) throws Exception {
-                if (futureListener.isSuccess()) {
-                    ResponseHandler handler = futureListener.channel().pipeline().get(ResponseHandler.class);
-                    channelPromise.trySuccess(futureListener.channel());
+            public void operationComplete(ChannelFuture future1) throws Exception {
+                if (future1.isSuccess()) {
+                    channelPromise.trySuccess(future1.channel());
                 } else {
-                    log.warn("Failed to connect to server, try connect after 10s");
-                    futureListener.channel().eventLoop().schedule(new Runnable() {
+                    log.error("Failed to connect to server, try connect after 10s", future1.cause());
+                    future1.channel().eventLoop().schedule(new Runnable() {
                         @Override
                         public void run() {
                             connect();
@@ -87,7 +86,7 @@ public class NettyClient implements Client {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
                     if (future.isSuccess()) {
-                        log.info("request success");
+                        log.info("request - {} success ", request.getRequestId());
                     } else {
                         log.error("request fail", future.cause());
                     }
@@ -105,9 +104,5 @@ public class NettyClient implements Client {
         Channel channel = channelPromise.getNow();
         return channel != null && channel.isActive();
     }
-
-
-
-
 
 }
