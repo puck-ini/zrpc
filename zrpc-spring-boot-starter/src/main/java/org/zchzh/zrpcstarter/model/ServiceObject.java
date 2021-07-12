@@ -1,7 +1,9 @@
-package org.zchzh.zrpcstarter.model.service;
+package org.zchzh.zrpcstarter.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -16,6 +18,8 @@ import java.util.Objects;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ServiceObject implements Serializable {
 
     /**

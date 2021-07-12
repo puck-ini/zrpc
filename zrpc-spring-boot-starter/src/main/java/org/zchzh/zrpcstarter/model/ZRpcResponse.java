@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.model.respones;
+package org.zchzh.zrpcstarter.model;
 
 import lombok.Data;
 

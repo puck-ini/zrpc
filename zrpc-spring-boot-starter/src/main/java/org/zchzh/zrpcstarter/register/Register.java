@@ -1,7 +1,7 @@
 package org.zchzh.zrpcstarter.register;
 
 
-import org.zchzh.zrpcstarter.model.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.ServiceObject;
 
 import java.util.List;
 

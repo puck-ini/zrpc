@@ -6,7 +6,7 @@ import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacos.api.naming.pojo.ListView;
 import lombok.extern.slf4j.Slf4j;
-import org.zchzh.zrpcstarter.model.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.ServiceObject;
 
 import java.util.ArrayList;
 import java.util.List;

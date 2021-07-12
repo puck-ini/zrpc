@@ -5,7 +5,7 @@ package org.zchzh.zrpcstarter.cluster;
 import com.google.auto.service.AutoService;
 import org.zchzh.zrpcstarter.annotation.JdkSPI;
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.ServiceObject;
 
 import java.util.List;
 import java.util.Random;
