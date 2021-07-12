@@ -1,9 +1,8 @@
-package org.zchzh.zrpcstarter.protocol.respones;
+package org.zchzh.zrpcstarter.model.respones;
 
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Map;
 
 /**
  * @author zengchzh

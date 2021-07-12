@@ -1,10 +1,10 @@
-package org.zchzh.zrpcstarter.server;
+package org.zchzh.zrpcstarter.remote.server;
 
-import org.zchzh.zrpcstarter.codec.RpcDecoder;
-import org.zchzh.zrpcstarter.codec.RpcEncoder;
+import org.zchzh.zrpcstarter.remote.codec.RpcDecoder;
+import org.zchzh.zrpcstarter.remote.codec.RpcEncoder;
 import org.zchzh.zrpcstarter.config.Constants;
-import org.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
-import org.zchzh.zrpcstarter.protocol.respones.ZRpcResponse;
+import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.respones.ZRpcResponse;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 import org.zchzh.zrpcstarter.serializer.kryo.KryoSerializer;
 import io.netty.channel.ChannelInitializer;

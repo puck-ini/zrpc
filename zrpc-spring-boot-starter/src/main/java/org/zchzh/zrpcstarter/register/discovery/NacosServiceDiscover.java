@@ -1,10 +1,10 @@
-package org.zchzh.zrpcstarter.discovery;
+package org.zchzh.zrpcstarter.register.discovery;
 
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
-import org.zchzh.zrpcstarter.protocol.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.service.ServiceObject;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;

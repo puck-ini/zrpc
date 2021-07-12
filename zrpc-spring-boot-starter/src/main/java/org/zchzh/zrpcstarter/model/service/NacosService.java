@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.protocol.service;
+package org.zchzh.zrpcstarter.model.service;
 
 import com.alibaba.nacos.api.naming.pojo.Instance;
 

@@ -1,6 +1,6 @@
 package org.zchzh.zrpcstarter.config;
 
-import org.zchzh.zrpcstarter.protocol.request.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.request.ZRpcRequest;
 
 /**
  * @author zengchzh

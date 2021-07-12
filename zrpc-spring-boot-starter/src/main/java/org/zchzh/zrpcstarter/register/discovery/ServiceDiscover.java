@@ -1,6 +1,6 @@
-package org.zchzh.zrpcstarter.discovery;
+package org.zchzh.zrpcstarter.register.discovery;
 
-import org.zchzh.zrpcstarter.protocol.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.service.ServiceObject;
 
 import java.util.List;
 

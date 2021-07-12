@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.client;
+package org.zchzh.zrpcstarter.remote.client;
 
 import java.util.concurrent.ExecutionException;
 

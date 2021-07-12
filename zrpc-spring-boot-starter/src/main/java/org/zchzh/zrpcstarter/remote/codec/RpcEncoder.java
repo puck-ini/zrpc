@@ -1,4 +1,4 @@
-package org.zchzh.zrpcstarter.codec;
+package org.zchzh.zrpcstarter.remote.codec;
 
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 import org.zchzh.zrpcstarter.serializer.ZSerializerFactory;

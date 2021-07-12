@@ -3,8 +3,8 @@ package org.zchzh.zrpcstarter.register;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.nacos.api.exception.NacosException;
 import org.zchzh.zrpcstarter.config.Constants;
-import org.zchzh.zrpcstarter.protocol.service.Service;
-import org.zchzh.zrpcstarter.protocol.service.ServiceObject;
+import org.zchzh.zrpcstarter.model.service.Service;
+import org.zchzh.zrpcstarter.model.service.ServiceObject;
 import org.zchzh.zrpcstarter.serializer.zookeeper.ZookeeperSerializer;
 import org.I0Itec.zkclient.ZkClient;
 
