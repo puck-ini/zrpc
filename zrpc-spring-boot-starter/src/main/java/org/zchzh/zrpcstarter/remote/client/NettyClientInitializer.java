@@ -24,7 +24,7 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ZSerializer serializer = ZSerializerFactory.getInstance(Constants.KRYO);
+        ZSerializer serializer = ZSerializerFactory.getInstance(Constants.PROTOSTUFF);
         ChannelPipeline channelPipeline = ch.pipeline();
 
         // 心跳机制，通过心跳检查对方是否有效,同时限制读和写的空闲时间，超过时间就会触发自定义handler中的userEventTrigger方法

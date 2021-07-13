@@ -26,7 +26,7 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ZSerializer serializer = ZSerializerFactory.getInstance(Constants.KRYO);
+        ZSerializer serializer = ZSerializerFactory.getInstance(Constants.PROTOSTUFF);
         ChannelPipeline channelPipeline = ch.pipeline();
         //
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));

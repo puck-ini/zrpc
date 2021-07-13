@@ -30,10 +30,14 @@ public class Constants {
 
     public static final String KRYO = "kryo";
 
+    public static final String PROTOSTUFF = "protostuff";
+
 
 
 
     public static final String RANDOM = "random";
+
+    public static final String WEIGHT_ROUND = "weightround";
 
 
     public static final String LOAD_BALANCE = "loadbalance";
