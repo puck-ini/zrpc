@@ -1,6 +1,9 @@
 package org.zchzh.zrpcstarter.proxy;
 
+import cn.hutool.cache.CacheUtil;
+import cn.hutool.cache.impl.TimedCache;
 import io.netty.util.concurrent.Promise;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.zchzh.zrpcstarter.cluster.LoadBalance;
 import org.zchzh.zrpcstarter.cluster.LoadBalanceFactory;
@@ -24,8 +27,20 @@ import java.util.UUID;
  * @author zengchzh
  * @date 2021/7/10
  */
+
+@Slf4j
 public class JdkProxyFactory implements ProxyFactory {
 
+
+    /**
+     * service 缓存
+     */
+    private static final TimedCache<String, List<ServiceObject>> SERVICE_CACHE
+            = CacheUtil.newTimedCache(10000);
+
+    static {
+        SERVICE_CACHE.schedulePrune(10000);
+    }
 
     @Resource
     private Register register;
@@ -45,7 +60,17 @@ public class JdkProxyFactory implements ProxyFactory {
         @Override
         public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
             String serviceName = clazz.getName();
+//            List<ServiceObject> serviceObjectList = SERVICE_CACHE.get(serviceName, false);
+//            if (CollectionUtils.isEmpty(serviceObjectList)) {
+//                serviceObjectList = register.getAll(serviceName);
+//                SERVICE_CACHE.put(serviceName, serviceObjectList, 10000);
+//            }
+
+//            long start = System.currentTimeMillis();
+//            log.info("start : " + start);
             List<ServiceObject> serviceObjectList = register.getAll(serviceName);
+//            log.info("cost : " + (System.currentTimeMillis() - start));
+
             if (CollectionUtils.isEmpty(serviceObjectList)) {
                 throw new RuntimeException("can not find service with name : " + serviceName);
             }

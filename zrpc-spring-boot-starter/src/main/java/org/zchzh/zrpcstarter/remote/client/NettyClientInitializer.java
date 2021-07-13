@@ -7,7 +7,7 @@ import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.remote.handler.ResponseHandler;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
-import org.zchzh.zrpcstarter.serializer.kryo.KryoSerializer;
+import org.zchzh.zrpcstarter.serializer.ZSerializerFactory;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -24,7 +24,7 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ZSerializer serializer = KryoSerializer.class.newInstance();
+        ZSerializer serializer = ZSerializerFactory.getInstance(Constants.KRYO);
         ChannelPipeline channelPipeline = ch.pipeline();
 
         // 心跳机制，通过心跳检查对方是否有效,同时限制读和写的空闲时间，超过时间就会触发自定义handler中的userEventTrigger方法

@@ -15,9 +15,9 @@ import java.util.List;
 
 public class RpcDecoder extends ByteToMessageDecoder {
 
-    private Class<?> clazz;
+    private final Class<?> clazz;
 
-    private ZSerializer serializer;
+    private final ZSerializer serializer;
 
     public RpcDecoder(Class<?> clazz, ZSerializer serializer) {
         this.clazz = clazz;
