@@ -10,6 +10,8 @@ import java.lang.annotation.Target;
 /**
  * @author zengchzh
  * @date 2021/3/10
+ *
+ * 消费者调用服务
  */
 
 @Target({ElementType.FIELD})

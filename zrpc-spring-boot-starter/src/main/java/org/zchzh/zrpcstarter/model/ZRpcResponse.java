@@ -11,10 +11,16 @@ import java.io.Serializable;
 
 @Data
 public class ZRpcResponse implements Serializable {
-
+    /**
+     * 请求id
+     */
     private String requestId;
-
+    /**
+     * 错误信息
+     */
     private String error;
-
+    /**
+     * 调用返回结果
+     */
     private Object result;
 }

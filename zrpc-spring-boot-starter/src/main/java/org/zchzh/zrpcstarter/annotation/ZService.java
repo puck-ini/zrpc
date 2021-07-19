@@ -11,6 +11,8 @@ import java.lang.annotation.Target;
 /**
  * @author zengchzh
  * @date 2021/3/10
+ *
+ * 提供者注册服务
  */
 
 @Target({ElementType.TYPE})

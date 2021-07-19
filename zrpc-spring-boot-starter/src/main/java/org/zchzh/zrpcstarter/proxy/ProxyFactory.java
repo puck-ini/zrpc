@@ -3,6 +3,8 @@ package org.zchzh.zrpcstarter.proxy;
 /**
  * @author zengchzh
  * @date 2021/7/9
+ *
+ * 代理
  */
 public interface ProxyFactory {
 

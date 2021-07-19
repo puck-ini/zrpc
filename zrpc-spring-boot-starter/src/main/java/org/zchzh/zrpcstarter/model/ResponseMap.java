@@ -10,6 +10,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author zengchzh
  * @date 2021/4/17
+ *
+ * 用于保存提供者返回的结果
  */
 @Slf4j
 public class ResponseMap {

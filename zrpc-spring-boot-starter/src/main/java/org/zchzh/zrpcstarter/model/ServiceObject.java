@@ -13,6 +13,8 @@ import java.util.Objects;
 /**
  * @author zengchzh
  * @date 2021/3/11
+ *
+ * 服务对象，用于注册中心的服务发现和注册
  */
 
 @Data

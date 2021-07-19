@@ -7,6 +7,8 @@ import java.util.List;
 /**
  * @author zengchzh
  * @date 2021/5/23
+ *
+ * 负载均衡
  */
 public interface LoadBalance {
 

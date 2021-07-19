@@ -17,15 +17,28 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ZRpcRequest implements Serializable {
 
+    /**
+     * 请求id
+     */
     private String requestId;
-
+    /**
+     * 请求的接口名
+     */
     private String className;
-
+    /**
+     * 方法名
+     */
     private String methodName;
-
+    /**
+     * 参数类型
+     */
     private Class<?>[] parameterTypes;
-
+    /**
+     * 调用参数
+     */
     private Object[] parameters;
-
+    /**
+     * 版本
+     */
     private String version;
 }
