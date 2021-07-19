@@ -35,7 +35,7 @@ public class RpcServerStarter implements ApplicationListener<ContextRefreshedEve
     private Server server;
 
     @Resource
-    private RpcProperties rpcProperties;
+    private RpcServerProperties rpcServerProperties;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -62,7 +62,7 @@ public class RpcServerStarter implements ApplicationListener<ContextRefreshedEve
                 ServiceObject serviceObject = ServiceObject.builder()
                         .serviceName(interfaceName)
                         .ip(ServerUtil.getHost())
-                        .port(rpcProperties.getServerPort())
+                        .port(rpcServerProperties.getServerPort())
                         .weight(service.weight())
                         .clazz(clazz)
                         .meta(new HashMap<>(10))

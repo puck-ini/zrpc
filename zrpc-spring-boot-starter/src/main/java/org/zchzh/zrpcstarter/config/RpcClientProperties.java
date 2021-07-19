@@ -7,12 +7,12 @@ import org.zchzh.zrpcstarter.constants.Constants;
 
 /**
  * @author zengchzh
- * @date 2021/3/11
+ * @date 2021/7/19
  */
 @Data
-@EnableConfigurationProperties(RpcProperties.class)
+@EnableConfigurationProperties(RpcClientProperties.class)
 @ConfigurationProperties("zrpc")
-public class RpcProperties {
+public class RpcClientProperties {
 
     /**
      * 服务注册中心
@@ -24,14 +24,14 @@ public class RpcProperties {
      */
     private String registerProtocol = "nacos";
 
-    /**
-     * 服务端暴露端口
-     */
-    private Integer serverPort = 19000;
-    /**
-     * 服务端序列化方式
-     */
-    private String serverSerializer = Constants.KRYO;
+//    /**
+//     * 服务端暴露端口
+//     */
+//    private Integer serverPort = 19000;
+//    /**
+//     * 服务端序列化方式
+//     */
+//    private String serverSerializer = Constants.KRYO;
 
     /**
      * 客户端暴露端口

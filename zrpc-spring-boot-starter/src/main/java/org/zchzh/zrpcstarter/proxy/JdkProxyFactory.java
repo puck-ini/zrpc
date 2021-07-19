@@ -42,7 +42,7 @@ public class JdkProxyFactory implements ProxyFactory {
         SERVICE_CACHE.schedulePrune(10000);
     }
 
-    @Resource
+    @Resource(name = "discovery")
     private Register register;
 
     @Override
