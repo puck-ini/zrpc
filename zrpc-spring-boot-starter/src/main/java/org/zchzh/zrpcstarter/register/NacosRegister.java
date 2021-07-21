@@ -5,7 +5,10 @@ import com.alibaba.nacos.api.naming.NamingFactory;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.pojo.Instance;
 import com.alibaba.nacos.api.naming.pojo.ListView;
+import com.google.auto.service.AutoService;
 import lombok.extern.slf4j.Slf4j;
+import org.zchzh.zrpcstarter.annotation.JdkSPI;
+import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.ServiceObject;
 
 import java.util.ArrayList;
@@ -16,6 +19,8 @@ import java.util.List;
  * @date 2021/7/4
  */
 @Slf4j
+@AutoService(Register.class)
+@JdkSPI(Constants.NACOS)
 public class NacosRegister implements Register {
 
     private NamingService namingService;

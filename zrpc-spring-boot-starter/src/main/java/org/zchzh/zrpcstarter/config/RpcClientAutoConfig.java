@@ -7,6 +7,7 @@ import org.zchzh.zrpcstarter.proxy.JdkProxyFactory;
 import org.zchzh.zrpcstarter.proxy.ProxyFactory;
 import org.zchzh.zrpcstarter.register.NacosRegister;
 import org.zchzh.zrpcstarter.register.Register;
+import org.zchzh.zrpcstarter.register.ZkRegister;
 
 /**
  * @author zengchzh

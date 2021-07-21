@@ -42,4 +42,9 @@ public class Constants {
 
     public static final String LOAD_BALANCE = "loadbalance";
 
+
+    public static final String NACOS = "nacos";
+
+    public static final String ZK = "zookeeper";
+
 }

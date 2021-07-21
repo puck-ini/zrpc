@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zchzh.zrpcstarter.register.NacosRegister;
 import org.zchzh.zrpcstarter.register.Register;
+import org.zchzh.zrpcstarter.register.ZkRegister;
 import org.zchzh.zrpcstarter.remote.server.NettyServer;
 import org.zchzh.zrpcstarter.remote.server.Server;
 

@@ -23,7 +23,7 @@ public class RpcServerProperties {
     /**
      * 注册中心协议
      */
-    private String registerProtocol = "nacos";
+    private String registerProtocol = Constants.NACOS;
 
     /**
      * 服务端暴露端口
