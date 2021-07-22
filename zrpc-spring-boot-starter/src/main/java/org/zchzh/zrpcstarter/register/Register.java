@@ -12,6 +12,12 @@ import java.util.List;
 public interface Register {
 
     /**
+     * 初始化配置
+     * @param address 注册中心地址
+     * @return 返回 Register 对象
+     */
+    Register init(String address);
+    /**
      * 注册服务
      * @param serviceObject 服务数据
      * @return 返回注册的服务

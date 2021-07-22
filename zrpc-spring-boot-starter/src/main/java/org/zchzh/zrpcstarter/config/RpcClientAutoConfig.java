@@ -7,6 +7,7 @@ import org.zchzh.zrpcstarter.proxy.JdkProxyFactory;
 import org.zchzh.zrpcstarter.proxy.ProxyFactory;
 import org.zchzh.zrpcstarter.register.NacosRegister;
 import org.zchzh.zrpcstarter.register.Register;
+import org.zchzh.zrpcstarter.register.RegisterFactory;
 import org.zchzh.zrpcstarter.register.ZkRegister;
 
 /**
@@ -28,7 +29,7 @@ public class RpcClientAutoConfig {
 
     @Bean(name = "discovery")
     public Register register(@Autowired RpcClientProperties rpcClientProperties) {
-        return new NacosRegister(rpcClientProperties.getRegisterAddress());
+        return RegisterFactory.getInstance(rpcClientProperties.getRegisterProtocol(), rpcClientProperties.getRegisterAddress());
     }
 
 

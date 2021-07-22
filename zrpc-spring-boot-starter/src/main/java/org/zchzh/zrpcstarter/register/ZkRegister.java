@@ -20,19 +20,30 @@ import java.util.List;
 @JdkSPI(Constants.ZK)
 public class ZkRegister implements Register{
 
-    private final ZkClient zkClient;
+    private ZkClient zkClient;
 
     private static final String ROOT_NODE = "/zrpc/service";
 
     private static final String NODE_SEPARATOR = "/";
 
-    public ZkRegister(String address) {
+//    public ZkRegister(String address) {
+//        zkClient = new ZkClient(address);
+//        zkClient.setZkSerializer(new SerializableSerializer());
+//        if (!zkClient.exists(ROOT_NODE)) {
+//            zkClient.createPersistent(ROOT_NODE, true);
+//        }
+//    }
+
+    @Override
+    public Register init(String address) {
         zkClient = new ZkClient(address);
         zkClient.setZkSerializer(new SerializableSerializer());
         if (!zkClient.exists(ROOT_NODE)) {
             zkClient.createPersistent(ROOT_NODE, true);
         }
+        return this;
     }
+
     @Override
     public ServiceObject register(ServiceObject serviceObject) {
         String serviceRootPath = ROOT_NODE + NODE_SEPARATOR + serviceObject.getServiceName();

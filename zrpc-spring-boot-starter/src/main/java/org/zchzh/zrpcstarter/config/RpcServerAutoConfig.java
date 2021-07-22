@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zchzh.zrpcstarter.register.NacosRegister;
 import org.zchzh.zrpcstarter.register.Register;
+import org.zchzh.zrpcstarter.register.RegisterFactory;
 import org.zchzh.zrpcstarter.register.ZkRegister;
 import org.zchzh.zrpcstarter.remote.server.NettyServer;
 import org.zchzh.zrpcstarter.remote.server.Server;
@@ -33,6 +34,6 @@ public class RpcServerAutoConfig {
 
     @Bean
     public Register register(@Autowired RpcServerProperties rpcServerProperties) {
-        return new NacosRegister(rpcServerProperties.getRegisterAddress());
+        return RegisterFactory.getInstance(rpcServerProperties.getRegisterProtocol(), rpcServerProperties.getRegisterAddress());
     }
 }
