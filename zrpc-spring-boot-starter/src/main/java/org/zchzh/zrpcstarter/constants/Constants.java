@@ -47,4 +47,9 @@ public class Constants {
 
     public static final String ZK = "zookeeper";
 
+
+    public static final String JDK = "jdk";
+
+    public static final String CGLIB = "cglib";
+
 }

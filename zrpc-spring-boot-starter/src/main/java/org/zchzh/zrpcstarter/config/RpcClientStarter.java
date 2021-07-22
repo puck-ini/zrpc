@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.zchzh.zrpcstarter.annotation.ZReference;
-import org.zchzh.zrpcstarter.proxy.ProxyFactory;
+import org.zchzh.zrpcstarter.proxy.InvokeProxy;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
@@ -21,7 +21,7 @@ import java.util.Objects;
 public class RpcClientStarter implements ApplicationListener<ContextRefreshedEvent> /*BeanFactoryPostProcessor*/ {
 
     @Resource
-    private ProxyFactory proxyFactory;
+    private InvokeProxy invokeProxy;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -48,7 +48,7 @@ public class RpcClientStarter implements ApplicationListener<ContextRefreshedEve
                 Object obj = context.getBean(name);
                 field.setAccessible(true);
                 try {
-                    field.set(obj, proxyFactory.getProxy(fieldClass));
+                    field.set(obj, invokeProxy.getProxy(fieldClass));
                 } catch (IllegalAccessException e) {
                     log.error("inject service fail - ", e);
                     throw new RuntimeException("inject service fail");

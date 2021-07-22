@@ -2,9 +2,11 @@ package org.zchzh.zrpcstarter.proxy;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
+import com.google.auto.service.AutoService;
 import io.netty.util.concurrent.Promise;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
+import org.zchzh.zrpcstarter.annotation.JdkSPI;
 import org.zchzh.zrpcstarter.cluster.LoadBalance;
 import org.zchzh.zrpcstarter.cluster.LoadBalanceFactory;
 import org.zchzh.zrpcstarter.constants.Constants;
@@ -15,7 +17,6 @@ import org.zchzh.zrpcstarter.register.Register;
 import org.zchzh.zrpcstarter.remote.client.ClientServiceCache;
 
 
-import javax.annotation.Resource;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -29,7 +30,9 @@ import java.util.UUID;
  */
 
 @Slf4j
-public class JdkProxyFactory implements ProxyFactory {
+@AutoService(InvokeProxy.class)
+@JdkSPI(Constants.JDK)
+public class JdkInvokeProxy implements InvokeProxy {
 
 
     /**
@@ -42,12 +45,16 @@ public class JdkProxyFactory implements ProxyFactory {
         SERVICE_CACHE.schedulePrune(10000);
     }
 
-    @Resource(name = "discovery")
     private Register register;
 
     @Override
     public Object getProxy(Class<?> clazz) {
         return Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] {clazz}, new ClientInvocationHandler(clazz));
+    }
+
+    @Override
+    public void setDiscovery(Register register) {
+        this.register = register;
     }
 
     private class ClientInvocationHandler implements InvocationHandler {

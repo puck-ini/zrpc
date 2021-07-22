@@ -1,14 +1,14 @@
 package org.zchzh.zrpcstarter.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.zchzh.zrpcstarter.proxy.JdkProxyFactory;
-import org.zchzh.zrpcstarter.proxy.ProxyFactory;
-import org.zchzh.zrpcstarter.register.NacosRegister;
+import org.zchzh.zrpcstarter.proxy.InvokeProxyFactory;
+import org.zchzh.zrpcstarter.proxy.JdkInvokeProxy;
+import org.zchzh.zrpcstarter.proxy.InvokeProxy;
 import org.zchzh.zrpcstarter.register.Register;
 import org.zchzh.zrpcstarter.register.RegisterFactory;
-import org.zchzh.zrpcstarter.register.ZkRegister;
 
 /**
  * @author zengchzh
@@ -34,7 +34,10 @@ public class RpcClientAutoConfig {
 
 
     @Bean
-    public ProxyFactory proxyFactory() {
-        return new JdkProxyFactory();
+    public InvokeProxy invokeProxy(@Autowired @Qualifier("discovery") Register discovery,
+                                   @Autowired RpcClientProperties rpcClientProperties) {
+        InvokeProxy invokeProxy = InvokeProxyFactory.getInstance(rpcClientProperties.getProxy());
+        invokeProxy.setDiscovery(discovery);
+        return invokeProxy;
     }
 }

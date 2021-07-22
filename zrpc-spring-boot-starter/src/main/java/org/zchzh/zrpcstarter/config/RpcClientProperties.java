@@ -41,4 +41,8 @@ public class RpcClientProperties {
      * 客户端序列化方式
      */
     private String clientSerializer = Constants.KRYO;
+    /**
+     * 代理方式
+     */
+    private String proxy = Constants.JDK;
 }
