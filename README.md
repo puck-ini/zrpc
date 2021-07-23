@@ -1,8 +1,10 @@
 # 简易RPC框架
 
-zrpc-spring-boot-test 为测试模块，demo-consumer 和 demo-provider 启动 nacos 后可直接运行测试
 
 
+## zrpc-spring-boot-starter 模块
+
+zrpc-spring-boot-starter 模块为 rpc 的主要实现，结构如下：
 
 ```
 ├─annotation 注解相关
@@ -24,5 +26,63 @@ zrpc-spring-boot-test 为测试模块，demo-consumer 和 demo-provider 启动 n
 │  ├─kryo
 │  └─protostuff
 └─util 工具类
+```
+
+
+
+## zrpc-spring-boot-test 模块
+
+zrpc-spring-boot-test 为测试模块，demo-consumer 和 demo-provider 启动 nacos 后可直接运行测试，也可以在application配置文件中修改配置更换注册中心。
+
+例如：
+
+```yaml
+zrpc:
+  register-address: 127.0.0.1:2181 # 注册中心地址
+  register-protocol: zookeeper # 注册中心，有 nacos 和 zookeeper 两种
+  proxy: jdk # 代理方式，有 jdk 和 cglib 两种实现
+```
+
+
+
+启动后访问 http://localhost:9090/v1/get 即可看到结果。
+
+
+
+## 使用方式
+
+定义接口：
+
+```java
+public interface DemoService {
+
+    String getMsg();
+
+}
+```
+
+
+
+接口实现，在实现类加入 @ZService 注解：
+
+```java
+@ZService
+public class DemoServiceImpl implements DemoService {
+
+    @Override
+    public String getMsg() {
+        return "getMsg: " + System.currentTimeMillis();
+    }
+
+}
+```
+
+
+
+调用接口，使用 @ZReference 调用接口：
+
+```java
+    @ZReference
+    private DemoService demoService;
 ```
 

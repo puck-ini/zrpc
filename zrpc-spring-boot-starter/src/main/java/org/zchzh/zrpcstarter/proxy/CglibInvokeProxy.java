@@ -48,6 +48,7 @@ public class CglibInvokeProxy implements InvokeProxy {
     }
 
     private class ClientInvocationHandler implements MethodInterceptor {
+
         private final Class<?> clazz;
 
         public ClientInvocationHandler(Class<?> clazz) {
@@ -56,42 +57,6 @@ public class CglibInvokeProxy implements InvokeProxy {
 
         @Override
         public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-//            if ("toString".equals(method.getName())) {
-//                return methodProxy.getClass().toString();
-//            }
-//
-//            if ("hashCode".equals(method.getName())) {
-//                return 0;
-//            }
-//            // 获取服务信息
-//            String serviceName = o.getClass().getName();
-//            List<Service> serviceList = serviceDiscover.getService(serviceName);
-//
-//            if (CollectionUtils.isEmpty(serviceList)) {
-//                log.error("ServiceNoFoundException");
-//                return null;
-//            }
-//
-//            // 随机选择一个服务提供者（软负载均衡）
-//            Service service = serviceList.get(random.nextInt(serviceList.size()));
-//
-//            // 构造request对象
-//            ZRpcRequest request = new ZRpcRequest();
-//            request.setClassName(serviceName);
-//            request.setMethodName(method.getName());
-//            request.setParameterTypes(method.getParameterTypes());
-//            request.setParameters(objects);
-//            request.setVersion("version");
-//            request.setRequestId(UUID.randomUUID().toString());
-//
-//            // 协议
-//            ZRpcResponse response = nettyClient.sendRequest(request,service);
-//            log.info("proxy success");
-//            if (response.getError() != null) {
-//                log.error("clientProxyFactory getError : " + response.getError());
-//            }
-//            return response.getResult();
-
             String serviceName = clazz.getName();
             List<ServiceObject> serviceObjectList = register.getAll(serviceName);
 
