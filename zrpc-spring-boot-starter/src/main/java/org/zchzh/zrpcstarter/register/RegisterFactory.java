@@ -16,19 +16,20 @@ public class RegisterFactory {
 
     private static final Map<String, Register> REGISTER_MAP = new ConcurrentHashMap<>();
 
-    public static Register getInstance(String name, String address) {
-        return REGISTER_MAP.computeIfAbsent(name, k -> get(name, address));
+    public static Register getInstance(String name) {
+        return REGISTER_MAP.computeIfAbsent(name, k -> get(name));
     }
 
-    private static Register get(String name, String address) {
+    private static Register get(String name) {
         ServiceLoader<Register> loader = ServiceLoader.load(Register.class);
         for (Register register : loader) {
             JdkSPI jdkSPI = register.getClass().getAnnotation(JdkSPI.class);
             if (Objects.isNull(jdkSPI)) {
                 throw new IllegalArgumentException("register name can not be empty");
             }
-            if (Objects.equals(name, jdkSPI.value())) {
-                return register.init(address);
+            String[] arr = name.split(":");
+            if (Objects.equals(arr[0], jdkSPI.value())) {
+                return register.init(arr[1]);
             }
         }
         throw new CommonException("invalid register config");

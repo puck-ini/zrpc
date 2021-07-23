@@ -34,6 +34,7 @@ public class RpcServerAutoConfig {
 
     @Bean
     public Register register(@Autowired RpcServerProperties rpcServerProperties) {
-        return RegisterFactory.getInstance(rpcServerProperties.getRegisterProtocol(), rpcServerProperties.getRegisterAddress());
+        String name = rpcServerProperties.getRegisterProtocol() + ":" + rpcServerProperties.getRegisterAddress();
+        return RegisterFactory.getInstance(name);
     }
 }

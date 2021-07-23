@@ -29,7 +29,8 @@ public class RpcClientAutoConfig {
 
     @Bean(name = "discovery")
     public Register register(@Autowired RpcClientProperties rpcClientProperties) {
-        return RegisterFactory.getInstance(rpcClientProperties.getRegisterProtocol(), rpcClientProperties.getRegisterAddress());
+        String name = rpcClientProperties.getRegisterProtocol() + ":" + rpcClientProperties.getRegisterAddress();
+        return RegisterFactory.getInstance(name);
     }
 
 
