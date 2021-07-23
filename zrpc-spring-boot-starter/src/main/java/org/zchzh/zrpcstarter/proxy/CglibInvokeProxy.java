@@ -9,8 +9,8 @@ import net.sf.cglib.proxy.MethodProxy;
 import org.springframework.util.CollectionUtils;
 import org.zchzh.zrpcstarter.annotation.JdkSPI;
 import org.zchzh.zrpcstarter.cluster.LoadBalance;
-import org.zchzh.zrpcstarter.cluster.LoadBalanceFactory;
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.factory.FactoryProducer;
 import org.zchzh.zrpcstarter.model.ServiceObject;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
@@ -64,7 +64,8 @@ public class CglibInvokeProxy implements InvokeProxy {
                 throw new RuntimeException("can not find service with name : " + serviceName);
             }
             String loadBalanceName = serviceObjectList.get(0).getMeta().get(Constants.LOAD_BALANCE);
-            LoadBalance loadBalance = LoadBalanceFactory.getInstance(loadBalanceName);
+            LoadBalance loadBalance = (LoadBalance) FactoryProducer.INSTANCE.getInstance(Constants.CLUSTER)
+                    .getInstance(loadBalanceName);
             ServiceObject serviceObject = loadBalance.get(serviceObjectList);
             ZRpcRequest request = ZRpcRequest.builder()
                     .requestId(UUID.randomUUID().toString())

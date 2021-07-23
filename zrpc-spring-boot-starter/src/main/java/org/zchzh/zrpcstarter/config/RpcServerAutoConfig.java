@@ -3,10 +3,9 @@ package org.zchzh.zrpcstarter.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.zchzh.zrpcstarter.register.NacosRegister;
+import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.factory.FactoryProducer;
 import org.zchzh.zrpcstarter.register.Register;
-import org.zchzh.zrpcstarter.register.RegisterFactory;
-import org.zchzh.zrpcstarter.register.ZkRegister;
 import org.zchzh.zrpcstarter.remote.server.NettyServer;
 import org.zchzh.zrpcstarter.remote.server.Server;
 
@@ -34,7 +33,8 @@ public class RpcServerAutoConfig {
 
     @Bean
     public Register register(@Autowired RpcServerProperties rpcServerProperties) {
-        String name = rpcServerProperties.getRegisterProtocol() + ":" + rpcServerProperties.getRegisterAddress();
-        return RegisterFactory.getInstance(name);
+        Register register = (Register) FactoryProducer.INSTANCE.getInstance(Constants.REGISTER)
+                .getInstance(rpcServerProperties.getRegisterProtocol());
+        return register.init(rpcServerProperties.getRegisterAddress());
     }
 }

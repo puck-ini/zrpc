@@ -1,8 +1,11 @@
 package org.zchzh.zrpcstarter.serializer;
 
+import com.google.auto.service.AutoService;
 import org.zchzh.zrpcstarter.annotation.JdkSPI;
+import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.exception.CommonException;
 import lombok.extern.slf4j.Slf4j;
+import org.zchzh.zrpcstarter.factory.AbstractFactory;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,27 +15,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2021/3/13
  */
 @Slf4j
-public class ZSerializerFactory {
+@AutoService(AbstractFactory.class)
+@JdkSPI(Constants.SERIALIZER)
+public class ZSerializerFactory extends AbstractFactory<ZSerializer> {
 
-    private static final Map<String, ZSerializer> SERIALIZER_MAP = new ConcurrentHashMap<>();
-
-    public static ZSerializer getInstance(String name) {
-        return SERIALIZER_MAP.computeIfAbsent(name, k -> get(name));
+    @Override
+    protected Class<ZSerializer> getType() {
+        return ZSerializer.class;
     }
-
-    private static ZSerializer get(String name) {
-        ServiceLoader<ZSerializer> loader = ServiceLoader.load(ZSerializer.class);
-        for (ZSerializer serializer : loader) {
-            JdkSPI serializerName = serializer.getClass().getAnnotation(JdkSPI.class);
-            if (Objects.isNull(serializerName)) {
-                throw new IllegalArgumentException("serializer name can not be empty");
-            }
-            if (Objects.equals(name, serializerName.value())) {
-                return serializer;
-            }
-        }
-        throw new CommonException("invalid serializer config");
-    }
-
 
 }

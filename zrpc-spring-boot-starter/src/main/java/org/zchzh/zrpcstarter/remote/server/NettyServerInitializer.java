@@ -1,5 +1,6 @@
 package org.zchzh.zrpcstarter.remote.server;
 
+import org.zchzh.zrpcstarter.factory.FactoryProducer;
 import org.zchzh.zrpcstarter.remote.codec.RpcDecoder;
 import org.zchzh.zrpcstarter.remote.codec.RpcEncoder;
 import org.zchzh.zrpcstarter.constants.Constants;
@@ -7,7 +8,6 @@ import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.remote.handler.RequestHandler;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
-import org.zchzh.zrpcstarter.serializer.ZSerializerFactory;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -26,7 +26,8 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ZSerializer serializer = ZSerializerFactory.getInstance(Constants.PROTOSTUFF);
+        ZSerializer serializer = (ZSerializer) FactoryProducer.INSTANCE.getInstance(Constants.SERIALIZER)
+                .getInstance(Constants.PROTOSTUFF);
         ChannelPipeline channelPipeline = ch.pipeline();
         //
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));

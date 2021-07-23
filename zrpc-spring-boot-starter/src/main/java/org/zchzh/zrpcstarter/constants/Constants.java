@@ -52,4 +52,12 @@ public class Constants {
 
     public static final String CGLIB = "cglib";
 
+    public static final String CLUSTER = "loadbalance";
+
+    public static final String PROXY = "proxy";
+
+    public static final String REGISTER = "register";
+
+    public static final String SERIALIZER = "serializer";
+
 }
