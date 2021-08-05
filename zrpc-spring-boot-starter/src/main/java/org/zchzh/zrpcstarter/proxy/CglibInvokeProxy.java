@@ -1,26 +1,15 @@
 package org.zchzh.zrpcstarter.proxy;
 
 import com.google.auto.service.AutoService;
-import io.netty.util.concurrent.Promise;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
-import org.springframework.util.CollectionUtils;
 import org.zchzh.zrpcstarter.annotation.JdkSPI;
-import org.zchzh.zrpcstarter.cluster.LoadBalance;
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.factory.FactoryProducer;
-import org.zchzh.zrpcstarter.model.ServiceObject;
-import org.zchzh.zrpcstarter.model.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.register.Register;
-import org.zchzh.zrpcstarter.remote.client.ClientServiceCache;
 
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
 /**
  * @author zengchzh
@@ -47,42 +36,15 @@ public class CglibInvokeProxy implements InvokeProxy {
         this.register = register;
     }
 
-    private class ClientInvocationHandler implements MethodInterceptor {
-
-        private final Class<?> clazz;
+    private class ClientInvocationHandler extends AbstractInvocationHandler implements MethodInterceptor {
 
         public ClientInvocationHandler(Class<?> clazz) {
-            this.clazz = clazz;
+            super(clazz);
         }
 
         @Override
         public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-            String serviceName = clazz.getName();
-            List<ServiceObject> serviceObjectList = register.getAll(serviceName);
-
-            if (CollectionUtils.isEmpty(serviceObjectList)) {
-                throw new RuntimeException("can not find service with name : " + serviceName);
-            }
-            String loadBalanceName = serviceObjectList.get(0).getMeta().get(Constants.LOAD_BALANCE);
-            LoadBalance loadBalance = (LoadBalance) FactoryProducer.INSTANCE.getInstance(Constants.CLUSTER)
-                    .getInstance(loadBalanceName);
-            ServiceObject serviceObject = loadBalance.get(serviceObjectList);
-            ZRpcRequest request = ZRpcRequest.builder()
-                    .requestId(UUID.randomUUID().toString())
-                    .className(serviceName)
-                    .methodName(method.getName())
-                    .parameterTypes(method.getParameterTypes())
-                    .parameters(objects)
-                    .build();
-            Promise<ZRpcResponse> promise = ClientServiceCache
-                    .getClient(serviceObject.getIp(), serviceObject.getPort())
-                    .invoke(request);
-            ZRpcResponse response = promise.get();
-            Object result = response.getResult();
-            if (Objects.isNull(result)) {
-                throw new RuntimeException(response.getError());
-            }
-            return result;
+            return handler(o, method, objects, register);
         }
     }
 }
