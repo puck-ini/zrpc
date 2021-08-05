@@ -1,6 +1,5 @@
 package org.zchzh.zrpcstarter.remote.server;
 
-import org.zchzh.zrpcstarter.util.ServiceUtil;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;

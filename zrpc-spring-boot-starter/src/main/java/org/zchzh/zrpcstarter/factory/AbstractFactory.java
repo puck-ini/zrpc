@@ -18,6 +18,10 @@ public abstract class AbstractFactory<T> {
 
     private final Map<String, T> MAP = new ConcurrentHashMap<>();
 
+    /**
+     * 获取 spi 加载的类的类型
+     * @return 返回加载的类的类型
+     */
     protected abstract Class<T> getType();
 
     public T getInstance(String name) {
