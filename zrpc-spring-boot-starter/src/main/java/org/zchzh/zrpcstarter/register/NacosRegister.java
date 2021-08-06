@@ -17,6 +17,7 @@ import org.zchzh.zrpcstarter.model.ServiceObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author zengchzh
@@ -85,12 +86,13 @@ public class NacosRegister extends AbstractRegister implements Register {
     }
 
     private List<ServiceObject> getService(String serviceName) throws NacosException {
-        List<ServiceObject> serviceObjectList = get(serviceName);
+        List<ServiceObject> serviceObjectList = getCache(serviceName);
         if (CollectionUtils.isEmpty(serviceObjectList)) {
             List<Instance> instanceList = namingService.getAllInstances(serviceName);
             for (Instance instance : instanceList) {
                 serviceObjectList.add(toService(instance));
             }
+            putCache(serviceName, serviceObjectList);
             subService(serviceName);
         }
         return serviceObjectList;
@@ -101,12 +103,12 @@ public class NacosRegister extends AbstractRegister implements Register {
             @Override
             public void onEvent(Event event) {
                 if (event instanceof NamingEvent) {
-                    List<ServiceObject> serviceObjectList = new ArrayList<>();
+                    List<ServiceObject> serviceObjectList = new CopyOnWriteArrayList<>();
                     for (Instance instance : ((NamingEvent) event).getInstances()) {
                         log.info(toService(instance).toString());
                         serviceObjectList.add(toService(instance));
                     }
-                    put(serviceName, serviceObjectList);
+                    putCache(serviceName, serviceObjectList);
                 }
             }
         });

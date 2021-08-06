@@ -1,15 +1,17 @@
 package org.zchzh.zrpcstarter.register;
 
 import com.google.auto.service.AutoService;
+import org.I0Itec.zkclient.IZkChildListener;
 import org.I0Itec.zkclient.ZkClient;
 import org.I0Itec.zkclient.serialize.SerializableSerializer;
-import org.apache.zookeeper.CreateMode;
+import org.springframework.util.CollectionUtils;
 import org.zchzh.zrpcstarter.annotation.JdkSPI;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.ServiceObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @author zengchzh
@@ -18,7 +20,7 @@ import java.util.List;
 
 @AutoService(Register.class)
 @JdkSPI(Constants.ZK)
-public class ZkRegister implements Register{
+public class ZkRegister extends AbstractRegister implements Register{
 
     private ZkClient zkClient;
 
@@ -71,14 +73,39 @@ public class ZkRegister implements Register{
 
     @Override
     public List<ServiceObject> getAll(String serviceName) {
+        return getService(serviceName);
+    }
+
+
+    private List<ServiceObject> getService(String serviceName) {
         String serviceRootPath = ROOT_NODE + NODE_SEPARATOR + serviceName;
         List<String> childPath = zkClient.getChildren(serviceRootPath);
-        List<ServiceObject> result = new ArrayList<>();
-        for (String path : childPath) {
-            String nodePath = serviceRootPath + NODE_SEPARATOR + path;
-            ServiceObject so = zkClient.readData(nodePath);
-            result.add(so);
+        List<ServiceObject> result = getCache(serviceName);
+        if (CollectionUtils.isEmpty(result)) {
+            for (String path : childPath) {
+                String nodePath = serviceRootPath + NODE_SEPARATOR + path;
+                ServiceObject so = zkClient.readData(nodePath);
+                result.add(so);
+            }
+            putCache(serviceName, result);
+            subService(serviceName);
         }
         return result;
+    }
+
+    private void subService(String serviceName) {
+        String serviceRootPath = ROOT_NODE + NODE_SEPARATOR + serviceName;
+        IZkChildListener childListener = new IZkChildListener() {
+            @Override
+            public void handleChildChange(String s, List<String> list) throws Exception {
+                List<ServiceObject> serviceObjectList = new CopyOnWriteArrayList<>();
+                for (String path : list) {
+                    String nodePath = serviceRootPath + NODE_SEPARATOR + path;
+                    serviceObjectList.add(zkClient.readData(nodePath));
+                }
+                putCache(serviceName, serviceObjectList);
+            }
+        };
+        zkClient.subscribeChildChanges(serviceRootPath, childListener);
     }
 }
