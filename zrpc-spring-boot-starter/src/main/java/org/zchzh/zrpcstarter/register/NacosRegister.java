@@ -30,14 +30,6 @@ public class NacosRegister extends AbstractRegister implements Register {
 
     private NamingService namingService;
 
-//    public NacosRegister(String address) {
-//        try {
-//            namingService = NamingFactory.createNamingService(address);
-//        } catch (NacosException e) {
-//            log.error("nacos error", e);
-//        }
-//    }
-
     @Override
     public Register init(String address) {
         try {

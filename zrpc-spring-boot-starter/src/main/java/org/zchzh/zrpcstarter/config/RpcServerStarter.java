@@ -68,6 +68,7 @@ public class RpcServerStarter implements ApplicationListener<ContextRefreshedEve
                         .meta(new HashMap<>(10))
                         .build();
                 serviceObject.getMeta().put(Constants.LOAD_BALANCE, service.loadBalance());
+                serviceObject.getMeta().put(Constants.SERIALIZER, rpcServerProperties.getServerSerializer());
                 register.register(serviceObject);
                 ServerServiceCache.put(interfaceName, obj);
             }

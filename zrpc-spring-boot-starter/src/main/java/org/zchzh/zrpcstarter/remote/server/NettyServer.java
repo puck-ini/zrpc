@@ -20,12 +20,15 @@ public class NettyServer implements Server {
     /**
      * 服务端口
      */
-    protected int port;
+    private int port;
 
     private Channel channel;
 
-    public NettyServer(int port){
+    private String serializer;
+
+    public NettyServer(int port, String serializer){
         this.port = port;
+        this.serializer = serializer;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class NettyServer implements Server {
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 100)
 //                            .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new NettyServerInitializer());
+                    .childHandler(new NettyServerInitializer(serializer));
 
             // 启动服务
             ChannelFuture channelFuture = serverBootstrap.bind(port).sync();

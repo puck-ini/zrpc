@@ -28,14 +28,6 @@ public class ZkRegister extends AbstractRegister implements Register{
 
     private static final String NODE_SEPARATOR = "/";
 
-//    public ZkRegister(String address) {
-//        zkClient = new ZkClient(address);
-//        zkClient.setZkSerializer(new SerializableSerializer());
-//        if (!zkClient.exists(ROOT_NODE)) {
-//            zkClient.createPersistent(ROOT_NODE, true);
-//        }
-//    }
-
     @Override
     public Register init(String address) {
         zkClient = new ZkClient(address);

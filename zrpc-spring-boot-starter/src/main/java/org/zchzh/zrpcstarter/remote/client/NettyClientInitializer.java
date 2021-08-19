@@ -22,10 +22,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
 
+    private ZSerializer serializer;
+
+    public NettyClientInitializer(String serializer) {
+        this.serializer = (ZSerializer) FactoryProducer.INSTANCE.getInstance(Constants.SERIALIZER)
+                .getInstance(serializer);
+    }
+
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ZSerializer serializer = (ZSerializer) FactoryProducer.INSTANCE.getInstance(Constants.SERIALIZER)
-                .getInstance(Constants.PROTOSTUFF);
         ChannelPipeline channelPipeline = ch.pipeline();
 
         // 心跳机制，通过心跳检查对方是否有效,同时限制读和写的空闲时间，超过时间就会触发自定义handler中的userEventTrigger方法

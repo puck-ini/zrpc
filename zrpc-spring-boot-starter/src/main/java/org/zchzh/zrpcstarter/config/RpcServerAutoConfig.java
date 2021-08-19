@@ -23,7 +23,7 @@ public class RpcServerAutoConfig {
 
     @Bean
     public Server server(@Autowired RpcServerProperties rpcServerProperties) {
-        return new NettyServer(rpcServerProperties.getServerPort());
+        return new NettyServer(rpcServerProperties.getServerPort(), rpcServerProperties.getServerSerializer());
     }
 
     @Bean

@@ -37,10 +37,10 @@ public class RpcClientProperties {
      * 客户端暴露端口
      */
     private Integer clientPort = 19000;
-    /**
-     * 客户端序列化方式
-     */
-    private String clientSerializer = Constants.KRYO;
+//    /**
+//     * 客户端序列化方式
+//     */
+//    private String clientSerializer = Constants.KRYO;
     /**
      * 代理方式
      */

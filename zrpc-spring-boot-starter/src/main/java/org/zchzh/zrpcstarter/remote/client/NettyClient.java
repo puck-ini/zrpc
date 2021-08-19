@@ -32,9 +32,12 @@ public class NettyClient implements Client {
 
     private Bootstrap bootstrap;
 
-    public NettyClient(String ip, int port) {
+    private String serializer;
+
+    public NettyClient(String ip, int port, String serializer) {
         this.ip = ip;
         this.port = port;
+        this.serializer = serializer;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class NettyClient implements Client {
             bootstrap.group(workGroup)
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.TCP_NODELAY, true)
-                    .handler(new NettyClientInitializer());
+                    .handler(new NettyClientInitializer(serializer));
             connect();
         } catch (Exception e) {
             e.printStackTrace();

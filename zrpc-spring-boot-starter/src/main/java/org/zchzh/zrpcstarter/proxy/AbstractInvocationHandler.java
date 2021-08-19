@@ -52,7 +52,7 @@ public abstract class AbstractInvocationHandler {
                 .parameters(args)
                 .build();
         Promise<ZRpcResponse> promise = ClientServiceCache
-                .getClient(serviceObject.getIp(), serviceObject.getPort())
+                .getClient(serviceObject.getIp(), serviceObject.getPort(), serviceObject.getMeta().get(Constants.SERIALIZER))
                 .invoke(request);
         ZRpcResponse response = promise.get();
         Object result = response.getResult();

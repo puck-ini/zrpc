@@ -24,12 +24,18 @@ import java.util.concurrent.TimeUnit;
  */
 public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
 
+    private final ZSerializer serializer;
+
+    public NettyServerInitializer(String serializer) {
+        this.serializer = (ZSerializer) FactoryProducer.INSTANCE
+                .getInstance(Constants.SERIALIZER)
+                .getInstance(serializer);
+    }
+
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {
-        ZSerializer serializer = (ZSerializer) FactoryProducer.INSTANCE.getInstance(Constants.SERIALIZER)
-                .getInstance(Constants.PROTOSTUFF);
         ChannelPipeline channelPipeline = ch.pipeline();
-        //
+        // 心跳配置
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));
         // 传输的最大值
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536,
