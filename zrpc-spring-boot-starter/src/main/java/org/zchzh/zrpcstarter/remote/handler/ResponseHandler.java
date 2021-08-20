@@ -1,15 +1,11 @@
 package org.zchzh.zrpcstarter.remote.handler;
 
-import org.zchzh.zrpcstarter.model.ResponseMap;
+import org.zchzh.zrpcstarter.model.ResponseHolder;
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
-import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
@@ -32,7 +28,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
-        ResponseMap.pop(response.getRequestId()).trySuccess(response);
+        ResponseHolder.pop(response.getRequestId()).trySuccess(response);
     }
 
     @Override

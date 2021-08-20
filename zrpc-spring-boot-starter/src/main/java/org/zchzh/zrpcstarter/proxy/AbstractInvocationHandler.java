@@ -11,7 +11,7 @@ import org.zchzh.zrpcstarter.model.ServiceObject;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.register.Register;
-import org.zchzh.zrpcstarter.remote.client.ClientServiceCache;
+import org.zchzh.zrpcstarter.remote.client.ClientHolder;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -51,8 +51,8 @@ public abstract class AbstractInvocationHandler {
                 .parameterTypes(method.getParameterTypes())
                 .parameters(args)
                 .build();
-        Promise<ZRpcResponse> promise = ClientServiceCache
-                .getClient(serviceObject.getIp(), serviceObject.getPort(), serviceObject.getMeta().get(Constants.SERIALIZER))
+        Promise<ZRpcResponse> promise = ClientHolder
+                .get(serviceObject.getIp(), serviceObject.getPort(), serviceObject.getMeta().get(Constants.SERIALIZER))
                 .invoke(request);
         ZRpcResponse response = promise.get();
         Object result = response.getResult();

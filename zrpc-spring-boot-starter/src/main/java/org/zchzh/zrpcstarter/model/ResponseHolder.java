@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 用于保存提供者返回的结果
  */
 @Slf4j
-public class ResponseMap {
+public class ResponseHolder {
 
     private static final Map<String, Promise<ZRpcResponse>> RESULT_MAP = new ConcurrentHashMap<>();
 

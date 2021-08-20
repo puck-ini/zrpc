@@ -6,10 +6,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
-import org.zchzh.zrpcstarter.model.ResponseMap;
+import org.zchzh.zrpcstarter.model.ResponseHolder;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
-import org.zchzh.zrpcstarter.remote.handler.ResponseHandler;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -82,7 +81,7 @@ public class NettyClient implements Client {
     @Override
     public Promise<ZRpcResponse> invoke(ZRpcRequest request) {
         Promise<ZRpcResponse> promise = ImmediateEventExecutor.INSTANCE.newPromise();
-        ResponseMap.put(request.getRequestId(), promise);
+        ResponseHolder.put(request.getRequestId(), promise);
         try {
             ChannelFuture future = channelPromise.get().writeAndFlush(request);
             future.addListener(new ChannelFutureListener() {

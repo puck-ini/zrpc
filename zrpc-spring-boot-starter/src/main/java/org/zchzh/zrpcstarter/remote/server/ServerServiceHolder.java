@@ -7,7 +7,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author zengchzh
  * @date 2021/7/9
  */
-public class ServerServiceCache {
+public class ServerServiceHolder {
 
     private static final Map<String, Object> SERVICE_CACHE = new ConcurrentHashMap<>();
 

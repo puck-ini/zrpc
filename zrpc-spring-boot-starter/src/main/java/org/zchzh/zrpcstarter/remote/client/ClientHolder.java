@@ -12,12 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 @Slf4j
-public class ClientServiceCache {
+public class ClientHolder {
 
 
     private static final Map<String, Client> CLIENT_MAP = new ConcurrentHashMap<>();
 
-    public static Client getClient(String ip, int port, String serializer) {
+    public static Client get(String ip, int port, String serializer) {
         String key = ip + port;
         return CLIENT_MAP.computeIfAbsent(key, i -> {
             Client client = new NettyClient(ip, port, serializer);

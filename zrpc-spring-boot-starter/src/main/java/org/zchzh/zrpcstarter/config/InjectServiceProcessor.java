@@ -18,7 +18,7 @@ import java.util.Objects;
  *
  */
 @Slf4j
-public class RpcClientStarter implements ApplicationListener<ContextRefreshedEvent> /*BeanFactoryPostProcessor*/ {
+public class InjectServiceProcessor implements ApplicationListener<ContextRefreshedEvent> /*BeanFactoryPostProcessor*/ {
 
     @Resource
     private InvokeProxy invokeProxy;

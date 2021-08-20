@@ -27,8 +27,8 @@ public class RpcServerAutoConfig {
     }
 
     @Bean
-    public RpcServerStarter rpcServerStarter() {
-        return new RpcServerStarter();
+    public RegisterServiceProcessor rpcServerStarter() {
+        return new RegisterServiceProcessor();
     }
 
     @Bean

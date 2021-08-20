@@ -22,8 +22,8 @@ public class RpcClientAutoConfig {
     }
 
     @Bean
-    public RpcClientStarter rpcClientStarter() {
-        return new RpcClientStarter();
+    public InjectServiceProcessor rpcClientStarter() {
+        return new InjectServiceProcessor();
     }
 
     @Bean(name = "discovery")

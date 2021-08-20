@@ -3,7 +3,7 @@ package org.zchzh.zrpcstarter.remote.handler;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
-import org.zchzh.zrpcstarter.remote.server.ServerServiceCache;
+import org.zchzh.zrpcstarter.remote.server.ServerServiceHolder;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -14,7 +14,6 @@ import net.sf.cglib.reflect.FastClass;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -79,7 +78,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
             return null;
         }
         String interfaceName = request.getClassName();
-        Object obj = ServerServiceCache.get(interfaceName);
+        Object obj = ServerServiceHolder.get(interfaceName);
         if (Objects.isNull(obj)) {
             throw new RuntimeException("can not find service implement with interface name " + interfaceName);
         }

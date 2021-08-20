@@ -9,7 +9,7 @@ import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.ServiceObject;
 import org.zchzh.zrpcstarter.register.Register;
 import org.zchzh.zrpcstarter.remote.server.Server;
-import org.zchzh.zrpcstarter.remote.server.ServerServiceCache;
+import org.zchzh.zrpcstarter.remote.server.ServerServiceHolder;
 import org.zchzh.zrpcstarter.util.ServerUtil;
 
 import javax.annotation.Resource;
@@ -24,7 +24,7 @@ import java.util.concurrent.ThreadFactory;
  * @date 2021/7/9
  */
 @Slf4j
-public class RpcServerStarter implements ApplicationListener<ContextRefreshedEvent> {
+public class RegisterServiceProcessor implements ApplicationListener<ContextRefreshedEvent> {
 
     private final ThreadFactory threadFactory = Executors.defaultThreadFactory();
 
@@ -70,7 +70,7 @@ public class RpcServerStarter implements ApplicationListener<ContextRefreshedEve
                 serviceObject.getMeta().put(Constants.LOAD_BALANCE, service.loadBalance());
                 serviceObject.getMeta().put(Constants.SERIALIZER, rpcServerProperties.getServerSerializer());
                 register.register(serviceObject);
-                ServerServiceCache.put(interfaceName, obj);
+                ServerServiceHolder.put(interfaceName, obj);
             }
             // 启动服务监听请求
             threadFactory.newThread(() -> server.start()).start();
