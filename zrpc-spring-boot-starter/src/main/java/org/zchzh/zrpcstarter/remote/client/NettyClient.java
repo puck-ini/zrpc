@@ -102,6 +102,15 @@ public class NettyClient implements Client {
         return promise;
     }
 
+    @Override
+    public void stop() {
+        workGroup.shutdownGracefully();
+    }
+
+    public Channel getChannel() {
+        return channelPromise.getNow();
+    }
+
     private boolean channelActive() {
         Channel channel = channelPromise.getNow();
         return channel != null && channel.isActive();

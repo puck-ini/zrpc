@@ -24,6 +24,11 @@ public interface Client {
     void connect();
 
     /**
+     * 关闭client
+     */
+    void stop();
+
+    /**
      * 发起请求
      * @param request 请求数据
      * @return 返回结果future

@@ -7,6 +7,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.zchzh.zrpcstarter.remote.client.ClientHolder;
 
 import java.util.Date;
 
@@ -39,6 +40,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("ResponseHandler exceptionCaught", cause);
+        ClientHolder.remove(ctx.channel());
         ctx.close();
     }
 
