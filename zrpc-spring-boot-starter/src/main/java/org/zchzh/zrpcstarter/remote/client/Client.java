@@ -1,11 +1,9 @@
 package org.zchzh.zrpcstarter.remote.client;
 
-import io.netty.util.concurrent.Promise;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
-import org.zchzh.zrpcstarter.remote.handler.ResponseHandler;
 
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author zengchzh
@@ -33,6 +31,6 @@ public interface Client {
      * @param request 请求数据
      * @return 返回结果future
      */
-    Promise<ZRpcResponse> invoke(ZRpcRequest request);
+    CompletableFuture<ZRpcResponse> invoke(ZRpcRequest request);
 
 }

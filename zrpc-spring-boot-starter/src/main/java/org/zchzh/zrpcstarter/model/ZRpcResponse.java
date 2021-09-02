@@ -3,6 +3,7 @@ package org.zchzh.zrpcstarter.model;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author zengchzh
@@ -23,4 +24,13 @@ public class ZRpcResponse implements Serializable {
      * 调用返回结果
      */
     private Object result;
+
+
+    public boolean isDone() {
+        return Objects.nonNull(requestId) && (Objects.nonNull(error) || Objects.nonNull(result));
+    }
+
+    public boolean isError() {
+        return Objects.nonNull(requestId) && Objects.nonNull(error);
+    }
 }

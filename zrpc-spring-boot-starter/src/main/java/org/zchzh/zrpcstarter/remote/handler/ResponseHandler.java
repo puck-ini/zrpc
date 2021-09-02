@@ -29,7 +29,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
-        ResponseHolder.pop(response.getRequestId()).trySuccess(response);
+        ResponseHolder.pop(response.getRequestId()).complete(response);
     }
 
     @Override

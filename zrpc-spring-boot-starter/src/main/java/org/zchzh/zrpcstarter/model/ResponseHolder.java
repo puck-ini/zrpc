@@ -1,10 +1,10 @@
 package org.zchzh.zrpcstarter.model;
 
 
-import io.netty.util.concurrent.Promise;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -16,17 +16,17 @@ import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class ResponseHolder {
 
-    private static final Map<String, Promise<ZRpcResponse>> RESULT_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, CompletableFuture<ZRpcResponse>> RESULT_MAP = new ConcurrentHashMap<>();
 
-    public static Promise<ZRpcResponse> pop(String key) {
+    public static CompletableFuture<ZRpcResponse> pop(String key) {
         return RESULT_MAP.remove(key);
     }
 
-    public static void put(String key, Promise<ZRpcResponse> promise) {
-        RESULT_MAP.putIfAbsent(key, promise);
+    public static void put(String key, CompletableFuture<ZRpcResponse> future) {
+        RESULT_MAP.putIfAbsent(key, future);
     }
 
-    public static Promise<ZRpcResponse> remove(String key) {
+    public static CompletableFuture<ZRpcResponse> remove(String key) {
         return RESULT_MAP.remove(key);
     }
 }

@@ -1,7 +1,7 @@
 package org.zchzh.zrpcstarter.remote.client;
 
 import io.netty.channel.Channel;
-import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.exception.CommonException;
 import org.zchzh.zrpcstarter.model.ServiceObject;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,16 +22,14 @@ public class ClientHolder {
 
 
     public static Client get(ServiceObject so) {
-        String ip = so.getIp();
-        int port = so.getPort();
-        String serializer = so.getMeta().get(Constants.SERIALIZER);
-        String key = ip + port;
+        String key = so.getIp() + so.getPort();
         return CLIENT_MAP.computeIfAbsent(key, i -> {
-            Client client = new NettyClient(ip, port, serializer);
+            Client client = new NettyClient(so);
             client.start();
             return client;
         });
     }
+
     public static Client get(String ip, int port, String serializer) {
         String key = ip + port;
         return CLIENT_MAP.computeIfAbsent(key, i -> {
@@ -39,6 +37,20 @@ public class ClientHolder {
             client.start();
             return client;
         });
+    }
+
+    public static Client get(Channel channel) {
+        for (Map.Entry<String, Client> entry : CLIENT_MAP.entrySet()) {
+            Client client = entry.getValue();
+            if (!(client instanceof NettyClient)) {
+                continue;
+            }
+            if (Objects.equals(channel, ((NettyClient) client).getChannel())) {
+                CLIENT_MAP.get(entry.getKey());
+            }
+        }
+        // 未找到客户端
+        throw new CommonException("client not found");
     }
 
 
@@ -49,7 +61,7 @@ public class ClientHolder {
                 continue;
             }
             if (Objects.equals(channel, ((NettyClient) client).getChannel())) {
-                CLIENT_MAP.remove(entry.getKey());
+                CLIENT_MAP.remove(entry.getKey()).stop();
             }
         }
     }

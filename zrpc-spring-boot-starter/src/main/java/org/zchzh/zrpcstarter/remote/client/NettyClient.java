@@ -6,10 +6,14 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
+import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.exception.CommonException;
 import org.zchzh.zrpcstarter.model.ResponseHolder;
+import org.zchzh.zrpcstarter.model.ServiceObject;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +41,12 @@ public class NettyClient implements Client {
         this.ip = ip;
         this.port = port;
         this.serializer = serializer;
+    }
+
+    public NettyClient(ServiceObject so) {
+        this.ip = so.getIp();
+        this.port = so.getPort();
+        this.serializer = so.getMeta().get(Constants.SERIALIZER);
     }
 
     @Override
@@ -79,9 +89,10 @@ public class NettyClient implements Client {
     }
 
     @Override
-    public Promise<ZRpcResponse> invoke(ZRpcRequest request) {
-        Promise<ZRpcResponse> promise = ImmediateEventExecutor.INSTANCE.newPromise();
-        ResponseHolder.put(request.getRequestId(), promise);
+    public CompletableFuture<ZRpcResponse> invoke(ZRpcRequest request) {
+        CompletableFuture<ZRpcResponse> resFuture = new CompletableFuture<>();
+        ResponseHolder.put(request.getRequestId(), resFuture);
+//        throw new CommonException("test fail");
         try {
             ChannelFuture future = channelPromise.get().writeAndFlush(request);
             future.addListener(new ChannelFutureListener() {
@@ -97,9 +108,9 @@ public class NettyClient implements Client {
             });
         } catch (InterruptedException | ExecutionException e) {
             log.error("get client channel fail", e);
-            throw new RuntimeException("get client channel fail");
+            throw new CommonException("get client channel fail");
         }
-        return promise;
+        return resFuture;
     }
 
     @Override
