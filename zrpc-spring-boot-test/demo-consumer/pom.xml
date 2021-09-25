@@ -6,7 +6,6 @@
         <groupId>com.zchzh</groupId>
         <artifactId>zrpc-spring-boot-test</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
     <artifactId>demo-consumer</artifactId>

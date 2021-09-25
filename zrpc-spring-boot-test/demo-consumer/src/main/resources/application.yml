@@ -17,8 +17,8 @@ spring:
     name: consumer
 
 zrpc:
-  register-address: 127.0.0.1:8848
-  register-protocol: nacos
-#  register-address: 127.0.0.1:2181
-#  register-protocol: zookeeper
+#  register-address: 127.0.0.1:8848
+#  register-protocol: nacos
+  register-address: 127.0.0.1:2181
+  register-protocol: zookeeper
   proxy: jdk
