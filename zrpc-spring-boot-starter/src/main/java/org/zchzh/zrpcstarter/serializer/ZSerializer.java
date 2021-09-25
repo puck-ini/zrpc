@@ -14,6 +14,7 @@ public interface ZSerializer {
      * @param object 序列化对象
      * @param <T> 序列化对象的类型
      * @return 返回字节数组
+     * @throws IOException 序列化失败时
      */
     <T> byte[] serialize(T object) throws IOException;
 
@@ -23,6 +24,7 @@ public interface ZSerializer {
      * @param clazz 转换的 java 类
      * @param <T> 反序列化对象的类型
      * @return 返回转换的对象
+     * @throws IOException 反序列化失败时
      */
     <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException;
 }

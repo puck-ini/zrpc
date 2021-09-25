@@ -12,6 +12,7 @@ import java.util.Objects;
 
 @Data
 public class ZRpcResponse implements Serializable {
+    private static final long serialVersionUID = -1371690556772602031L;
     /**
      * 请求id
      */

@@ -4,7 +4,6 @@ import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.remote.server.ServerServiceHolder;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -46,7 +45,8 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
             log.info("ping >>>>>>>> server - {}, reqId {} ", new Date(), req.getRequestId());
             return;
         }
-        pool.execute(() -> {
+
+        CompletableFuture<ZRpcResponse> handlerFuture = CompletableFuture.supplyAsync(() -> {
             ZRpcResponse response = new ZRpcResponse();
             response.setRequestId(req.getRequestId());
             try {
@@ -55,17 +55,36 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
             }catch (Throwable t) {
                 response.setError(t.toString());
             }
-            ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (future.isSuccess()) {
-                        log.info("send response for request" + req.getRequestId());
-                    } else {
-                        log.error("send response fail with request - {}", req.getRequestId(), future.cause());
-                    }
-                }
-            });
-        });
+            return response;
+        }, pool);
+
+        handlerFuture.thenAccept(response -> ctx.writeAndFlush(response).addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                log.info("send response for request" + req.getRequestId());
+            } else {
+                log.error("send response fail with request - {}", req.getRequestId(), future.cause());
+            }
+        }));
+//        pool.execute(() -> {
+//            ZRpcResponse response = new ZRpcResponse();
+//            response.setRequestId(req.getRequestId());
+//            try {
+//                Object result = handle(req);
+//                response.setResult(result);
+//            }catch (Throwable t) {
+//                response.setError(t.toString());
+//            }
+//            ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
+//                @Override
+//                public void operationComplete(ChannelFuture future) throws Exception {
+//                    if (future.isSuccess()) {
+//                        log.info("send response for request" + req.getRequestId());
+//                    } else {
+//                        log.error("send response fail with request - {}", req.getRequestId(), future.cause());
+//                    }
+//                }
+//            });
+//        });
     }
 
     /**

@@ -23,6 +23,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class ServiceObject implements Serializable {
 
+    private static final long serialVersionUID = 7255243583029667457L;
     /**
      * 服务名
      */

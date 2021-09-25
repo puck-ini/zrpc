@@ -17,6 +17,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ZRpcRequest implements Serializable {
 
+    private static final long serialVersionUID = -2533590886135497522L;
     /**
      * 请求id
      */
