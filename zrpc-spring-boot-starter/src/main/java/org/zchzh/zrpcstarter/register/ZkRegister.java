@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @AutoService(Register.class)
 @JdkSPI(Constants.ZK)
-public class ZkRegister extends AbstractRegister implements Register{
+public class ZkRegister implements Register{
 
     private ZkClient zkClient;
 
@@ -72,14 +72,14 @@ public class ZkRegister extends AbstractRegister implements Register{
     private List<ServiceObject> getService(String serviceName) {
         String serviceRootPath = ROOT_NODE + NODE_SEPARATOR + serviceName;
         List<String> childPath = zkClient.getChildren(serviceRootPath);
-        List<ServiceObject> result = getCache(serviceName);
+        List<ServiceObject> result = ServiceCache.getCache(serviceName);
         if (CollectionUtils.isEmpty(result)) {
             for (String path : childPath) {
                 String nodePath = serviceRootPath + NODE_SEPARATOR + path;
                 ServiceObject so = zkClient.readData(nodePath);
                 result.add(so);
             }
-            putCache(serviceName, result);
+            ServiceCache.putCache(serviceName, result);
             subService(serviceName);
         }
         return result;
@@ -95,7 +95,7 @@ public class ZkRegister extends AbstractRegister implements Register{
                     String nodePath = serviceRootPath + NODE_SEPARATOR + path;
                     serviceObjectList.add(zkClient.readData(nodePath));
                 }
-                putCache(serviceName, serviceObjectList);
+                ServiceCache.putCache(serviceName, serviceObjectList);
             }
         };
         zkClient.subscribeChildChanges(serviceRootPath, childListener);

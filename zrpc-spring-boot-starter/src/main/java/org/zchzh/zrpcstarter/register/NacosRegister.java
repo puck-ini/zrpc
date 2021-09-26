@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Slf4j
 @AutoService(Register.class)
 @JdkSPI(Constants.NACOS)
-public class NacosRegister extends AbstractRegister implements Register {
+public class NacosRegister implements Register {
 
     private NamingService namingService;
 
@@ -78,13 +78,13 @@ public class NacosRegister extends AbstractRegister implements Register {
     }
 
     private List<ServiceObject> getService(String serviceName) throws NacosException {
-        List<ServiceObject> serviceObjectList = getCache(serviceName);
+        List<ServiceObject> serviceObjectList = ServiceCache.getCache(serviceName);
         if (CollectionUtils.isEmpty(serviceObjectList)) {
             List<Instance> instanceList = namingService.getAllInstances(serviceName);
             for (Instance instance : instanceList) {
                 serviceObjectList.add(toService(instance));
             }
-            putCache(serviceName, serviceObjectList);
+            ServiceCache.putCache(serviceName, serviceObjectList);
             subService(serviceName);
         }
         return serviceObjectList;
@@ -100,7 +100,7 @@ public class NacosRegister extends AbstractRegister implements Register {
                         log.info(toService(instance).toString());
                         serviceObjectList.add(toService(instance));
                     }
-                    putCache(serviceName, serviceObjectList);
+                    ServiceCache.putCache(serviceName, serviceObjectList);
                 }
             }
         });
