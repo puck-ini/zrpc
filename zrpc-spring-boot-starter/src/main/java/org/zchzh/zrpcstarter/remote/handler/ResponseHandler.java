@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.zchzh.zrpcstarter.remote.client.ClientHolder;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * @author zengchzh
@@ -29,7 +30,14 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
-        ResponseHolder.pop(response.getRequestId()).complete(response);
+        // 处理请求太大报错问题
+        String id = response.getRequestId();
+        if (Objects.equals(id, Constants.REMOVE_ID)) {
+            ResponseHolder.remove(id);
+            ClientHolder.remove(ctx.channel());
+        } else {
+            ResponseHolder.pop(id).complete(response);
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package org.zchzh.zrpcstarter.constants;
 
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
+import org.zchzh.zrpcstarter.model.ZRpcResponse;
 
 /**
  * @author zengchzh
@@ -18,9 +19,15 @@ public class Constants {
 
     public static final String PING = "beat_ping";
 
+    public static final ZRpcResponse REMOVE_CLIENT;
+
+    public static final String REMOVE_ID = "remove-client";
+
     static {
         BEAT_PING = new ZRpcRequest();
         BEAT_PING.setRequestId(PING + ":" + System.currentTimeMillis());
+        REMOVE_CLIENT = new ZRpcResponse();
+        REMOVE_CLIENT.setRequestId(REMOVE_ID);
     }
 
 

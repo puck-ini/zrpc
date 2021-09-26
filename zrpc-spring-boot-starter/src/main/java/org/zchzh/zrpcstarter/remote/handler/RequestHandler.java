@@ -1,5 +1,6 @@
 package org.zchzh.zrpcstarter.remote.handler;
 
+import io.netty.handler.codec.TooLongFrameException;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
@@ -115,6 +116,10 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("RequestHandler exceptionCaught", cause);
+        if (cause instanceof TooLongFrameException) {
+            // 处理请求数据太大问题
+            ctx.channel().writeAndFlush(Constants.REMOVE_CLIENT);
+        }
         ctx.close();
     }
 

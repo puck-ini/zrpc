@@ -91,10 +91,12 @@ public class NettyClient implements Client {
     @Override
     public CompletableFuture<ZRpcResponse> invoke(ZRpcRequest request) {
         CompletableFuture<ZRpcResponse> resFuture = new CompletableFuture<>();
-        ResponseHolder.put(request.getRequestId(), resFuture);
+        String requestId = request.getRequestId();
+        ResponseHolder.put(requestId, resFuture);
 //        throw new CommonException("test fail");
         try {
-            ChannelFuture future = channelPromise.get().writeAndFlush(request);
+            Channel channel =  channelPromise.get();
+            ChannelFuture future =channel.writeAndFlush(request);
             future.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {
@@ -102,6 +104,8 @@ public class NettyClient implements Client {
                         log.info("request - {} success ", request.getRequestId());
                     } else {
                         log.error("request fail", future.cause());
+                        ResponseHolder.remove(requestId);
+                        ClientHolder.remove(channel);
                     }
 
                 }
