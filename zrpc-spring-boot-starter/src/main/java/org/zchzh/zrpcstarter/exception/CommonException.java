@@ -6,7 +6,13 @@ package org.zchzh.zrpcstarter.exception;
  */
 public class CommonException extends RuntimeException {
 
+    private static final long serialVersionUID = -1249719013881196148L;
+
     public CommonException(String msg) {
         super(msg);
+    }
+
+    public CommonException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

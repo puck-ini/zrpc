@@ -31,6 +31,8 @@ public class Constants {
     }
 
 
+    // serializer spi
+
     public static final String FASTJSON = "fastjson";
 
     public static final String HESSIAN2 = "hessian";
@@ -40,20 +42,25 @@ public class Constants {
     public static final String PROTOSTUFF = "protostuff";
 
 
-
+    // loadbalance spi
 
     public static final String RANDOM = "random";
 
     public static final String WEIGHT_ROUND = "weightround";
 
 
+    // meta data map key
     public static final String LOAD_BALANCE = "loadbalance";
 
+
+    // register spi
 
     public static final String NACOS = "nacos";
 
     public static final String ZK = "zookeeper";
 
+
+    // factory spi
 
     public static final String JDK = "jdk";
 
@@ -66,5 +73,10 @@ public class Constants {
     public static final String REGISTER = "register";
 
     public static final String SERIALIZER = "serializer";
+
+
+    // compress spi
+
+    public static final String GZIP = "gzip";
 
 }
