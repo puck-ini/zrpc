@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.SerializerType;
 
 /**
  * @author zengchzh
@@ -40,7 +41,7 @@ public class RpcClientProperties {
     /**
      * 客户端序列化方式
      */
-    private String clientSerializer = Constants.KRYO;
+    private SerializerType clientSerializer =  SerializerType.KRYO;
     /**
      * 代理方式
      */

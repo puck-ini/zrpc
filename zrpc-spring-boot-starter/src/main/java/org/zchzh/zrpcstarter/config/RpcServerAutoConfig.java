@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.factory.FactoryProducer;
+import org.zchzh.zrpcstarter.model.RpcProp;
 import org.zchzh.zrpcstarter.register.Register;
 import org.zchzh.zrpcstarter.remote.server.NettyServer;
 import org.zchzh.zrpcstarter.remote.server.Server;
@@ -18,12 +19,14 @@ public class RpcServerAutoConfig {
 
     @Bean
     public RpcServerProperties rpcServerProperties() {
-        return new RpcServerProperties();
+        RpcServerProperties properties = new RpcServerProperties();
+        RpcProp.INSTANCE.put(properties);
+        return properties;
     }
 
     @Bean
     public Server server(@Autowired RpcServerProperties rpcServerProperties) {
-        return new NettyServer(rpcServerProperties.getServerPort(), rpcServerProperties.getServerSerializer());
+        return new NettyServer(rpcServerProperties.getServerPort());
     }
 
     @Bean

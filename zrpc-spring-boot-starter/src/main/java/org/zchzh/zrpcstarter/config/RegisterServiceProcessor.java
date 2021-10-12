@@ -68,7 +68,7 @@ public class RegisterServiceProcessor implements ApplicationListener<ContextRefr
                         .meta(new HashMap<>(10))
                         .build();
                 serviceObject.getMeta().put(Constants.LOAD_BALANCE, service.loadBalance());
-                serviceObject.getMeta().put(Constants.SERIALIZER, rpcServerProperties.getServerSerializer());
+//                serviceObject.getMeta().put(Constants.SERIALIZER, rpcServerProperties.getServerSerializer());
                 register.register(serviceObject);
                 ServerServiceHolder.put(interfaceName, obj);
             }

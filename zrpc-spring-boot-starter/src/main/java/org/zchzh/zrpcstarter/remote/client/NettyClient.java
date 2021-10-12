@@ -6,9 +6,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
-import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.enums.MessageType;
-import org.zchzh.zrpcstarter.enums.SerializerType;
 import org.zchzh.zrpcstarter.exception.CommonException;
 import org.zchzh.zrpcstarter.model.*;
 
@@ -34,18 +32,14 @@ public class NettyClient implements Client {
 
     private Bootstrap bootstrap;
 
-    private String serializer;
-
-    public NettyClient(String ip, int port, String serializer) {
+    public NettyClient(String ip, int port) {
         this.ip = ip;
         this.port = port;
-        this.serializer = serializer;
     }
 
     public NettyClient(ServiceObject so) {
         this.ip = so.getIp();
         this.port = so.getPort();
-        this.serializer = so.getMeta().get(Constants.SERIALIZER);
     }
 
     @Override
@@ -55,7 +49,7 @@ public class NettyClient implements Client {
             bootstrap.group(workGroup)
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.TCP_NODELAY, true)
-                    .handler(new NettyClientInitializer(serializer));
+                    .handler(new NettyClientInitializer());
             connect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,7 +88,7 @@ public class NettyClient implements Client {
         ResponseHolder.put(requestId, resFuture);
         ZRpcMessage message = ZRpcMessage.builder()
                 .messageType(MessageType.REQUEST)
-                .serializerType(SerializerType.KRYO)
+                .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
                 .data(request)
                 .build();
         try {

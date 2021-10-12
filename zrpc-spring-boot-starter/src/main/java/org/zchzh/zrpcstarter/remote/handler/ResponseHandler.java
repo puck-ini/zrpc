@@ -1,12 +1,8 @@
 package org.zchzh.zrpcstarter.remote.handler;
 
+import io.netty.channel.*;
 import org.zchzh.zrpcstarter.enums.MessageType;
-import org.zchzh.zrpcstarter.enums.SerializerType;
-import org.zchzh.zrpcstarter.model.ResponseHolder;
-import org.zchzh.zrpcstarter.model.ZRpcMessage;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import org.zchzh.zrpcstarter.model.*;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.zchzh.zrpcstarter.remote.client.ClientHolder;
@@ -62,7 +58,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
             log.info("client send beat -" + new Date());
             ZRpcMessage message = ZRpcMessage.builder()
                     .messageType(MessageType.BEAT_REQ)
-                    .serializerType(SerializerType.KRYO)
+                    .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
                     .build();
             ctx.channel().writeAndFlush(message);
         } else {

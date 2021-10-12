@@ -1,12 +1,16 @@
 package org.zchzh.zrpcstarter.enums;
 
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.factory.FactoryProducer;
+import org.zchzh.zrpcstarter.serializer.ZSerializer;
+
+import java.io.IOException;
 
 /**
  * @author zengchzh
  * @date 2021/10/11
  */
-public enum SerializerType {
+public enum SerializerType implements ZSerializer {
     /**
      * FASTJSON 序列化
      */
@@ -53,5 +57,19 @@ public enum SerializerType {
 
     public String getName() {
         return name;
+    }
+
+    @Override
+    public <T> byte[] serialize(T object) throws IOException {
+        return ((ZSerializer) FactoryProducer.INSTANCE
+                .getInstance(Constants.SERIALIZER)
+                .getInstance(this.getName())).serialize(object);
+    }
+
+    @Override
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
+        return ((ZSerializer) FactoryProducer.INSTANCE
+                .getInstance(Constants.SERIALIZER)
+                .getInstance(this.getName())).deserialize(bytes, clazz);
     }
 }

@@ -17,7 +17,7 @@ public enum MessageType {
      */
     REQUEST((byte) 0) {
         @Override
-        public void handler(ZRpcMessage message, byte[] data, ZSerializer serializer) throws IOException {
+        public void handler(ZRpcMessage message, byte[] data, SerializerType serializer) throws IOException {
             ZRpcRequest request = serializer.deserialize(data, ZRpcRequest.class);
             message.setData(request);
         }
@@ -27,7 +27,7 @@ public enum MessageType {
      */
     RESPONSE((byte) 1) {
         @Override
-        public void handler(ZRpcMessage message, byte[] data, ZSerializer serializer) throws IOException {
+        public void handler(ZRpcMessage message, byte[] data, SerializerType serializer) throws IOException {
             ZRpcResponse response = serializer.deserialize(data, ZRpcResponse.class);
             message.setData(response);
         }
@@ -65,7 +65,7 @@ public enum MessageType {
         throw new IllegalArgumentException("No enum constant " + code);
     }
 
-    public void handler(ZRpcMessage message, byte[] data, ZSerializer serializer) throws IOException {
+    public void handler(ZRpcMessage message, byte[] data, SerializerType serializer) throws IOException {
         message.setData(this);
     }
 }

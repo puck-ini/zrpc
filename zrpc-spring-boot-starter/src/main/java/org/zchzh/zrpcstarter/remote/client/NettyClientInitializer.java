@@ -1,11 +1,9 @@
 package org.zchzh.zrpcstarter.remote.client;
 
-import org.zchzh.zrpcstarter.factory.FactoryProducer;
 import org.zchzh.zrpcstarter.remote.codec.RpcDecoder;
 import org.zchzh.zrpcstarter.remote.codec.RpcEncoder;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.remote.handler.ResponseHandler;
-import org.zchzh.zrpcstarter.serializer.ZSerializer;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;
@@ -19,13 +17,6 @@ import java.util.concurrent.TimeUnit;
  * @date 2021/3/11
  */
 public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
-
-    private ZSerializer serializer;
-
-    public NettyClientInitializer(String serializer) {
-        this.serializer = (ZSerializer) FactoryProducer.INSTANCE.getInstance(Constants.SERIALIZER)
-                .getInstance(serializer);
-    }
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {

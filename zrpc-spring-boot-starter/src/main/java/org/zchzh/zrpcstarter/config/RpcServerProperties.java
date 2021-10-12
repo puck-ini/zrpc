@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.SerializerType;
 
 /**
  * @author zengchzh
@@ -32,7 +33,7 @@ public class RpcServerProperties {
     /**
      * 服务端序列化方式
      */
-    private String serverSerializer = Constants.KRYO;
+    private SerializerType serverSerializer = SerializerType.KRYO;
 
 //    /**
 //     * 客户端暴露端口

@@ -3,7 +3,7 @@ package org.zchzh.zrpcstarter.remote.handler;
 import io.netty.handler.codec.TooLongFrameException;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.enums.MessageType;
-import org.zchzh.zrpcstarter.enums.SerializerType;
+import org.zchzh.zrpcstarter.model.RpcProp;
 import org.zchzh.zrpcstarter.model.ZRpcMessage;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
@@ -46,7 +46,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcMessage message) throws Exception {
         ZRpcMessage resMsg = ZRpcMessage.builder()
                 .messageType(MessageType.RESPONSE)
-                .serializerType(SerializerType.KRYO).build();
+                .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer()).build();
         if (message.getMessageType() == MessageType.BEAT_RES) {
             resMsg.setMessageType(MessageType.BEAT_RES);
             ctx.channel().writeAndFlush(resMsg);
@@ -104,7 +104,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
             // 处理请求数据太大问题
             ZRpcMessage message = ZRpcMessage.builder()
                     .messageType(MessageType.HANDLER_REQ_ERROR_REQ)
-                    .serializerType(SerializerType.KRYO).build();
+                    .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer()).build();
             ctx.channel().writeAndFlush(message);
         }
         ctx.close();
