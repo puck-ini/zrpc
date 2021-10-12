@@ -7,11 +7,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.MessageType;
+import org.zchzh.zrpcstarter.enums.SerializerType;
 import org.zchzh.zrpcstarter.exception.CommonException;
-import org.zchzh.zrpcstarter.model.ResponseHolder;
-import org.zchzh.zrpcstarter.model.ServiceObject;
-import org.zchzh.zrpcstarter.model.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
+import org.zchzh.zrpcstarter.model.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -93,10 +92,14 @@ public class NettyClient implements Client {
         CompletableFuture<ZRpcResponse> resFuture = new CompletableFuture<>();
         String requestId = request.getRequestId();
         ResponseHolder.put(requestId, resFuture);
-//        throw new CommonException("test fail");
+        ZRpcMessage message = ZRpcMessage.builder()
+                .messageType(MessageType.REQUEST)
+                .serializerType(SerializerType.KRYO)
+                .data(request)
+                .build();
         try {
             Channel channel =  channelPromise.get();
-            ChannelFuture future =channel.writeAndFlush(request);
+            ChannelFuture future =channel.writeAndFlush(message);
             future.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {

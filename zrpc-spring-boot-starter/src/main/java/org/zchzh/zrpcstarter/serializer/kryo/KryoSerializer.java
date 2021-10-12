@@ -47,12 +47,12 @@ public class KryoSerializer implements ZSerializer {
     }
 
     @Override
-    public <T> Object deserialize(byte[] bytes, Class<T> clazz) {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) {
         Kryo kryo = kryoPool.borrow();
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         Input in = new Input(byteArrayInputStream);
         try {
-            Object result = kryo.readObject(in, clazz);
+            T result = kryo.readObject(in, clazz);
             in.close();
             return result;
         } catch (Exception ex) {

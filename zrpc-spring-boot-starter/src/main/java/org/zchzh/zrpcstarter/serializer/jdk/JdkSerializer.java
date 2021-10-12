@@ -26,11 +26,11 @@ public class JdkSerializer implements ZSerializer {
     }
 
     @Override
-    public <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
         ByteArrayInputStream in = new ByteArrayInputStream(bytes);
         try (ObjectInputStream input = new ObjectInputStream(in)) {
             try {
-                return input.readObject();
+                return (T) input.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 return null;

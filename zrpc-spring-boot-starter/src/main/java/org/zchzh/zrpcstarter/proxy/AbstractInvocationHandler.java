@@ -1,7 +1,9 @@
 package org.zchzh.zrpcstarter.proxy;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.zchzh.zrpcstarter.cluster.LoadBalance;
+import org.zchzh.zrpcstarter.config.RpcClientProperties;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.exception.CommonException;
 import org.zchzh.zrpcstarter.factory.FactoryProducer;
@@ -12,6 +14,7 @@ import org.zchzh.zrpcstarter.register.Register;
 import org.zchzh.zrpcstarter.remote.client.Client;
 import org.zchzh.zrpcstarter.remote.client.ClientHolder;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +26,7 @@ import java.util.function.Function;
  * @author zengchzh
  * @date 2021/8/5
  */
+@Slf4j
 public abstract class AbstractInvocationHandler {
 
     protected final Class<?> clazz;
@@ -65,15 +69,6 @@ public abstract class AbstractInvocationHandler {
         }
         return resultFuture.get();
     }
-
-//    private ZRpcResponse invokeSync(Client client, ZRpcRequest request) throws ExecutionException, InterruptedException {
-//        return client.invoke(request).get();
-//    }
-//
-//    private CompletableFuture<ZRpcResponse> invokeFuture(Client client, ZRpcRequest request) {
-////        return client.invoke(request);
-//        return null;
-//    }
 
     private ServiceObject getServiceObject(String serviceName, Register register) {
         List<ServiceObject> serviceObjectList = register.getAll(serviceName);

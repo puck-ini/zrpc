@@ -63,4 +63,9 @@ public class NettyServer implements Server {
         this.channel.close();
     }
 
+    @Override
+    public int getPort() {
+        return this.port;
+    }
+
 }

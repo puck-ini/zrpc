@@ -62,7 +62,7 @@ public class RegisterServiceProcessor implements ApplicationListener<ContextRefr
                 ServiceObject serviceObject = ServiceObject.builder()
                         .serviceName(interfaceName)
                         .ip(ServerUtil.getHost())
-                        .port(rpcServerProperties.getServerPort())
+                        .port(server.getPort())
                         .weight(service.weight())
                         .clazz(clazz)
                         .meta(new HashMap<>(10))

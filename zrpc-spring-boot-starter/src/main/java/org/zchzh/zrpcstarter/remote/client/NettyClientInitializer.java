@@ -4,8 +4,6 @@ import org.zchzh.zrpcstarter.factory.FactoryProducer;
 import org.zchzh.zrpcstarter.remote.codec.RpcDecoder;
 import org.zchzh.zrpcstarter.remote.codec.RpcEncoder;
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.remote.handler.ResponseHandler;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 import io.netty.channel.ChannelInitializer;
@@ -36,11 +34,15 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         // 心跳机制，通过心跳检查对方是否有效,同时限制读和写的空闲时间，超过时间就会触发自定义handler中的userEventTrigger方法
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME, TimeUnit.SECONDS));
         // client 编码 request
-        channelPipeline.addLast(new RpcEncoder(ZRpcRequest.class, serializer));
+        channelPipeline.addLast(new RpcEncoder());
         // 自定义长度编码器
-        channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536, 0, 4, 0, 0));
+        channelPipeline.addLast(new LengthFieldBasedFrameDecoder(8 * 1024 * 1024,
+                6,
+                4,
+                -10,
+                0));
         // client 节码 response
-        channelPipeline.addLast(new RpcDecoder(ZRpcResponse.class, serializer));
+        channelPipeline.addLast(new RpcDecoder());
         channelPipeline.addLast(new ResponseHandler());
     }
 }

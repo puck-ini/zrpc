@@ -4,8 +4,6 @@ import org.zchzh.zrpcstarter.factory.FactoryProducer;
 import org.zchzh.zrpcstarter.remote.codec.RpcDecoder;
 import org.zchzh.zrpcstarter.remote.codec.RpcEncoder;
 import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.remote.handler.RequestHandler;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 import io.netty.channel.ChannelInitializer;
@@ -38,15 +36,15 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         // 心跳配置
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));
         // 传输的最大值
-        channelPipeline.addLast(new LengthFieldBasedFrameDecoder(65536,
-                0,
+        channelPipeline.addLast(new LengthFieldBasedFrameDecoder(8 * 1024 * 1024,
+                6,
                 4,
-                0,
+                -10,
                 0));
         // server 解码 request
-        channelPipeline.addLast(new RpcDecoder(ZRpcRequest.class, serializer));
+        channelPipeline.addLast(new RpcDecoder());
         // server 编码 response
-        channelPipeline.addLast(new RpcEncoder(ZRpcResponse.class, serializer));
+        channelPipeline.addLast(new RpcEncoder());
         channelPipeline.addLast(new RequestHandler());
     }
 }
