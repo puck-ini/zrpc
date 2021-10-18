@@ -2,6 +2,9 @@ package org.zchzh.zrpcstarter.remote.handler;
 
 import io.netty.handler.codec.TooLongFrameException;
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.MessageType;
+import org.zchzh.zrpcstarter.model.RpcProp;
+import org.zchzh.zrpcstarter.model.ZRpcMessage;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
 import org.zchzh.zrpcstarter.model.ZRpcResponse;
 import org.zchzh.zrpcstarter.remote.server.ServerServiceHolder;
@@ -13,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.reflect.FastClass;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -22,7 +24,7 @@ import java.util.concurrent.*;
  * @date 2021/3/10
  */
 @Slf4j
-public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
+public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
 
     private final ThreadPoolExecutor pool = new ThreadPoolExecutor(
             12,
@@ -41,13 +43,18 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
             });
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ZRpcRequest req) throws Exception {
-        if (req.getRequestId().startsWith(Constants.PING)) {
-            log.info("ping >>>>>>>> server - {}, reqId {} ", new Date(), req.getRequestId());
+    protected void channelRead0(ChannelHandlerContext ctx, ZRpcMessage message) throws Exception {
+        ZRpcMessage resMsg = ZRpcMessage.builder()
+                .messageType(MessageType.RESPONSE)
+                .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer()).build();
+        if (message.getMessageType() == MessageType.BEAT_RES) {
+            resMsg.setMessageType(MessageType.BEAT_RES);
+            ctx.channel().writeAndFlush(resMsg);
             return;
         }
+        ZRpcRequest req = (ZRpcRequest) message.getData();
 
-        CompletableFuture<ZRpcResponse> handlerFuture = CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<Void> handlerFuture = CompletableFuture.runAsync(() -> {
             ZRpcResponse response = new ZRpcResponse();
             response.setRequestId(req.getRequestId());
             try {
@@ -56,36 +63,16 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
             }catch (Throwable t) {
                 response.setError(t.toString());
             }
-            return response;
+            resMsg.setData(response);
         }, pool);
 
-        handlerFuture.thenAccept(response -> ctx.writeAndFlush(response).addListener((ChannelFutureListener) future -> {
+        handlerFuture.thenAccept(aVoid -> ctx.writeAndFlush(resMsg).addListener((ChannelFutureListener) future -> {
             if (future.isSuccess()) {
                 log.info("send response for request" + req.getRequestId());
             } else {
                 log.error("send response fail with request - {}", req.getRequestId(), future.cause());
             }
         }));
-//        pool.execute(() -> {
-//            ZRpcResponse response = new ZRpcResponse();
-//            response.setRequestId(req.getRequestId());
-//            try {
-//                Object result = handle(req);
-//                response.setResult(result);
-//            }catch (Throwable t) {
-//                response.setError(t.toString());
-//            }
-//            ctx.writeAndFlush(response).addListener(new ChannelFutureListener() {
-//                @Override
-//                public void operationComplete(ChannelFuture future) throws Exception {
-//                    if (future.isSuccess()) {
-//                        log.info("send response for request" + req.getRequestId());
-//                    } else {
-//                        log.error("send response fail with request - {}", req.getRequestId(), future.cause());
-//                    }
-//                }
-//            });
-//        });
     }
 
     /**
@@ -94,9 +81,6 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
      * @return
      */
     private Object handle(ZRpcRequest request) throws InvocationTargetException {
-        if (request.getRequestId().startsWith(Constants.PING)) {
-            return null;
-        }
         String interfaceName = request.getClassName();
         Object obj = ServerServiceHolder.get(interfaceName);
         if (Objects.isNull(obj)) {
@@ -118,7 +102,10 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcRequest> {
         log.error("RequestHandler exceptionCaught", cause);
         if (cause instanceof TooLongFrameException) {
             // 处理请求数据太大问题
-            ctx.channel().writeAndFlush(Constants.REMOVE_CLIENT);
+            ZRpcMessage message = ZRpcMessage.builder()
+                    .messageType(MessageType.HANDLER_REQ_ERROR_REQ)
+                    .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer()).build();
+            ctx.channel().writeAndFlush(message);
         }
         ctx.close();
     }

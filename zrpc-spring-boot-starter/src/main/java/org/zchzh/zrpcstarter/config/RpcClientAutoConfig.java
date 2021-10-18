@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.factory.FactoryProducer;
+import org.zchzh.zrpcstarter.model.RpcProp;
 import org.zchzh.zrpcstarter.proxy.InvokeProxy;
 import org.zchzh.zrpcstarter.register.Register;
 
@@ -18,7 +19,9 @@ public class RpcClientAutoConfig {
 
     @Bean
     public RpcClientProperties rpcClientProperties() {
-        return new RpcClientProperties();
+        RpcClientProperties properties = new RpcClientProperties();
+        RpcProp.INSTANCE.put(properties);
+        return properties;
     }
 
     @Bean

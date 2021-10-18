@@ -6,10 +6,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.*;
-
 /**
  * @author zengchzh
  * @date 2021/3/10
@@ -24,11 +20,9 @@ public class NettyServer implements Server {
 
     private Channel channel;
 
-    private String serializer;
 
-    public NettyServer(int port, String serializer){
+    public NettyServer(int port){
         this.port = port;
-        this.serializer = serializer;
     }
 
     @Override
@@ -42,7 +36,7 @@ public class NettyServer implements Server {
                     .channel(NioServerSocketChannel.class)
                     .option(ChannelOption.SO_BACKLOG, 100)
 //                            .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new NettyServerInitializer(serializer));
+                    .childHandler(new NettyServerInitializer());
 
             // 启动服务
             ChannelFuture channelFuture = serverBootstrap.bind(port).sync();
@@ -61,6 +55,11 @@ public class NettyServer implements Server {
     @Override
     public void stop() {
         this.channel.close();
+    }
+
+    @Override
+    public int getPort() {
+        return this.port;
     }
 
 }

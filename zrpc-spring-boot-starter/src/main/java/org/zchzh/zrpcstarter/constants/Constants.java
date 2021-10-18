@@ -9,26 +9,13 @@ import org.zchzh.zrpcstarter.model.ZRpcResponse;
  */
 public class Constants {
 
+    public static final byte[] MAGIC_NUMBER = {(byte) 'z', (byte) 'r', (byte) 'p', (byte) 'c'};
+
+    public static final int HEAD_LEN = 10;
+
     public static final String UTF_8 = "UTF-8";
 
-    public static final String DEFAULT_HANDLE = "default-handle";
-
     public static final int BEAT_TIME = 30;
-
-    public static final ZRpcRequest BEAT_PING;
-
-    public static final String PING = "beat_ping";
-
-    public static final ZRpcResponse REMOVE_CLIENT;
-
-    public static final String REMOVE_ID = "remove-client";
-
-    static {
-        BEAT_PING = new ZRpcRequest();
-        BEAT_PING.setRequestId(PING + ":" + System.currentTimeMillis());
-        REMOVE_CLIENT = new ZRpcResponse();
-        REMOVE_CLIENT.setRequestId(REMOVE_ID);
-    }
 
 
     // serializer spi

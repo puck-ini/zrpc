@@ -20,11 +20,11 @@ public interface ZSerializer {
 
     /**
      * 反序列化
+     * @param <T> 反序列化对象的类型
      * @param bytes 反序列化字节数组
      * @param clazz 转换的 java 类
-     * @param <T> 反序列化对象的类型
      * @return 返回转换的对象
      * @throws IOException 反序列化失败时
      */
-    <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException;
+    <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException;
 }

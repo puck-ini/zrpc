@@ -16,4 +16,10 @@ public interface Server {
      */
     void stop();
 
+    /**
+     * 获取监听的端口
+     * @return 监听端口
+     */
+    int getPort();
+
 }

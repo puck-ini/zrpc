@@ -6,12 +6,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.concurrent.*;
 import lombok.extern.slf4j.Slf4j;
-import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.MessageType;
 import org.zchzh.zrpcstarter.exception.CommonException;
-import org.zchzh.zrpcstarter.model.ResponseHolder;
-import org.zchzh.zrpcstarter.model.ServiceObject;
-import org.zchzh.zrpcstarter.model.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
+import org.zchzh.zrpcstarter.model.*;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -35,18 +32,14 @@ public class NettyClient implements Client {
 
     private Bootstrap bootstrap;
 
-    private String serializer;
-
-    public NettyClient(String ip, int port, String serializer) {
+    public NettyClient(String ip, int port) {
         this.ip = ip;
         this.port = port;
-        this.serializer = serializer;
     }
 
     public NettyClient(ServiceObject so) {
         this.ip = so.getIp();
         this.port = so.getPort();
-        this.serializer = so.getMeta().get(Constants.SERIALIZER);
     }
 
     @Override
@@ -56,7 +49,7 @@ public class NettyClient implements Client {
             bootstrap.group(workGroup)
                     .channel(NioSocketChannel.class)
                     .option(ChannelOption.TCP_NODELAY, true)
-                    .handler(new NettyClientInitializer(serializer));
+                    .handler(new NettyClientInitializer());
             connect();
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,10 +86,14 @@ public class NettyClient implements Client {
         CompletableFuture<ZRpcResponse> resFuture = new CompletableFuture<>();
         String requestId = request.getRequestId();
         ResponseHolder.put(requestId, resFuture);
-//        throw new CommonException("test fail");
+        ZRpcMessage message = ZRpcMessage.builder()
+                .messageType(MessageType.REQUEST)
+                .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
+                .data(request)
+                .build();
         try {
             Channel channel =  channelPromise.get();
-            ChannelFuture future =channel.writeAndFlush(request);
+            ChannelFuture future =channel.writeAndFlush(message);
             future.addListener(new ChannelFutureListener() {
                 @Override
                 public void operationComplete(ChannelFuture future) throws Exception {

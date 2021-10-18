@@ -33,7 +33,7 @@ public class ClientHolder {
     public static Client get(String ip, int port, String serializer) {
         String key = ip + port;
         return CLIENT_MAP.computeIfAbsent(key, i -> {
-            Client client = new NettyClient(ip, port, serializer);
+            Client client = new NettyClient(ip, port);
             client.start();
             return client;
         });

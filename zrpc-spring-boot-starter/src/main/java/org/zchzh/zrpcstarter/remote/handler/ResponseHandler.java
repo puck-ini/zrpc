@@ -1,16 +1,13 @@
 package org.zchzh.zrpcstarter.remote.handler;
 
-import org.zchzh.zrpcstarter.model.ResponseHolder;
-import org.zchzh.zrpcstarter.constants.Constants;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
+import org.zchzh.zrpcstarter.enums.MessageType;
+import org.zchzh.zrpcstarter.model.*;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
 import org.zchzh.zrpcstarter.remote.client.ClientHolder;
 
 import java.util.Date;
-import java.util.Objects;
 
 /**
  * @author zengchzh
@@ -20,19 +17,20 @@ import java.util.Objects;
  */
 
 @Slf4j
-public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
+public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
 
     /**
      * 接受响应
      * @param ctx
-     * @param response
+     * @param message
      * @throws Exception
      */
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ZRpcResponse response) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, ZRpcMessage message) throws Exception {
         // 处理请求太大报错问题
+        ZRpcResponse response = (ZRpcResponse) message.getData();
         String id = response.getRequestId();
-        if (Objects.equals(id, Constants.REMOVE_ID)) {
+        if (message.getMessageType() == MessageType.HANDLER_REQ_ERROR_REQ) {
             ResponseHolder.remove(id);
             ClientHolder.remove(ctx.channel());
         } else {
@@ -58,7 +56,11 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcResponse> {
         // 实现长连接发送心跳
         if (evt instanceof IdleStateEvent) {
             log.info("client send beat -" + new Date());
-            ctx.channel().writeAndFlush(Constants.BEAT_PING);
+            ZRpcMessage message = ZRpcMessage.builder()
+                    .messageType(MessageType.BEAT_REQ)
+                    .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
+                    .build();
+            ctx.channel().writeAndFlush(message);
         } else {
             super.userEventTriggered(ctx, evt);
         }

@@ -28,7 +28,7 @@ public class Hessian2Serializer implements ZSerializer {
     }
 
     @Override
-    public <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
         Hessian2Input input = new Hessian2Input(byteArrayInputStream);
         return (T) input.readObject(clazz);

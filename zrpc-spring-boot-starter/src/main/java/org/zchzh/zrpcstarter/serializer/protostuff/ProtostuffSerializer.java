@@ -38,7 +38,7 @@ public class ProtostuffSerializer implements ZSerializer {
     }
 
     @Override
-    public <T> Object deserialize(byte[] bytes, Class<T> clazz) throws IOException {
+    public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
         // 可以使用 clazz.newInstance()，但是改方法如果对象没有无参构造函数会报错，而且性能不如objenesis.newInstance(clazz);
         T t = objenesis.newInstance(clazz);
 //        T t = clazz.newInstance();
