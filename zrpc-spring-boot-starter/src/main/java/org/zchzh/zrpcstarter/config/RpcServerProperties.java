@@ -30,17 +30,9 @@ public class RpcServerProperties {
      * 服务端暴露端口
      */
     private Integer serverPort = 19000;
+
     /**
      * 服务端序列化方式
      */
     private SerializerType serverSerializer = SerializerType.KRYO;
-
-//    /**
-//     * 客户端暴露端口
-//     */
-//    private Integer clientPort = 19000;
-//    /**
-//     * 客户端序列化方式
-//     */
-//    private String clientSerializer = Constants.KRYO;
 }

@@ -25,23 +25,11 @@ public class RpcClientProperties {
      */
     private String registerProtocol = Constants.NACOS;
 
-//    /**
-//     * 服务端暴露端口
-//     */
-//    private Integer serverPort = 19000;
-//    /**
-//     * 服务端序列化方式
-//     */
-//    private String serverSerializer = Constants.KRYO;
-//
-//    /**
-//     * 客户端暴露端口
-//     */
-//    private Integer clientPort = 19000;
     /**
      * 客户端序列化方式
      */
     private SerializerType clientSerializer =  SerializerType.KRYO;
+
     /**
      * 代理方式
      */
