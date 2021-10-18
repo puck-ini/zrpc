@@ -2,6 +2,7 @@ package org.zchzh.zrpcstarter.model;
 
 import lombok.Builder;
 import lombok.Data;
+import org.zchzh.zrpcstarter.enums.CompressType;
 import org.zchzh.zrpcstarter.enums.MessageType;
 import org.zchzh.zrpcstarter.enums.SerializerType;
 
@@ -22,6 +23,8 @@ public class ZRpcMessage implements Serializable {
     private MessageType messageType;
 
     private SerializerType serializerType;
+
+    private CompressType compressType;
 
     private Object data;
 }

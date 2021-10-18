@@ -28,9 +28,9 @@ public class NettyClientInitializer extends ChannelInitializer<SocketChannel> {
         channelPipeline.addLast(new RpcEncoder());
         // 自定义长度编码器
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(8 * 1024 * 1024,
-                6,
+                7,
                 4,
-                -10,
+                -11,
                 0));
         // client 节码 response
         channelPipeline.addLast(new RpcDecoder());

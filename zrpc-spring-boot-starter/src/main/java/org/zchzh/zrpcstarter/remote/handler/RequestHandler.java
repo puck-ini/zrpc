@@ -46,7 +46,9 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcMessage message) throws Exception {
         ZRpcMessage resMsg = ZRpcMessage.builder()
                 .messageType(MessageType.RESPONSE)
-                .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer()).build();
+                .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer())
+                .compressType(RpcProp.INSTANCE.getServer().getServerCompress())
+                .build();
         if (message.getMessageType() == MessageType.BEAT_RES) {
             resMsg.setMessageType(MessageType.BEAT_RES);
             ctx.channel().writeAndFlush(resMsg);
@@ -104,7 +106,9 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
             // 处理请求数据太大问题
             ZRpcMessage message = ZRpcMessage.builder()
                     .messageType(MessageType.HANDLER_REQ_ERROR_REQ)
-                    .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer()).build();
+                    .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer())
+                    .compressType(RpcProp.INSTANCE.getServer().getServerCompress())
+                    .build();
             ctx.channel().writeAndFlush(message);
         }
         ctx.close();

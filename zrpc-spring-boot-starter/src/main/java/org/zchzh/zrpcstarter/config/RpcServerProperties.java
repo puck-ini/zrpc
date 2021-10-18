@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.CompressType;
 import org.zchzh.zrpcstarter.enums.SerializerType;
 
 /**
@@ -35,4 +36,8 @@ public class RpcServerProperties {
      * 服务端序列化方式
      */
     private SerializerType serverSerializer = SerializerType.KRYO;
+    /**
+     * 压缩方式
+     */
+    private CompressType serverCompress = CompressType.NONE;
 }

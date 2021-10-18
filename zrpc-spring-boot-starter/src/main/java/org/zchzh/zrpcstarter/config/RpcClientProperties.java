@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.CompressType;
 import org.zchzh.zrpcstarter.enums.SerializerType;
 
 /**
@@ -34,4 +35,8 @@ public class RpcClientProperties {
      * 代理方式
      */
     private String proxy = Constants.JDK;
+    /**
+     * 压缩方式
+     */
+    private CompressType clientCompress = CompressType.NONE;
 }

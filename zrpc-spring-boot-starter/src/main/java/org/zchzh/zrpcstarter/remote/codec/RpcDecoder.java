@@ -1,6 +1,7 @@
 package org.zchzh.zrpcstarter.remote.codec;
 
 import org.zchzh.zrpcstarter.constants.Constants;
+import org.zchzh.zrpcstarter.enums.CompressType;
 import org.zchzh.zrpcstarter.enums.MessageType;
 import org.zchzh.zrpcstarter.enums.SerializerType;
 import org.zchzh.zrpcstarter.model.ZRpcMessage;
@@ -26,11 +27,17 @@ public class RpcDecoder extends ByteToMessageDecoder {
            MessageType messageType = MessageType.get(messageCode);
            byte serializerCode = in.readByte();
            SerializerType serializerType = SerializerType.get(serializerCode);
-           ZRpcMessage message = ZRpcMessage.builder().messageType(messageType).serializerType(serializerType).build();
+           byte compressCode = in.readByte();
+           CompressType compressType = CompressType.get(compressCode);
+           ZRpcMessage message = ZRpcMessage.builder()
+                   .messageType(messageType)
+                   .serializerType(serializerType)
+                   .compressType(compressType).build();
            int dataLen = in.readInt();
            byte[] data = new byte[dataLen - Constants.HEAD_LEN];
            in.readBytes(data);
-           messageType.handler(message, data, serializerType);
+           byte[] decompressData = compressType.decompress(data);
+           messageType.handler(message, decompressData, serializerType);
            out.add(message);
        }
     }

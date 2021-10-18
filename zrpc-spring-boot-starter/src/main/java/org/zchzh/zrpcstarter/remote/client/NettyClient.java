@@ -89,6 +89,7 @@ public class NettyClient implements Client {
         ZRpcMessage message = ZRpcMessage.builder()
                 .messageType(MessageType.REQUEST)
                 .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
+                .compressType(RpcProp.INSTANCE.getClient().getClientCompress())
                 .data(request)
                 .build();
         try {

@@ -26,9 +26,9 @@ public class NettyServerInitializer extends ChannelInitializer<SocketChannel> {
         channelPipeline.addLast(new IdleStateHandler(0, 0, Constants.BEAT_TIME * 3, TimeUnit.SECONDS));
         // 传输的最大值
         channelPipeline.addLast(new LengthFieldBasedFrameDecoder(8 * 1024 * 1024,
-                6,
+                7,
                 4,
-                -10,
+                -11,
                 0));
         // server 解码 request
         channelPipeline.addLast(new RpcDecoder());

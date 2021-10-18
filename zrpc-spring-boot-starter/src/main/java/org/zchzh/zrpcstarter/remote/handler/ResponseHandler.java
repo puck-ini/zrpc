@@ -59,6 +59,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
             ZRpcMessage message = ZRpcMessage.builder()
                     .messageType(MessageType.BEAT_REQ)
                     .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
+                    .compressType(RpcProp.INSTANCE.getClient().getClientCompress())
                     .build();
             ctx.channel().writeAndFlush(message);
         } else {

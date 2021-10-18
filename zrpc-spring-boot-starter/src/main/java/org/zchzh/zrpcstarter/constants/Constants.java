@@ -11,7 +11,7 @@ public class Constants {
 
     public static final byte[] MAGIC_NUMBER = {(byte) 'z', (byte) 'r', (byte) 'p', (byte) 'c'};
 
-    public static final int HEAD_LEN = 10;
+    public static final int HEAD_LEN = 11;
 
     public static final String UTF_8 = "UTF-8";
 
@@ -60,6 +60,8 @@ public class Constants {
     public static final String REGISTER = "register";
 
     public static final String SERIALIZER = "serializer";
+
+    public static final String COMPRESS = "compress";
 
 
     // compress spi
