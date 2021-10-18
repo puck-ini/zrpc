@@ -1,5 +1,6 @@
 package org.zchzh.zrpcstarter.remote.codec;
 
+import lombok.extern.slf4j.Slf4j;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.enums.CompressType;
 import org.zchzh.zrpcstarter.enums.MessageType;
@@ -17,6 +18,7 @@ import java.util.List;
  * @date 2021/3/10
  */
 
+@Slf4j
 public class RpcDecoder extends ByteToMessageDecoder {
 
     @Override
@@ -36,7 +38,9 @@ public class RpcDecoder extends ByteToMessageDecoder {
            int dataLen = in.readInt();
            byte[] data = new byte[dataLen - Constants.HEAD_LEN];
            in.readBytes(data);
+           long start = System.currentTimeMillis();
            byte[] decompressData = compressType.decompress(data);
+           log.info("decompress time : " + (System.currentTimeMillis() - start));
            messageType.handler(message, decompressData, serializerType);
            out.add(message);
        }

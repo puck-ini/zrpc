@@ -39,5 +39,5 @@ public class RpcServerProperties {
     /**
      * 压缩方式
      */
-    private CompressType serverCompress = CompressType.NONE;
+    private CompressType serverCompress = CompressType.GZIP;
 }
