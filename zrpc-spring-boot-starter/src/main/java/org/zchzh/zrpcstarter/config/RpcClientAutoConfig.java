@@ -40,9 +40,7 @@ public class RpcClientAutoConfig {
     @Bean
     public InvokeProxy invokeProxy(@Autowired @Qualifier("discovery") Register discovery,
                                    @Autowired RpcClientProperties rpcClientProperties) {
-        InvokeProxy invokeProxy = (InvokeProxy) FactoryProducer.INSTANCE.getInstance(Constants.PROXY)
+        return (InvokeProxy) FactoryProducer.INSTANCE.getInstance(Constants.PROXY)
                 .getInstance(rpcClientProperties.getProxy());
-        invokeProxy.setDiscovery(discovery);
-        return invokeProxy;
     }
 }

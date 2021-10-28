@@ -48,7 +48,7 @@ public class InjectServiceProcessor implements ApplicationListener<ContextRefres
                 Object obj = context.getBean(name);
                 field.setAccessible(true);
                 try {
-                    field.set(obj, invokeProxy.getProxy(fieldClass));
+                    field.set(obj, invokeProxy.getProxy(fieldClass, reference.loadBalance()));
                 } catch (IllegalAccessException e) {
                     log.error("inject service fail - ", e);
                     throw new RuntimeException("inject service fail");

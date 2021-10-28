@@ -1,5 +1,6 @@
 package org.zchzh.zrpcstarter.proxy;
 
+import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.register.Register;
 
 /**
@@ -12,14 +13,18 @@ public interface InvokeProxy {
 
     /**
      * 获取代理对象
-     * @param clazz
+     * @param clazz 被代理类
      * @return 代理对象
      */
-    Object getProxy(Class<?> clazz);
+    default Object getProxy(Class<?> clazz) {
+        return getProxy(clazz, Constants.RANDOM);
+    }
 
     /**
-     * 设置服务发现对象
-     * @param register 服务发现对象
+     * 获取代理对象，设置负载均衡
+     * @param clazz 被代理类
+     * @param loadBalance 负载均衡方式
+     * @return 返回代理对象
      */
-    void setDiscovery(Register register);
+    Object getProxy(Class<?> clazz, String loadBalance);
 }

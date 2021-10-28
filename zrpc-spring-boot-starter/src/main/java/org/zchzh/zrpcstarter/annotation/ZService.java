@@ -22,6 +22,4 @@ public @interface ZService {
     String name() default "";
 
     double weight() default 1.0;
-
-    String loadBalance() default Constants.RANDOM;
 }

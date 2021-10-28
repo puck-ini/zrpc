@@ -3,7 +3,6 @@ package org.zchzh.zrpcstarter.proxy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.zchzh.zrpcstarter.cluster.LoadBalance;
-import org.zchzh.zrpcstarter.config.RpcClientProperties;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.exception.CommonException;
 import org.zchzh.zrpcstarter.factory.FactoryProducer;
@@ -14,7 +13,6 @@ import org.zchzh.zrpcstarter.register.Register;
 import org.zchzh.zrpcstarter.remote.client.Client;
 import org.zchzh.zrpcstarter.remote.client.ClientHolder;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.UUID;
@@ -31,11 +29,17 @@ public abstract class AbstractInvocationHandler {
 
     protected final Class<?> clazz;
 
-    public AbstractInvocationHandler(Class<?> clazz) {
+    private final Register discovery;
+
+    private final LoadBalance loadBalance;
+
+    public AbstractInvocationHandler(Class<?> clazz, Register discovery, LoadBalance loadBalance) {
         this.clazz = clazz;
+        this.discovery = discovery;
+        this.loadBalance = loadBalance;
     }
 
-    protected Object handler(Object o, Method method, Object[] args, Register register) throws ExecutionException, InterruptedException {
+    protected Object handler(Object o, Method method, Object[] args) throws ExecutionException, InterruptedException {
         String serviceName = clazz.getName();
         ZRpcRequest request = ZRpcRequest.builder()
                 .requestId(UUID.randomUUID().toString())
@@ -44,7 +48,7 @@ public abstract class AbstractInvocationHandler {
                 .parameterTypes(method.getParameterTypes())
                 .parameters(args)
                 .build();
-        ServiceObject so = getServiceObject(serviceName, register);
+        ServiceObject so = getServiceObject(serviceName);
         return getResult(ClientHolder.get(so), request);
     }
 
@@ -70,14 +74,11 @@ public abstract class AbstractInvocationHandler {
         return resultFuture.get();
     }
 
-    private ServiceObject getServiceObject(String serviceName, Register register) {
-        List<ServiceObject> serviceObjectList = register.getAll(serviceName);
+    private ServiceObject getServiceObject(String serviceName) {
+        List<ServiceObject> serviceObjectList = discovery.getAll(serviceName);
         if (CollectionUtils.isEmpty(serviceObjectList)) {
             throw new CommonException("can not find service with name : " + serviceName);
         }
-        String loadBalanceName = serviceObjectList.get(0).getMeta().get(Constants.LOAD_BALANCE);
-        LoadBalance loadBalance = (LoadBalance) FactoryProducer.INSTANCE.getInstance(Constants.CLUSTER)
-                .getInstance(loadBalanceName);
         return loadBalance.get(serviceObjectList);
     }
 }
