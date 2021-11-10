@@ -4,6 +4,8 @@ import org.zchzh.zrpcstarter.compress.Compress;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.factory.FactoryProducer;
 
+import java.util.Objects;
+
 /**
  * @author zengchzh
  * @date 2021/10/18
@@ -51,6 +53,9 @@ public enum CompressType implements Compress {
         if (this == NONE) {
             return bytes;
         }
+        if (Objects.isNull(bytes)) {
+            return new byte[0];
+        }
         return ((Compress) FactoryProducer.INSTANCE
                 .getInstance(Constants.COMPRESS)
                 .getInstance(this.getName()))
@@ -61,6 +66,9 @@ public enum CompressType implements Compress {
     public byte[] decompress(byte[] bytes) {
         if (this == NONE) {
             return bytes;
+        }
+        if (Objects.isNull(bytes)) {
+            return new byte[0];
         }
         return ((Compress) FactoryProducer.INSTANCE
                 .getInstance(Constants.COMPRESS)

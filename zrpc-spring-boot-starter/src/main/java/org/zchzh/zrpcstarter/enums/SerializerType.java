@@ -5,6 +5,7 @@ import org.zchzh.zrpcstarter.factory.FactoryProducer;
 import org.zchzh.zrpcstarter.serializer.ZSerializer;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author zengchzh
@@ -61,6 +62,9 @@ public enum SerializerType implements ZSerializer {
 
     @Override
     public <T> byte[] serialize(T object) throws IOException {
+        if (Objects.isNull(object)) {
+            return new byte[0];
+        }
         return ((ZSerializer) FactoryProducer.INSTANCE
                 .getInstance(Constants.SERIALIZER)
                 .getInstance(this.getName())).serialize(object);
@@ -68,6 +72,13 @@ public enum SerializerType implements ZSerializer {
 
     @Override
     public <T> T deserialize(byte[] bytes, Class<T> clazz) throws IOException {
+        if (Objects.isNull(bytes)) {
+            try {
+                return clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
         return ((ZSerializer) FactoryProducer.INSTANCE
                 .getInstance(Constants.SERIALIZER)
                 .getInstance(this.getName())).deserialize(bytes, clazz);

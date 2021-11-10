@@ -31,7 +31,7 @@ public class JdkInvokeProxy implements InvokeProxy {
                 .getInstance(Constants.REGISTER)
                 .getInstance(RpcProp.INSTANCE.getClient().getRegisterProtocol());
         LoadBalance loadBalance1 = (LoadBalance) FactoryProducer.INSTANCE
-                .getInstance(Constants.LOAD_BALANCE)
+                .getInstance(Constants.CLUSTER)
                 .getInstance(loadBalance);
         return Proxy.newProxyInstance(clazz.getClassLoader(),
                 new Class[] {clazz},

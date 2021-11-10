@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.sf.cglib.reflect.FastClass;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.concurrent.*;
 
@@ -49,7 +50,8 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
                 .serializerType(RpcProp.INSTANCE.getServer().getServerSerializer())
                 .compressType(RpcProp.INSTANCE.getServer().getServerCompress())
                 .build();
-        if (message.getMessageType() == MessageType.BEAT_RES) {
+        if (message.getMessageType() == MessageType.BEAT_REQ) {
+            log.info("beat req - " + LocalDateTime.now());
             resMsg.setMessageType(MessageType.BEAT_RES);
             ctx.channel().writeAndFlush(resMsg);
             return;

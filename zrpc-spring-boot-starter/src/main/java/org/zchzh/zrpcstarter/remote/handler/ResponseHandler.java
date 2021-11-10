@@ -27,6 +27,9 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
      */
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, ZRpcMessage message) throws Exception {
+        if (message.getMessageType() == MessageType.BEAT_RES) {
+            return;
+        }
         // 处理请求太大报错问题
         ZRpcResponse response = (ZRpcResponse) message.getData();
         String id = response.getRequestId();

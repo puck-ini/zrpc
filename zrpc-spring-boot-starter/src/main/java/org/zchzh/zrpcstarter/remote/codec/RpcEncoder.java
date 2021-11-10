@@ -10,6 +10,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
 import java.io.IOException;
+import java.util.Objects;
 
 
 /**
@@ -50,7 +51,9 @@ public class RpcEncoder extends MessageToByteEncoder<ZRpcMessage> {
         long start = System.currentTimeMillis();
         byte[] compressData = msg.getCompressType().compress(data);
         log.info("compress time : " + (System.currentTimeMillis() - start));
-        log.info(" data len : {}, compress data len : {}", data.length, compressData.length);
+        log.info(" data len : {}, compress data len : {}",
+                Objects.isNull(data) ? 0 : data.length,
+                Objects.isNull(compressData) ? 0 : compressData.length);
         out.writeInt(compressData.length + Constants.HEAD_LEN);
         out.writeBytes(compressData);
     }

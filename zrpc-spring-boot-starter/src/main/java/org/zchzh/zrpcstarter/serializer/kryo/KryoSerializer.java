@@ -35,12 +35,13 @@ public class KryoSerializer implements ZSerializer {
             output.close();
             return byteArrayOutputStream.toByteArray();
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            ex.printStackTrace();
+            return null;
         } finally {
             try {
                 byteArrayOutputStream.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
             kryoPool.release(kryo);
         }
@@ -56,12 +57,13 @@ public class KryoSerializer implements ZSerializer {
             in.close();
             return result;
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            ex.printStackTrace();
+            return null;
         } finally {
             try {
                 byteArrayInputStream.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
             kryoPool.release(kryo);
         }
