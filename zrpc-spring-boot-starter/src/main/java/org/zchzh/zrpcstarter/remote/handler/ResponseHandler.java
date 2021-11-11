@@ -59,11 +59,7 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
         // 实现长连接发送心跳
         if (evt instanceof IdleStateEvent) {
             log.info("client send beat -" + new Date());
-            ZRpcMessage message = ZRpcMessage.builder()
-                    .messageType(MessageType.BEAT_REQ)
-                    .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
-                    .compressType(RpcProp.INSTANCE.getClient().getClientCompress())
-                    .build();
+            ZRpcMessage message = ZRpcMessage.builder().messageType(MessageType.BEAT_REQ).setClientConfig().build();
             ctx.channel().writeAndFlush(message);
         } else {
             super.userEventTriggered(ctx, evt);

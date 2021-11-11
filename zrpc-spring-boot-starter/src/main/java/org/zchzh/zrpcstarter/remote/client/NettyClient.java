@@ -86,12 +86,7 @@ public class NettyClient implements Client {
         CompletableFuture<ZRpcResponse> resFuture = new CompletableFuture<>();
         String requestId = request.getRequestId();
         ResponseHolder.put(requestId, resFuture);
-        ZRpcMessage message = ZRpcMessage.builder()
-                .messageType(MessageType.REQUEST)
-                .serializerType(RpcProp.INSTANCE.getClient().getClientSerializer())
-                .compressType(RpcProp.INSTANCE.getClient().getClientCompress())
-                .data(request)
-                .build();
+        ZRpcMessage message = ZRpcMessage.builder().messageType(MessageType.REQUEST).setClientConfig().data(request).build();
         try {
             Channel channel =  channelPromise.get();
             ChannelFuture future =channel.writeAndFlush(message);
