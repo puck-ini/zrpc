@@ -13,6 +13,9 @@ import org.zchzh.zrpcstarter.register.Register;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * @author zengchzh
@@ -24,6 +27,7 @@ import java.lang.reflect.Proxy;
 @JdkSPI(Constants.JDK)
 public class JdkInvokeProxy implements InvokeProxy {
 
+    private static final Map<String, Object> CACHE = new ConcurrentHashMap<>();
 
     @Override
     public Object getProxy(Class<?> clazz, String loadBalance) {
@@ -33,9 +37,15 @@ public class JdkInvokeProxy implements InvokeProxy {
         LoadBalance loadBalance1 = (LoadBalance) FactoryProducer.INSTANCE
                 .getInstance(Constants.CLUSTER)
                 .getInstance(loadBalance);
-        return Proxy.newProxyInstance(clazz.getClassLoader(),
-                new Class[] {clazz},
-                new ClientInvocationHandler(clazz, discovery, loadBalance1));
+
+        return CACHE.computeIfAbsent(clazz.getName() + ":" + loadBalance,
+                s -> Proxy.newProxyInstance(
+                        clazz.getClassLoader(),
+                        new Class[] {clazz},
+                        new ClientInvocationHandler(clazz, discovery, loadBalance1)
+                )
+        );
+
     }
 
     private static class ClientInvocationHandler extends AbstractInvocationHandler implements InvocationHandler {

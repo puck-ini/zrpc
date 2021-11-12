@@ -13,6 +13,9 @@ import org.zchzh.zrpcstarter.model.RpcProp;
 import org.zchzh.zrpcstarter.register.Register;
 
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * @author zengchzh
@@ -24,6 +27,8 @@ import java.lang.reflect.Method;
 @JdkSPI(Constants.CGLIB)
 public class CglibInvokeProxy implements InvokeProxy {
 
+    private static final Map<String, Object> CACHE = new ConcurrentHashMap<>();
+
     @Override
     public Object getProxy(Class<?> clazz, String loadBalance) {
         Register discovery = (Register) FactoryProducer.INSTANCE
@@ -32,10 +37,13 @@ public class CglibInvokeProxy implements InvokeProxy {
         LoadBalance loadBalance1 = (LoadBalance) FactoryProducer.INSTANCE
                 .getInstance(Constants.CLUSTER)
                 .getInstance(loadBalance);
-        Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(clazz);
-        enhancer.setCallback(new ClientInvocationHandler(clazz, discovery, loadBalance1));
-        return enhancer.create();
+
+        return CACHE.computeIfAbsent(clazz.getName() + ":" + loadBalance, s -> {
+            Enhancer enhancer = new Enhancer();
+            enhancer.setSuperclass(clazz);
+            enhancer.setCallback(new ClientInvocationHandler(clazz, discovery, loadBalance1));
+            return enhancer.create();
+        });
     }
 
     private static class ClientInvocationHandler extends AbstractInvocationHandler implements MethodInterceptor {
