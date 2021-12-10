@@ -34,10 +34,10 @@ public class ResponseHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
         ZRpcResponse response = (ZRpcResponse) message.getData();
         String id = response.getRequestId();
         if (message.getMessageType() == MessageType.HANDLER_REQ_ERROR_REQ) {
-            ResponseHolder.remove(id);
+            PendingReqHolder.remove(id);
             ClientHolder.remove(ctx.channel());
         } else {
-            ResponseHolder.pop(id).complete(response);
+            PendingReqHolder.pop(id).complete(response);
         }
     }
 

@@ -10,7 +10,6 @@ import org.zchzh.zrpcstarter.enums.MessageType;
 import org.zchzh.zrpcstarter.exception.CommonException;
 import org.zchzh.zrpcstarter.model.*;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -82,10 +81,9 @@ public class NettyClient implements Client {
     }
 
     @Override
-    public CompletableFuture<ZRpcResponse> invoke(ZRpcRequest request) {
-        CompletableFuture<ZRpcResponse> resFuture = new CompletableFuture<>();
+    public PendingRequest invoke(ZRpcRequest request) {
         String requestId = request.getRequestId();
-        ResponseHolder.put(requestId, resFuture);
+        PendingReqHolder.put(requestId, new PendingRequest(request));
         ZRpcMessage message = ZRpcMessage.builder().messageType(MessageType.REQUEST).setClientConfig().data(request).build();
         try {
             Channel channel =  channelPromise.get();
@@ -97,7 +95,7 @@ public class NettyClient implements Client {
                         log.info("request - {} success ", request.getRequestId());
                     } else {
                         log.error("request fail", future.cause());
-                        ResponseHolder.remove(requestId);
+                        PendingReqHolder.remove(requestId);
                         ClientHolder.remove(channel);
                     }
 
@@ -107,7 +105,7 @@ public class NettyClient implements Client {
             log.error("get client channel fail", e);
             throw new CommonException("get client channel fail");
         }
-        return resFuture;
+        return PendingReqHolder.get(requestId);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.zchzh.zrpcstarter.remote.client;
 
+import org.zchzh.zrpcstarter.model.PendingRequest;
 import org.zchzh.zrpcstarter.model.ZRpcRequest;
-import org.zchzh.zrpcstarter.model.ZRpcResponse;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -31,6 +31,6 @@ public interface Client {
      * @param request 请求数据
      * @return 返回结果future
      */
-    CompletableFuture<ZRpcResponse> invoke(ZRpcRequest request);
+    PendingRequest invoke(ZRpcRequest request);
 
 }
