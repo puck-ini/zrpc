@@ -38,8 +38,4 @@ public class ZRpcRequest implements Serializable {
      * 调用参数
      */
     private Object[] parameters;
-    /**
-     * 版本
-     */
-    private String version;
 }

@@ -34,9 +34,6 @@ public class RegisterServiceProcessor implements ApplicationListener<ContextRefr
     @Resource
     private Server server;
 
-    @Resource
-    private RpcServerProperties rpcServerProperties;
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (Objects.isNull(event.getApplicationContext().getParent())) {

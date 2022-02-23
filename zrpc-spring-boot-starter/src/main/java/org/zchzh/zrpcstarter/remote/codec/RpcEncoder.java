@@ -32,10 +32,14 @@ public class RpcEncoder extends MessageToByteEncoder<ZRpcMessage> {
      * @param out
      */
     private void encodeMessageHead(ZRpcMessage msg, ByteBuf out) {
+        // 魔数占用4字节
         out.writeBytes(Constants.MAGIC_NUMBER);
+        // msg 类型占用1字节
         out.writeByte(msg.getMessageType().getCode());
+        // 序列化类型占用1字节
         SerializerType serializerType = msg.getSerializerType();
         out.writeByte(serializerType.getCode());
+        // 压缩类型占用1字节
         CompressType compressType = msg.getCompressType();
         out.writeByte(compressType.getCode());
     }
@@ -54,6 +58,7 @@ public class RpcEncoder extends MessageToByteEncoder<ZRpcMessage> {
         log.info(" data len : {}, compress data len : {}",
                 Objects.isNull(data) ? 0 : data.length,
                 Objects.isNull(compressData) ? 0 : compressData.length);
+        // 消息头加消息体长度占用4字节
         out.writeInt(compressData.length + Constants.HEAD_LEN);
         out.writeBytes(compressData);
     }

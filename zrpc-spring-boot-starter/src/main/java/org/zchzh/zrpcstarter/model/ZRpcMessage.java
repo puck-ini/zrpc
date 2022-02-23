@@ -27,7 +27,10 @@ public class ZRpcMessage implements Serializable {
 
     private Object data;
 
-    ZRpcMessage(final MessageType messageType, final SerializerType serializerType, final CompressType compressType, final Object data) {
+    ZRpcMessage(MessageType messageType,
+                SerializerType serializerType,
+                CompressType compressType,
+                Object data) {
         this.messageType = messageType;
         this.serializerType = serializerType;
         this.compressType = compressType;

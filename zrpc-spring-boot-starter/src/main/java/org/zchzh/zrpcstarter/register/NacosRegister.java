@@ -91,17 +91,14 @@ public class NacosRegister implements Register {
     }
 
     private void subService(String serviceName) throws NacosException {
-        namingService.subscribe(serviceName, new EventListener() {
-            @Override
-            public void onEvent(Event event) {
-                if (event instanceof NamingEvent) {
-                    List<ServiceObject> serviceObjectList = new CopyOnWriteArrayList<>();
-                    for (Instance instance : ((NamingEvent) event).getInstances()) {
-                        log.info(toService(instance).toString());
-                        serviceObjectList.add(toService(instance));
-                    }
-                    ServiceCache.putCache(serviceName, serviceObjectList);
+        namingService.subscribe(serviceName, event -> {
+            if (event instanceof NamingEvent) {
+                List<ServiceObject> serviceObjectList = new CopyOnWriteArrayList<>();
+                for (Instance instance : ((NamingEvent) event).getInstances()) {
+                    log.info(toService(instance).toString());
+                    serviceObjectList.add(toService(instance));
                 }
+                ServiceCache.putCache(serviceName, serviceObjectList);
             }
         });
     }

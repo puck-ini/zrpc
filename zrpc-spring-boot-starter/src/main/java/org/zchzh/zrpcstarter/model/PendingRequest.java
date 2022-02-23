@@ -29,20 +29,12 @@ public class PendingRequest {
         this.requestId = request.getRequestId();
         this.request = request;
         this.resFuture  = new CompletableFuture<>();
-        this.resultFuture = this.resFuture.thenApply(new Function<ZRpcResponse, Object>() {
-            @Override
-            public Object apply(ZRpcResponse response) {
-                if (response.isError()) {
-                    throw new CommonException(response.getError());
-                }
-                return response.getResult();
+        this.resultFuture = this.resFuture.thenApply(response -> {
+            if (response.isError()) {
+                throw new CommonException(response.getError());
             }
-        }).exceptionally(new Function<Throwable, Object>() {
-            @Override
-            public Object apply(Throwable throwable) {
-                return throwable;
-            }
-        });
+            return response.getResult();
+        }).exceptionally(throwable -> throwable);
         this.invokeTime = System.currentTimeMillis();
     }
 

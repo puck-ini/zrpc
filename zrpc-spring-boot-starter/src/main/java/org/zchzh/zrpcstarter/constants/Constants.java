@@ -13,6 +13,8 @@ public class Constants {
 
     public static final int HEAD_LEN = 11;
 
+    public static final int MSG_LEN = 4;
+
     public static final String UTF_8 = "UTF-8";
 
     public static final int BEAT_TIME = 30;

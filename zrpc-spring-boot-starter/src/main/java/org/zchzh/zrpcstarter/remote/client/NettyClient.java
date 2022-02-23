@@ -61,21 +61,13 @@ public class NettyClient implements Client {
             return;
         }
 
-        ChannelFuture future = bootstrap.connect(ip,port);
-        future.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(ChannelFuture future1) throws Exception {
-                if (future1.isSuccess()) {
-                    channelPromise.trySuccess(future1.channel());
-                } else {
-                    log.error("Failed to connect to server, try connect after 10s", future1.cause());
-                    future1.channel().eventLoop().schedule(new Runnable() {
-                        @Override
-                        public void run() {
-                            connect();
-                        }
-                    }, 10, TimeUnit.SECONDS);
-                }
+        ChannelFuture future = bootstrap.connect(ip, port);
+        future.addListener((ChannelFutureListener) future1 -> {
+            if (future1.isSuccess()) {
+                channelPromise.trySuccess(future1.channel());
+            } else {
+                log.error("Failed to connect to server, try connect after 10s", future1.cause());
+                future1.channel().eventLoop().schedule(() -> connect(), 10, TimeUnit.SECONDS);
             }
         });
     }
@@ -86,20 +78,17 @@ public class NettyClient implements Client {
         PendingReqHolder.put(requestId, new PendingRequest(request));
         ZRpcMessage message = ZRpcMessage.builder().messageType(MessageType.REQUEST).setClientConfig().data(request).build();
         try {
-            Channel channel =  channelPromise.get();
-            ChannelFuture future =channel.writeAndFlush(message);
-            future.addListener(new ChannelFutureListener() {
-                @Override
-                public void operationComplete(ChannelFuture future) throws Exception {
-                    if (future.isSuccess()) {
-                        log.info("request - {} success ", request.getRequestId());
-                    } else {
-                        log.error("request fail", future.cause());
-                        PendingReqHolder.remove(requestId);
-                        ClientHolder.remove(channel);
-                    }
-
+            Channel channel = channelPromise.get();
+            ChannelFuture future = channel.writeAndFlush(message);
+            future.addListener((ChannelFutureListener) future1 -> {
+                if (future1.isSuccess()) {
+                    log.info("request - {} success ", request.getRequestId());
+                } else {
+                    log.error("request fail", future1.cause());
+                    PendingReqHolder.remove(requestId);
+                    ClientHolder.remove(channel);
                 }
+
             });
         } catch (InterruptedException | ExecutionException e) {
             log.error("get client channel fail", e);

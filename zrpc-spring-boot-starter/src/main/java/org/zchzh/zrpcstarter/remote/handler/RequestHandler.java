@@ -60,7 +60,7 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
             try {
                 Object result = handle(req);
                 response.setResult(result);
-            }catch (Throwable t) {
+            } catch (Throwable t) {
                 response.setError(t.toString());
             }
             resMsg.setData(response);
