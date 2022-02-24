@@ -63,9 +63,9 @@ public class RpcDecoder extends ByteToMessageDecoder {
         int dataLen = in.readInt();
         byte[] data = new byte[dataLen - Constants.HEAD_LEN];
         in.readBytes(data);
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         byte[] decompressData = message.getCompressType().decompress(data);
-        log.info("decompress time : " + (System.currentTimeMillis() - start));
+//        log.info("decompress time : " + (System.currentTimeMillis() - start));
         switch (message.getMessageType()) {
             case REQUEST:
                 message.setData(message.getSerializerType().deserialize(decompressData, ZRpcRequest.class));

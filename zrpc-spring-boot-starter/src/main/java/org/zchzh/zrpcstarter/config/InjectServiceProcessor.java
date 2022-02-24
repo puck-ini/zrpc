@@ -56,40 +56,4 @@ public class InjectServiceProcessor implements ApplicationListener<ContextRefres
             }
         }
     }
-
-//    private BeanFactory beanFactory;
-//    @Override
-//    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-//        this.beanFactory = beanFactory;
-//        postProcessRpcClientBeanFactory(beanFactory, (BeanDefinitionRegistry) beanFactory);
-//    }
-//
-//    private void postProcessRpcClientBeanFactory(ConfigurableListableBeanFactory beanFactory,
-//                                                 BeanDefinitionRegistry beanDefinitionRegistry) {
-//        String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
-//        int len = beanDefinitionNames.length;
-//        for (int i = 0; i < len; i++) {
-//            String beanDefinitionName = beanDefinitionNames[i];
-//            BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanDefinitionName);
-//            String beanCLassName = beanDefinition.getBeanClassName();
-//            if (Objects.nonNull(beanCLassName)) {
-//                Class<?> clazz = ClassUtils.resolveClassName(beanCLassName, null);
-//                ReflectionUtils.doWithFields(clazz, new ReflectionUtils.FieldCallback() {
-//                    @Override
-//                    public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-//                        parseField(field);
-//                    }
-//                });
-//            }
-//        }
-//    }
-//
-//    private void parseField(Field field) {
-//        Reference reference = field.getAnnotation(Reference.class);
-//        if (Objects.isNull(reference)) {
-//
-//        }
-//    }
-
-
 }

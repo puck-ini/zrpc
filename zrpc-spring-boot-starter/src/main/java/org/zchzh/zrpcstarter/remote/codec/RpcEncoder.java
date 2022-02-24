@@ -52,12 +52,12 @@ public class RpcEncoder extends MessageToByteEncoder<ZRpcMessage> {
      */
     private void encodeMessageBody(ZRpcMessage msg, ByteBuf out) throws IOException {
         byte[] data = msg.getSerializerType().serialize(msg.getData());
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
         byte[] compressData = msg.getCompressType().compress(data);
-        log.info("compress time : " + (System.currentTimeMillis() - start));
-        log.info(" data len : {}, compress data len : {}",
-                Objects.isNull(data) ? 0 : data.length,
-                Objects.isNull(compressData) ? 0 : compressData.length);
+//        log.info("compress time : " + (System.currentTimeMillis() - start));
+//        log.info(" data len : {}, compress data len : {}",
+//                Objects.isNull(data) ? 0 : data.length,
+//                Objects.isNull(compressData) ? 0 : compressData.length);
         // 消息头加消息体长度占用4字节
         out.writeInt(compressData.length + Constants.HEAD_LEN);
         out.writeBytes(compressData);

@@ -1,6 +1,7 @@
 package org.zchzh.zrpcstarter.remote.handler;
 
 import io.netty.handler.codec.TooLongFrameException;
+import org.springframework.util.Assert;
 import org.zchzh.zrpcstarter.constants.Constants;
 import org.zchzh.zrpcstarter.enums.MessageType;
 import org.zchzh.zrpcstarter.model.RpcProp;
@@ -33,14 +34,11 @@ public class RequestHandler extends SimpleChannelInboundHandler<ZRpcMessage> {
             Constants.BEAT_TIME * 3,
             TimeUnit.SECONDS,
             new LinkedBlockingQueue<>(1000),
-            new ThreadFactory() {
-                @Override
-                public Thread newThread(Runnable r) {
-                    Thread thread = new Thread(r);
-                    thread.setDaemon(true);
-                    thread.setName("RequestHandler-" + r.hashCode());
-                    return thread;
-                }
+            r -> {
+                Thread thread = new Thread(r);
+                thread.setDaemon(true);
+                thread.setName("RequestHandler-" + r.hashCode());
+                return thread;
             });
 
     @Override

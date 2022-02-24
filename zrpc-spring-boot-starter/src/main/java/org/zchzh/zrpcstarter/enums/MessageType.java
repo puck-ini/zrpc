@@ -34,7 +34,7 @@ public enum MessageType {
     HANDLER_REQ_ERROR_REQ((byte) 4),
     ;
 
-    private byte code;
+    private final byte code;
 
     MessageType(byte code) {
         this.code = code;

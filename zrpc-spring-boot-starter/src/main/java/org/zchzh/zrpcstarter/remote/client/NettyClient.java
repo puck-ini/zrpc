@@ -21,11 +21,11 @@ import java.util.concurrent.TimeUnit;
 public class NettyClient implements Client {
 
 
-    private String ip;
+    private final String ip;
 
-    private int port;
+    private final int port;
 
-    private EventLoopGroup workGroup = new NioEventLoopGroup(1);
+    private final EventLoopGroup workGroup = new NioEventLoopGroup(1);
 
     private final Promise<Channel> channelPromise = ImmediateEventExecutor.INSTANCE.newPromise();
 
@@ -67,7 +67,7 @@ public class NettyClient implements Client {
                 channelPromise.trySuccess(future1.channel());
             } else {
                 log.error("Failed to connect to server, try connect after 10s", future1.cause());
-                future1.channel().eventLoop().schedule(() -> connect(), 10, TimeUnit.SECONDS);
+                future1.channel().eventLoop().schedule(this::connect, 10, TimeUnit.SECONDS);
             }
         });
     }
